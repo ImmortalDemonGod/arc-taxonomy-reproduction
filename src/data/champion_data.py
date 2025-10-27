@@ -63,15 +63,15 @@ class ChampionARCDataset(Dataset):
                 train_examples = task_data.get('train', [])
                 test_examples = task_data.get('test', [])
                 
-                # Need at least num_context_pairs + 1 examples
+                # Need at least num_context_pairs examples
                 if len(train_examples) < self.num_context_pairs:
                     continue
                 
                 # Use first num_context_pairs as context
                 context_examples = train_examples[:self.num_context_pairs]
                 
-                # Use remaining train + test as query examples
-                query_examples = train_examples[self.num_context_pairs:] + test_examples
+                # Use ALL train + test as query examples (context can also be queries)
+                query_examples = train_examples + test_examples
                 
                 for query in query_examples:
                     example = self._process_example(query, context_examples)
