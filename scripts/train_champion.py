@@ -52,8 +52,8 @@ def main():
     print(f"{'='*70}")
     print(f"Dataset: distributional_alignment (re-arc synthetic)")
     print(f"Total tasks: {len(task_files)}")
-    print(f"Train tasks: {len(train_files)} ({len(train_files) * 15} examples)")
-    print(f"Val tasks: {len(val_files)} ({len(val_files) * 15} examples)")
+    print(f"Train tasks: {len(train_files)} ({len(train_files) * 150} examples)")
+    print(f"Val tasks: {len(val_files)} ({len(val_files) * 150} examples)")
     print(f"Architecture: Full Champion (E-D + Grid2D PE + PermInv + Bridge)")
     print(f"Training config: Trial 69 hyperparameters")
     print(f"Loss function: CrossEntropyLoss (Option A)")
@@ -67,7 +67,7 @@ def main():
         batch_size=32,  # Trial 69 value
         shuffle=True,
         num_context_pairs=2,  # Trial 69 value
-        max_grid_size=30,
+        max_grid_size=35,  # Increased for 150 samples/task (was 30 for 15 samples/task)
     )
     
     val_loader = create_champion_dataloader(
@@ -75,7 +75,7 @@ def main():
         batch_size=32,
         shuffle=False,
         num_context_pairs=2,
-        max_grid_size=30,
+        max_grid_size=35,  # Increased for 150 samples/task
     )
     
     # Create model with Trial 69-aligned configuration
@@ -87,7 +87,7 @@ def main():
         num_decoder_layers=3,  # Trial 69 value (1.7M params)
         num_heads=4,
         d_ff=640,  # Trial 69 value (1.7M params)
-        max_grid_size=30,
+        max_grid_size=35,  # Increased for 150 samples/task
         dropout=0.16712351989226623,  # Trial 69 optimized dropout
         learning_rate=0.0018498849832733245,  # Trial 69
         weight_decay=0.0,  # Trial 69
