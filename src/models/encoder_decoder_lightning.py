@@ -5,10 +5,13 @@ Simplified for ablation experiments - works directly with data loader outputs.
 """
 import torch
 import pytorch_lightning as pl
-# Using torch.optim directly to match Trial 69 configuration
+# Using torch.optim directly to import torch
+import torch.nn as nn
 import torch.nn.functional as F
+import pytorch_lightning as pl
 
-from .encoder_decoder_baseline import create_encoder_decoder_model
+from .encoder_decoder_architecture import EncoderDecoderArchitecture
+from ..utils.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 
 class EncoderDecoderLightningModule(pl.LightningModule):
@@ -113,15 +116,25 @@ class EncoderDecoderLightningModule(pl.LightningModule):
             ignore_index=self.pad_token,
         )
         
-        # Compute accuracy on shifted target
+        # Get predictions
         preds = logits.argmax(dim=-1)
-        non_pad_mask = tgt_output != self.pad_token
-        if non_pad_mask.sum() > 0:
-            correct = (preds == tgt_output) & non_pad_mask
-            accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        # Compute grid-level accuracy metrics
+        grid_metrics = compute_grid_accuracy(preds, tgt_output, self.pad_token)
+        self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        
+        # Compute transformation quality metrics
+        if src.size(1) > 1:
+            src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_output.size(1)]
+            try:
+                copy_metrics = compute_copy_metrics_on_batch(src_shifted, tgt_output, preds)
+                self.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+                self.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+            except Exception:
+                pass
+        
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         return loss
     

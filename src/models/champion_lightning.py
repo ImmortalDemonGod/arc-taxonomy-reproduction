@@ -4,12 +4,12 @@ PyTorch Lightning module for Champion architecture (Exp 3).
 Handles context pairs for full champion model.
 """
 import torch
-import pytorch_lightning as pl
-from torch.optim import AdamW
-from torch.optim.lr_scheduler import CosineAnnealingLR
+import torch.nn as nn
 import torch.nn.functional as F
+import pytorch_lightning as pl
 
-from .champion_architecture import create_champion_architecture
+from .champion_architecture import ChampionArchitecture
+from ..utils.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 
 class ChampionLightningModule(pl.LightningModule):
@@ -115,7 +115,7 @@ class ChampionLightningModule(pl.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
-        """Validation step with proper target shifting."""
+        """Validation step with grid-level and transformation metrics."""
         src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = batch
         
         # Target shifting for proper next-token prediction
@@ -139,15 +139,29 @@ class ChampionLightningModule(pl.LightningModule):
             ignore_index=self.pad_token,
         )
         
-        # Compute accuracy on shifted target
+        # Get predictions
         preds = logits.argmax(dim=-1)
-        non_pad_mask = tgt_output != self.pad_token
-        if non_pad_mask.sum() > 0:
-            correct = (preds == tgt_output) & non_pad_mask
-            accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        # Compute grid-level accuracy metrics (HEADLINE METRICS)
+        grid_metrics = compute_grid_accuracy(preds, tgt_output, self.pad_token)
+        self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        
+        # Compute transformation quality metrics
+        # Note: src needs to be truncated to match tgt_output (due to target shifting)
+        if src.size(1) > 1:
+            src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_output.size(1)]
+            try:
+                copy_metrics = compute_copy_metrics_on_batch(src_shifted, tgt_output, preds)
+                self.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+                self.log('val_change_precision', copy_metrics['change_precision'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+                self.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+                self.log('val_copy_rate', copy_metrics['copy_rate'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+            except Exception as e:
+                # Transformation metrics may fail if shapes don't align - log but don't crash
+                pass
+        
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         return loss
     

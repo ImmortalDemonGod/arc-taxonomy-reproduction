@@ -100,17 +100,17 @@ def main():
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
         dirpath="checkpoints/exp_3_champion",
-        filename="champion-{epoch:02d}-{val_loss:.4f}",
-        monitor="val_loss",
-        mode="min",
+        filename="champion-{epoch:02d}-{val_grid_accuracy:.4f}",
+        monitor="val_grid_accuracy",  # Monitor grid-solving (headline metric)
+        mode="max",
         save_top_k=3,
         save_last=True,
     )
     
     early_stop_callback = EarlyStopping(
-        monitor="val_loss",
+        monitor="val_grid_accuracy",  # Stop when grid-solving plateaus
         patience=7,  # Trial 69 value
-        mode="min",
+        mode="max",
         verbose=True,
     )
     

@@ -4,6 +4,8 @@ PyTorch Lightning module for Decoder-Only baseline (Exp -1).
 Provides training/validation loop with logging for ablation experiments.
 """
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 import pytorch_lightning as pl
 # Using torch.optim directly to match Trial 69 configuration
 from typing import Optional, Dict, Any
@@ -13,6 +15,7 @@ from .decoder_only_baseline import (
     compute_decoder_only_loss,
     flatten_grid_to_sequence,
 )
+from ..utils.metrics import compute_grid_accuracy
 
 
 class DecoderOnlyLightningModule(pl.LightningModule):
@@ -132,16 +135,16 @@ class DecoderOnlyLightningModule(pl.LightningModule):
             ignore_index=self.pad_token,
         )
         
-        # Compute accuracy (ignoring pad tokens)
+        # Get predictions
         batch_size = sequences.size(0)
         preds = logits.argmax(dim=-1)
-        non_pad_mask = targets != self.pad_token
-        if non_pad_mask.sum() > 0:
-            correct = (preds == targets) & non_pad_mask
-            accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        # Compute grid-level accuracy metrics
+        grid_metrics = compute_grid_accuracy(preds, targets, self.pad_token)
+        self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         return loss
     
