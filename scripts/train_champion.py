@@ -29,14 +29,6 @@ def main():
     # Uses TensorFloat32 for ~2-3x faster matmuls with minimal precision loss
     torch.set_float32_matmul_precision('high')
     
-    # Disable torch.compile cache limit to handle dynamic shapes
-    # Dataset has 870+ unique source shapes, 855+ target shapes
-    # With batching and context, actual combinations are unpredictable
-    # Setting to sys.maxsize (effectively unlimited) to avoid recompilation
-    import torch._dynamo as dynamo
-    import sys
-    dynamo.config.cache_size_limit = sys.maxsize  # Unlimited
-    
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
     
@@ -100,10 +92,11 @@ def main():
         use_bridge=True,
     )
     
-    # PyTorch 2.0+ compile for ~20-30% additional speedup
-    # Cache limit set to unlimited (sys.maxsize) to handle all shape variations
-    print("Compiling model with torch.compile (cache_size_limit=unlimited)...")
-    model = torch.compile(model)
+    # NOTE: torch.compile DISABLED due to hangs with dynamic shapes
+    # Even with unlimited cache, it causes training to freeze mid-epoch
+    # Cost: ~20-30% slower training (38s/epoch -> 50s/epoch estimated)
+    # Benefit: Reliable training without hangs
+    # model = torch.compile(model)  # DISABLED
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
