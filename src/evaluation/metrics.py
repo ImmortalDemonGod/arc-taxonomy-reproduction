@@ -45,6 +45,10 @@ def compute_grid_accuracy(
     # Support [B,H,W] or [B,T] by flattening non-batch dims
     if correct_or_pad.dim() >= 2:
         grid_matches = correct_or_pad.view(correct_or_pad.size(0), -1).all(dim=1)
+        # Check if grid has any valid cells (not all padding)
+        has_valid_cells = valid_mask.view(valid_mask.size(0), -1).any(dim=1)
+        # Only count as correct if grid has valid cells AND all are correct
+        grid_matches = grid_matches & has_valid_cells
     else:
         grid_matches = correct_or_pad.bool()
     

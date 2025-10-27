@@ -151,12 +151,14 @@ class ChampionLightningModule(pl.LightningModule):
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
         # Compute per-example cell accuracy
+        # CRITICAL: Use same tensors as grid_metrics to ensure consistency
         valid_mask = (tgt_output != self.pad_token)
         correct_cells = (preds == tgt_output) & valid_mask
         
-        # Per-example cell accuracy
+        # Per-example cell accuracy counts
         cell_correct_counts = correct_cells.view(correct_cells.size(0), -1).sum(dim=1)
         cell_total_counts = valid_mask.view(valid_mask.size(0), -1).sum(dim=1)
+        
         
         # Store for per-category metrics at epoch end
         self.validation_step_outputs.append({
