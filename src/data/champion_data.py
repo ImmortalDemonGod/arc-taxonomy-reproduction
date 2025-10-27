@@ -34,6 +34,7 @@ class ChampionARCDataset(Dataset):
         num_context_pairs: int = 2,  # Champion uses 2
         max_grid_size: int = 30,
         pad_token: int = 10,
+        task_categories: Dict[str, str] = None,  # Optional: task_id -> category mapping
     ):
         """
         Initialize dataset.
@@ -48,15 +49,19 @@ class ChampionARCDataset(Dataset):
         self.num_context_pairs = num_context_pairs
         self.max_grid_size = max_grid_size
         self.pad_token = pad_token
+        self.task_categories = task_categories or {}
         
-        # Load all examples: (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape)
-        self.examples: List[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, tuple, tuple]] = []
+        # Load all examples: (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape, task_id)
+        self.examples: List[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, tuple, tuple, str]] = []
         self._load_data()
     
     def _load_data(self):
         """Load all ARC tasks with context pairs."""
         for task_file in self.task_files:
             try:
+                # Extract task_id from filename
+                task_id = task_file.stem  # e.g., "007bbfb7" from "007bbfb7.json"
+                
                 with open(task_file) as f:
                     task_data = json.load(f)
                 
@@ -74,7 +79,7 @@ class ChampionARCDataset(Dataset):
                 query_examples = train_examples + test_examples
                 
                 for query in query_examples:
-                    example = self._process_example(query, context_examples)
+                    example = self._process_example(query, context_examples, task_id)
                     if example is not None:
                         self.examples.append(example)
                 
@@ -115,8 +120,9 @@ class ChampionARCDataset(Dataset):
     def _process_example(
         self,
         query: Dict,
-        context_examples: List[Dict]
-    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        context_examples: List[Dict],
+        task_id: str
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, tuple, tuple, str]:
         """
         Process query example with context.
         
@@ -183,8 +189,8 @@ class ChampionARCDataset(Dataset):
             ctx_input = torch.stack(ctx_inputs)
             ctx_output = torch.stack(ctx_outputs)
             
-            # Return with grid shapes
-            return (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape)
+            # Return with grid shapes and task_id
+            return (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape, task_id)
             
         except Exception as e:
             print(f"Warning: Failed to process example: {e}")
@@ -211,13 +217,13 @@ def collate_champion(
     Collate function for champion batches.
     
     Args:
-        batch: List of (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape) tuples
+        batch: List of (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape, task_id) tuples
         pad_token: Token ID for padding
         
     Returns:
-        Tuple of (src_batch, tgt_batch, ctx_input_batch, ctx_output_batch, src_shapes, tgt_shapes)
+        Tuple of (src_batch, tgt_batch, ctx_input_batch, ctx_output_batch, src_shapes, tgt_shapes, task_ids)
     """
-    srcs, tgts, ctx_inputs, ctx_outputs, src_shapes, tgt_shapes = zip(*batch)
+    srcs, tgts, ctx_inputs, ctx_outputs, src_shapes, tgt_shapes, task_ids = zip(*batch)
     
     # Pad src sequences
     max_src_len = max(src.size(0) for src in srcs)
@@ -275,6 +281,7 @@ def collate_champion(
         torch.stack(padded_ctx_outputs),
         list(src_shapes),  # Keep as list of tuples
         list(tgt_shapes),  # Keep as list of tuples
+        list(task_ids),    # Keep as list of strings
     )
 
 
@@ -282,6 +289,7 @@ def create_champion_dataloader(
     task_files: List[Path],
     batch_size: int = 8,
     shuffle: bool = True,
+    task_categories: Dict[str, str] = None,  # Optional: task_id -> category mapping
     **dataset_kwargs
 ) -> torch.utils.data.DataLoader:
     """
@@ -293,6 +301,7 @@ def create_champion_dataloader(
         task_files: List of ARC JSON file paths
         batch_size: Batch size
         shuffle: Whether to shuffle
+        task_categories: Optional dict mapping task_id -> category
         **dataset_kwargs: Additional args for dataset
         
     Returns:
@@ -300,13 +309,22 @@ def create_champion_dataloader(
     """
     from torch.utils.data import DataLoader
     
-    dataset = ChampionARCDataset(task_files, **dataset_kwargs)
+    # Auto-load task_categories if not provided
+    if task_categories is None and len(task_files) > 0:
+        # Try to find task_categories.json in the same directory
+        data_dir = task_files[0].parent
+        categories_file = data_dir / "task_categories.json"
+        if categories_file.exists():
+            with open(categories_file) as f:
+                task_categories = json.load(f)
+    
+    dataset = ChampionARCDataset(task_files, task_categories=task_categories, **dataset_kwargs)
     
     return DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=shuffle,
         collate_fn=lambda batch: collate_champion(batch, dataset.pad_token),
-        num_workers=4,              # Parallel data loading
+        num_workers=0,              # Use 0 to avoid multiprocessing pickle errors
         pin_memory=True,            # Faster GPU transfer
     )

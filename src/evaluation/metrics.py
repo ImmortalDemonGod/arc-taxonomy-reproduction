@@ -53,6 +53,8 @@ def compute_grid_accuracy(
     return {
         "grid_accuracy": grid_accuracy,
         "cell_accuracy": cell_accuracy,
+        "grid_correct": grid_matches,  # Per-example correctness for category-level metrics
+        "total_grids": len(grid_matches),
     }
 
 

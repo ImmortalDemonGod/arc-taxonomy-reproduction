@@ -42,6 +42,9 @@ class ChampionLightningModule(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         
+        # For tracking per-category metrics during validation
+        self.validation_step_outputs = []
+        
         # Create model
         self.model = create_champion_architecture(
             vocab_size=vocab_size,
@@ -76,13 +79,13 @@ class ChampionLightningModule(pl.LightningModule):
         Training step with proper target shifting.
         
         Args:
-            batch: Tuple of (src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes) from data loader
+            batch: Tuple of (src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids) from data loader
             batch_idx: Batch index
             
         Returns:
             Loss tensor
         """
-        src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = batch
+        src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids = batch
         
         # Target shifting for proper next-token prediction
         # Decoder input: tgt[:-1] (remove last token)
@@ -147,6 +150,13 @@ class ChampionLightningModule(pl.LightningModule):
         self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
+        # Store for per-category metrics at epoch end
+        self.validation_step_outputs.append({
+            'task_ids': task_ids,
+            'grid_correct': grid_metrics['grid_correct'],  # Boolean per example
+            'total_grids': grid_metrics['total_grids'],
+        })
+        
         # Compute transformation quality metrics
         # Note: src needs to be truncated to match tgt_output (due to target shifting)
         if src.size(1) > 1:
@@ -169,6 +179,68 @@ class ChampionLightningModule(pl.LightningModule):
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         return loss
+    
+    def on_validation_epoch_end(self):
+        """Compute and print per-category accuracy at end of validation epoch."""
+        if not self.validation_step_outputs:
+            return
+        
+        # Load task categories (try to get from dataloader)
+        task_categories = {}
+        if hasattr(self.trainer, 'datamodule'):
+            task_categories = getattr(self.trainer.datamodule, 'task_categories', {})
+        
+        # If not available, try to load from data directory
+        if not task_categories and len(self.validation_step_outputs) > 0:
+            # Try to infer data directory from validation
+            try:
+                from pathlib import Path
+                import json
+                # Assume we're in reproduction/ directory
+                data_dir = Path("data/distributional_alignment")
+                categories_file = data_dir / "task_categories.json"
+                if categories_file.exists():
+                    with open(categories_file) as f:
+                        task_categories = json.load(f)
+            except:
+                pass
+        
+        # Aggregate per-category metrics
+        from collections import defaultdict
+        category_stats = defaultdict(lambda: {'correct': 0, 'total': 0})
+        
+        for output in self.validation_step_outputs:
+            task_ids = output['task_ids']
+            grid_correct = output['grid_correct']
+            
+            for task_id, is_correct in zip(task_ids, grid_correct):
+                category = task_categories.get(task_id, 'unknown')
+                category_stats[category]['correct'] += int(is_correct)
+                category_stats[category]['total'] += 1
+        
+        # Print per-category accuracy
+        if category_stats:
+            print("\n" + "="*70)
+            print("PER-CATEGORY VALIDATION ACCURACY (Epoch {})".format(self.current_epoch))
+            print("="*70)
+            print(f"{'Category':<12} {'Correct':<10} {'Total':<10} {'Accuracy':<10}")
+            print("-"*70)
+            
+            for category in sorted(category_stats.keys()):
+                stats = category_stats[category]
+                accuracy = (stats['correct'] / stats['total'] * 100) if stats['total'] > 0 else 0
+                print(f"{category:<12} {stats['correct']:<10} {stats['total']:<10} {accuracy:>8.2f}%")
+            
+            # Overall
+            total_correct = sum(s['correct'] for s in category_stats.values())
+            total = sum(s['total'] for s in category_stats.values())
+            overall_acc = (total_correct / total * 100) if total > 0 else 0
+            print("-"*70)
+            print(f"{'OVERALL':<12} {total_correct:<10} {total:<10} {overall_acc:>8.2f}%")
+            print("="*70 + "\n")
+        
+        # Clear for next epoch
+        self.validation_step_outputs.clear()
     
     def configure_optimizers(self):
         """Configure optimizer and learning rate scheduler to match Trial 69."""
