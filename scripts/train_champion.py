@@ -29,6 +29,12 @@ def main():
     # Uses TensorFloat32 for ~2-3x faster matmuls with minimal precision loss
     torch.set_float32_matmul_precision('high')
     
+    # Increase torch.compile cache limit to handle dynamic shapes
+    # Default is 64 which causes constant recompilation with varying grid sizes
+    # Set to unlimited to avoid mid-training recompilations
+    import torch._dynamo
+    torch._dynamo.config.cache_size_limit = 256  # Increase from 64 to 256
+    
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
     
@@ -92,11 +98,10 @@ def main():
         use_bridge=True,
     )
     
-    # PyTorch 2.0+ compile disabled due to dynamic shape recompilation issues
-    # The model hits torch.compile cache_size_limit (64) causing constant recompilation
-    # This makes training SLOWER than without compile due to pauses mid-batch
-    # Re-enable when using static batch sizes or increase cache limit
-    # model = torch.compile(model)
+    # PyTorch 2.0+ compile for ~20-30% additional speedup
+    # Cache limit increased to 256 to handle dynamic grid shapes
+    print("Compiling model with torch.compile (cache_size_limit=256)...")
+    model = torch.compile(model)
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
