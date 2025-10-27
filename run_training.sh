@@ -60,12 +60,12 @@ fi
 
 # Check data directory
 print_info "Checking data..."
-if [ ! -d "data/tasks" ] || [ -z "$(ls -A data/tasks/*.json 2>/dev/null)" ]; then
-    print_error "No task files found in data/tasks/"
-    print_info "Please ensure data/tasks/ contains ARC JSON files"
+if [ ! -d "data/distributional_alignment" ] || [ -z "$(ls -A data/distributional_alignment/*.json 2>/dev/null)" ]; then
+    print_error "No task files found in data/distributional_alignment/"
+    print_info "Please ensure data/distributional_alignment/ contains ARC JSON files"
     exit 1
 fi
-task_count=$(ls -1 data/tasks/*.json 2>/dev/null | wc -l)
+task_count=$(ls -1 data/distributional_alignment/*.json 2>/dev/null | grep -v -E "(split_manifest|generation_statistics|task_categories)" | wc -l)
 print_info "Found $task_count task files"
 
 # Determine which experiment to run
