@@ -86,3 +86,4 @@ tests_old_backup/
 *.swp
 tmp/
 temp/
+src/utils/

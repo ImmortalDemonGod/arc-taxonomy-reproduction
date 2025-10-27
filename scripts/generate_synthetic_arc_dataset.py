@@ -484,11 +484,20 @@ Examples:
         help='Random seed for reproducibility'
     )
     
+    # Default: Look for re-arc submodule in reproduction package external/re-arc
+    # Fallback: Try parent repo structure (for local dev)
+    default_rearc = Path(__file__).parent.parent / 'external' / 're-arc'
+    if not default_rearc.exists():
+        # Try parent repo structure: reproduction/../../../external/re-arc
+        alt_rearc = Path(__file__).parent.parent.parent.parent.parent / 'external' / 're-arc'
+        if alt_rearc.exists():
+            default_rearc = alt_rearc
+    
     parser.add_argument(
         '--rearc-path',
         type=Path,
-        default=Path(__file__).parent.parent.parent.parent.parent / 'external' / 're-arc',
-        help='Path to re-arc submodule (default: resolved from __file__ → arc_reactor/external/re-arc)'
+        default=default_rearc,
+        help='Path to re-arc submodule (default: auto-detected or ./external/re-arc)'
     )
     
     parser.add_argument(

@@ -1,0 +1,3 @@
+[submodule "external/re-arc"]
+	path = external/re-arc
+	url = https://github.com/michaelhodel/re-arc
