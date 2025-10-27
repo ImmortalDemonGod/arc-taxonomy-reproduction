@@ -55,6 +55,13 @@ data/processed/
 *.tar.gz
 *.zip
 
+# Distributional alignment data (456MB - too large for GitHub)
+# Keep only metadata files, regenerate task files using scripts
+data/distributional_alignment/*.json
+!data/distributional_alignment/task_categories.json
+!data/distributional_alignment/generation_statistics.json
+!data/distributional_alignment/split_manifest.json
+
 # Jupyter
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*

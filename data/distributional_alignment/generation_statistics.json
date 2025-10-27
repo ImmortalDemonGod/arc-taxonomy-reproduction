@@ -1,8 +1,8 @@
 {
   "total_tasks": 400,
   "successful_tasks": 400,
-  "total_examples_attempted": 6178,
-  "total_examples_generated": 6174,
-  "total_examples_verified": 6000,
+  "total_examples_attempted": 61776,
+  "total_examples_generated": 61718,
+  "total_examples_verified": 60000,
   "failed_tasks": []
 }
