@@ -47,12 +47,17 @@ def main():
     """Test all models."""
     pl.seed_everything(307, workers=True)
     
-    # Get data
-    data_dir = Path(__file__).parent.parent / "data" / "tasks"
-    task_files = sorted(list(data_dir.glob("*.json")))
-    split_idx = int(len(task_files) * 0.8)
-    train_files = task_files[:split_idx]
-    val_files = task_files[split_idx:]
+    # Get data from distributional_alignment dataset
+    import json
+    data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
+    
+    # Load split manifest
+    with open(data_dir / "split_manifest.json") as f:
+        split_info = json.load(f)
+    
+    # Use just first 5 files for quick test
+    train_files = [data_dir / fname for fname in split_info["train_files"][:5]]
+    val_files = [data_dir / fname for fname in split_info["val_files"][:2]]
     
     print(f"\n{'='*70}")
     print(f"FAST DEV RUN TEST - ALL MODELS")

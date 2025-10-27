@@ -76,13 +76,16 @@ def check_gpu():
 
 def check_data_files():
     """Check data files exist."""
-    data_dir = Path("data/tasks")
+    data_dir = Path("data/distributional_alignment")
     if not data_dir.exists():
-        return print_check("Data Directory", False, "data/tasks/ not found")
+        return print_check("Data Directory", False, "data/distributional_alignment/ not found")
     
     json_files = list(data_dir.glob("*.json"))
+    # Exclude metadata files
+    json_files = [f for f in json_files if f.stem not in ['split_manifest', 'generation_statistics', 'task_categories']]
+    
     if len(json_files) == 0:
-        return print_check("Task Files", False, "No JSON files found")
+        return print_check("Task Files", False, "No task JSON files found")
     
     details = f"{len(json_files)} task files"
     return print_check("Task Files", True, details)
