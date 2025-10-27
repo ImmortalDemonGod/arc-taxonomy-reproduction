@@ -150,11 +150,20 @@ class ChampionLightningModule(pl.LightningModule):
         self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
+        # Compute per-example cell accuracy
+        valid_mask = (tgt_output != self.pad_token)
+        correct_cells = (preds == tgt_output) & valid_mask
+        
+        # Per-example cell accuracy
+        cell_correct_counts = correct_cells.view(correct_cells.size(0), -1).sum(dim=1)
+        cell_total_counts = valid_mask.view(valid_mask.size(0), -1).sum(dim=1)
+        
         # Store for per-category metrics at epoch end
         self.validation_step_outputs.append({
             'task_ids': task_ids,
             'grid_correct': grid_metrics['grid_correct'],  # Boolean per example
-            'total_grids': grid_metrics['total_grids'],
+            'cell_correct_counts': cell_correct_counts,     # Correct cells per example
+            'cell_total_counts': cell_total_counts,         # Total valid cells per example
         })
         
         # Compute transformation quality metrics
@@ -207,16 +216,27 @@ class ChampionLightningModule(pl.LightningModule):
         
         # Aggregate per-category metrics
         from collections import defaultdict
-        category_stats = defaultdict(lambda: {'correct': 0, 'total': 0})
+        category_stats = defaultdict(lambda: {
+            'grid_correct': 0, 
+            'grid_total': 0,
+            'cell_correct': 0,
+            'cell_total': 0
+        })
         
         for output in self.validation_step_outputs:
             task_ids = output['task_ids']
             grid_correct = output['grid_correct']
+            cell_correct_counts = output['cell_correct_counts']
+            cell_total_counts = output['cell_total_counts']
             
-            for task_id, is_correct in zip(task_ids, grid_correct):
+            for task_id, is_grid_correct, cell_correct, cell_total in zip(
+                task_ids, grid_correct, cell_correct_counts, cell_total_counts
+            ):
                 category = task_categories.get(task_id, 'unknown')
-                category_stats[category]['correct'] += int(is_correct)
-                category_stats[category]['total'] += 1
+                category_stats[category]['grid_correct'] += int(is_grid_correct)
+                category_stats[category]['grid_total'] += 1
+                category_stats[category]['cell_correct'] += int(cell_correct)
+                category_stats[category]['cell_total'] += int(cell_total)
         
         # Print per-category accuracy
         # IMPORTANT: Use explicit print + flush to avoid Paperspace log truncation
@@ -227,24 +247,30 @@ class ChampionLightningModule(pl.LightningModule):
             print("\n\n")
             sys.stdout.flush()
             
-            print("="*70)
+            print("="*90)
             print("PER-CATEGORY VALIDATION ACCURACY (Epoch {})".format(self.current_epoch))
-            print("="*70)
-            print(f"{'Category':<12} {'Correct':<10} {'Total':<10} {'Accuracy':<10}")
-            print("-"*70)
+            print("="*90)
+            print(f"{'Category':<12} {'Grids':<8} {'Grid Acc':<12} {'Cell Acc':<12}")
+            print("-"*90)
             
             for category in sorted(category_stats.keys()):
                 stats = category_stats[category]
-                accuracy = (stats['correct'] / stats['total'] * 100) if stats['total'] > 0 else 0
-                print(f"{category:<12} {stats['correct']:<10} {stats['total']:<10} {accuracy:>8.2f}%")
+                grid_acc = (stats['grid_correct'] / stats['grid_total'] * 100) if stats['grid_total'] > 0 else 0
+                cell_acc = (stats['cell_correct'] / stats['cell_total'] * 100) if stats['cell_total'] > 0 else 0
+                print(f"{category:<12} {stats['grid_total']:<8} {grid_acc:>10.2f}%  {cell_acc:>10.2f}%")
             
             # Overall
-            total_correct = sum(s['correct'] for s in category_stats.values())
-            total = sum(s['total'] for s in category_stats.values())
-            overall_acc = (total_correct / total * 100) if total > 0 else 0
-            print("-"*70)
-            print(f"{'OVERALL':<12} {total_correct:<10} {total:<10} {overall_acc:>8.2f}%")
-            print("="*70)
+            total_grid_correct = sum(s['grid_correct'] for s in category_stats.values())
+            total_grids = sum(s['grid_total'] for s in category_stats.values())
+            total_cell_correct = sum(s['cell_correct'] for s in category_stats.values())
+            total_cells = sum(s['cell_total'] for s in category_stats.values())
+            
+            overall_grid_acc = (total_grid_correct / total_grids * 100) if total_grids > 0 else 0
+            overall_cell_acc = (total_cell_correct / total_cells * 100) if total_cells > 0 else 0
+            
+            print("-"*90)
+            print(f"{'OVERALL':<12} {total_grids:<8} {overall_grid_acc:>10.2f}%  {overall_cell_acc:>10.2f}%")
+            print("="*90)
             print("\n")
             
             # Explicit flush to ensure it appears in Paperspace logs
