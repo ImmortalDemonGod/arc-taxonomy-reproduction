@@ -32,27 +32,35 @@ def main():
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
     
-    # Get data files
-    data_dir = Path(__file__).parent.parent / "data" / "tasks"
-    task_files = sorted(list(data_dir.glob("*.json")))
+    # Get data files from distributional_alignment dataset (Phase 1B - 400 tasks)
+    # This is the correct pretraining dataset that produced champion_bootstrap.ckpt
+    import json
+    # Path: reproduction/scripts -> publications -> arc_reactor -> data/synthetic_data
+    arc_reactor_root = Path(__file__).parent.parent.parent.parent.parent
+    data_dir = arc_reactor_root / "data" / "synthetic_data" / "distributional_alignment"
+    
+    # Load split manifest to get train/val split
+    with open(data_dir / "split_manifest.json") as f:
+        split_info = json.load(f)
+    
+    train_files = [data_dir / fname for fname in split_info["train_files"]]
+    val_files = [data_dir / fname for fname in split_info["val_files"]]
+    
+    task_files = train_files + val_files  # For info printing
     
     print(f"\n{'='*70}")
-    print(f"TRAINING: Exp 3 (Champion Architecture)")
+    print(f"TRAINING: Exp 3 (Champion Architecture) - Phase 1B")
     print(f"{'='*70}")
-    print(f"Task files: {len(task_files)}")
+    print(f"Dataset: distributional_alignment (re-arc synthetic)")
+    print(f"Total tasks: {len(task_files)}")
+    print(f"Train tasks: {len(train_files)} ({len(train_files) * 15} examples)")
+    print(f"Val tasks: {len(val_files)} ({len(val_files) * 15} examples)")
     print(f"Architecture: Full Champion (E-D + Grid2D PE + PermInv + Bridge)")
     print(f"Training config: Trial 69 hyperparameters")
     print(f"Loss function: CrossEntropyLoss (Option A)")
     print(f"Context pairs: 2 (fixed)")
+    print(f"Expected baseline: ~2.34% grid accuracy (champion_bootstrap)")
     print(f"{'='*70}\n")
-    
-    # Split data: 80% train, 20% val
-    split_idx = int(len(task_files) * 0.8)
-    train_files = task_files[:split_idx]
-    val_files = task_files[split_idx:]
-    
-    print(f"Train files: {len(train_files)}")
-    print(f"Val files: {len(val_files)}\n")
     
     # Create data loaders with Trial 69 batch size
     train_loader = create_champion_dataloader(
