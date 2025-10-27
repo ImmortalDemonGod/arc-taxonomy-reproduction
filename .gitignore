@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# PyTorch
+*.pth
+*.pt
+
+# Training outputs
+checkpoints/
+lightning_logs/
+logs/
+outputs/
+wandb/
+tensorboard/
+*.log
+nohup.out
+
+# Data (keep structure, ignore large files)
+data/raw/
+data/processed/
+*.tar.gz
+*.zip
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Backup folders
+*_backup/
+*_old/
+src_jarc_reactor_backup/
+tests_old_backup/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+tmp/
+temp/

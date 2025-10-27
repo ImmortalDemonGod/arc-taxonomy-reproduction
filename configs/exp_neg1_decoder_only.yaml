@@ -1,0 +1,46 @@
+# Experiment -1: Decoder-Only Baseline Configuration
+# Expected performance: ~0-1% grid accuracy (catastrophic failure)
+# Purpose: Establish empirical floor for ablation experiments
+
+model:
+  vocab_size: 11  # 0-9 colors + PAD token
+  context_length: 512  # Max sequence length (30x30 input + 30x30 output = 1800 max)
+  d_model: 128
+  num_layers: 2
+  num_heads: 4
+  d_ff: 512
+  rope_theta: 10000.0
+  dropout: 0.1
+  sep_token: 10
+  pad_token: 10
+
+training:
+  learning_rate: 3e-4
+  max_epochs: 50
+  batch_size: 8
+  num_workers: 4
+  gradient_clip_val: 1.0
+
+data:
+  train_tasks: 18  # V2 task subset (foundational_skills_v2)
+  val_split: 0.2
+  max_samples_per_task: 400
+  
+scheduler:
+  type: cosine
+  eta_min: 1e-6
+
+optimizer:
+  type: adamw
+  weight_decay: 0.01
+
+logging:
+  experiment_name: exp_neg1_decoder_only
+  log_every_n_steps: 10
+  
+checkpoint:
+  save_top_k: 3
+  monitor: val_loss
+  mode: min
+
+seed: 42

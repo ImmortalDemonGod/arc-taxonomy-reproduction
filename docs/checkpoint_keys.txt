@@ -1,0 +1,1742 @@
+================================================================================
+CHAMPION_BOOTSTRAP.CKPT - COMPLETE KEY STRUCTURE
+================================================================================
+
+## TOP-LEVEL KEYS
+--------------------------------------------------------------------------------
+- epoch
+- global_step
+- pytorch-lightning_version
+- state_dict
+- loops
+- callbacks
+- optimizer_states
+- lr_schedulers
+- MixedPrecision
+- hparams_name
+- hyper_parameters
+
+
+## STATE_DICT KEYS (Total: 292)
+--------------------------------------------------------------------------------
+
+### Component: cebr_alpha (1 keys)
+  - cebr_alpha
+      Shape: (), Dtype: torch.float32
+
+### Component: cebr_beta (1 keys)
+  - cebr_beta
+      Shape: (), Dtype: torch.float32
+
+### Component: cebr_gamma (1 keys)
+  - cebr_gamma
+      Shape: (), Dtype: torch.float32
+
+### Component: core_model (144 keys)
+  - core_model.bos_embed
+      Shape: (160,), Dtype: torch.float32
+  - core_model.context_encoder.attn_proj.weight
+      Shape: (1, 32), Dtype: torch.float32
+  - core_model.context_encoder.cross_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - core_model.context_encoder.cross_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - core_model.context_encoder.cross_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.cross_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - core_model.context_encoder.embedding.G
+      Shape: (11, 32), Dtype: torch.float32
+  - core_model.context_encoder.grid_type_embedding.weight
+      Shape: (2, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.0.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_ctx.layers.1.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.0.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - core_model.context_encoder.pixel_q.layers.1.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - core_model.context_encoder.pos_encoder.pe
+      Shape: (1, 900, 32), Dtype: torch.float32
+  - core_model.context_integration.0.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.context_integration.0.weight
+      Shape: (160, 192), Dtype: torch.float32
+  - core_model.context_integration.2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.context_integration.2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.context_to_logits.bias
+      Shape: (11,), Dtype: torch.float32
+  - core_model.context_to_logits.weight
+      Shape: (11, 32), Dtype: torch.float32
+  - core_model.context_to_tgt_bias.weight
+      Shape: (160, 32), Dtype: torch.float32
+  - core_model.dec_mem_ln.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.dec_mem_ln.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - core_model.decoder.layers.0.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - core_model.decoder.layers.0.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - core_model.decoder.layers.0.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.0.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.0.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.0.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.0.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.0.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder.layers.1.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - core_model.decoder.layers.1.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - core_model.decoder.layers.1.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - core_model.decoder.layers.1.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.1.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.1.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.1.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.1.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.1.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder.layers.2.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - core_model.decoder.layers.2.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - core_model.decoder.layers.2.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - core_model.decoder.layers.2.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.2.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.2.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.decoder.layers.2.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.decoder.layers.2.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder.layers.2.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.0.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.0.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.1.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.1.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.decoder_inter_layer_ln.2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - core_model.encoder.layers.0.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - core_model.encoder.layers.0.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - core_model.encoder.layers.0.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - core_model.encoder.layers.0.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - core_model.encoder.layers.0.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.encoder.layers.0.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - core_model.eval_ln.bias
+      Shape: (160,), Dtype: torch.float32
+  - core_model.eval_ln.weight
+      Shape: (160,), Dtype: torch.float32
+  - core_model.input_embedding.G
+      Shape: (11, 160), Dtype: torch.float32
+  - core_model.output_aug_extra.weight
+      Shape: (13, 160), Dtype: torch.float32
+  - core_model.output_fc.weight
+      Shape: (11, 160), Dtype: torch.float32
+  - core_model.positional_encoding.pe
+      Shape: (1, 900, 160), Dtype: torch.float32
+
+### Component: gauge_alpha (1 keys)
+  - gauge_alpha
+      Shape: (), Dtype: torch.float32
+
+### Component: model (144 keys)
+  - model.bos_embed
+      Shape: (160,), Dtype: torch.float32
+  - model.context_encoder.attn_proj.weight
+      Shape: (1, 32), Dtype: torch.float32
+  - model.context_encoder.cross_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - model.context_encoder.cross_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - model.context_encoder.cross_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.cross_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - model.context_encoder.embedding.G
+      Shape: (11, 32), Dtype: torch.float32
+  - model.context_encoder.grid_type_embedding.weight
+      Shape: (2, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.0.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_ctx.layers.1.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.0.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.linear1.bias
+      Shape: (128,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.linear1.weight
+      Shape: (128, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.linear2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.linear2.weight
+      Shape: (32, 128), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.norm1.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.norm1.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.norm2.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.norm2.weight
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.self_attn.in_proj_bias
+      Shape: (96,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.self_attn.in_proj_weight
+      Shape: (96, 32), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.self_attn.out_proj.bias
+      Shape: (32,), Dtype: torch.float32
+  - model.context_encoder.pixel_q.layers.1.self_attn.out_proj.weight
+      Shape: (32, 32), Dtype: torch.float32
+  - model.context_encoder.pos_encoder.pe
+      Shape: (1, 900, 32), Dtype: torch.float32
+  - model.context_integration.0.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.context_integration.0.weight
+      Shape: (160, 192), Dtype: torch.float32
+  - model.context_integration.2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.context_integration.2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.context_to_logits.bias
+      Shape: (11,), Dtype: torch.float32
+  - model.context_to_logits.weight
+      Shape: (11, 32), Dtype: torch.float32
+  - model.context_to_tgt_bias.weight
+      Shape: (160, 32), Dtype: torch.float32
+  - model.dec_mem_ln.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.dec_mem_ln.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - model.decoder.layers.0.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - model.decoder.layers.0.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - model.decoder.layers.0.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.0.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.0.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder.layers.0.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.0.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.0.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.0.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder.layers.1.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - model.decoder.layers.1.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - model.decoder.layers.1.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - model.decoder.layers.1.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.1.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.1.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder.layers.1.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.1.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.1.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.1.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder.layers.2.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - model.decoder.layers.2.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - model.decoder.layers.2.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - model.decoder.layers.2.multihead_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.2.multihead_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.2.multihead_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.multihead_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder.layers.2.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.norm3.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.norm3.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.decoder.layers.2.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.decoder.layers.2.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder.layers.2.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.0.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.0.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.1.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.1.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.decoder_inter_layer_ln.2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.linear1.bias
+      Shape: (640,), Dtype: torch.float32
+  - model.encoder.layers.0.linear1.weight
+      Shape: (640, 160), Dtype: torch.float32
+  - model.encoder.layers.0.linear2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.linear2.weight
+      Shape: (160, 640), Dtype: torch.float32
+  - model.encoder.layers.0.norm1.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.norm1.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.norm2.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.norm2.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.self_attn.in_proj_bias
+      Shape: (480,), Dtype: torch.float32
+  - model.encoder.layers.0.self_attn.in_proj_weight
+      Shape: (480, 160), Dtype: torch.float32
+  - model.encoder.layers.0.self_attn.out_proj.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.encoder.layers.0.self_attn.out_proj.weight
+      Shape: (160, 160), Dtype: torch.float32
+  - model.eval_ln.bias
+      Shape: (160,), Dtype: torch.float32
+  - model.eval_ln.weight
+      Shape: (160,), Dtype: torch.float32
+  - model.input_embedding.G
+      Shape: (11, 160), Dtype: torch.float32
+  - model.output_aug_extra.weight
+      Shape: (13, 160), Dtype: torch.float32
+  - model.output_fc.weight
+      Shape: (11, 160), Dtype: torch.float32
+  - model.positional_encoding.pe
+      Shape: (1, 900, 160), Dtype: torch.float32
+
+## HYPER_PARAMETERS
+--------------------------------------------------------------------------------
+- cagrad:
+  - c: 0.4
+  - enabled: True
+  - freq: 1
+  - log_stats: False
+  - max_iter: 20
+  - optimizer_idx: None
+  - sample_tasks_k: None
+  - solver: pgd
+  - tol: 1e-06
+- callbacks:
+  - frm:
+    - enabled: False
+  - karl:
+    - enabled: False
+  - mks:
+    - enabled: False
+  - sam:
+    - enabled: False
+  - zpr:
+    - enabled: False
+- cumoe:
+  - model:
+    - cumoe:
+      - apply_to: ['both']
+      - capacity_factor_eval: 2.0
+      - capacity_factor_train: 1.0
+      - diagnostics:
+        - enabled: True
+        - log_every_n_steps: 100
+        - max_tokens: 2048
+      - enabled: True
+      - expert_hidden: 128
+      - load_balance_alpha: 0.01
+      - num_experts: 16
+      - ponder:
+        - adapter_kind: none
+        - beta_kl: 0.05
+        - cond_embed_dim: 64
+        - cond_static_keys: []
+        - cond_vocab: 8
+        - enabled: False
+        - eps_halt: 0.05
+        - film_use_bias: True
+        - lora_rank: 8
+        - loss:
+          - use_expected_task: True
+          - use_kl: True
+          - use_ponder_cost: False
+        - pi_prior: 0.7
+        - tau_ponder: 0.0
+        - tmax_attn: 1
+        - tmax_ffn: 3
+        - use_condition_embed: False
+        - use_no_repeat: True
+      - premix:
+        - global_tokens: 0
+        - low_rank_q: 16
+        - pool_stride: 1
+        - use_prototypes: False
+      - router:
+        - noise: none
+        - temperature: 1.0
+        - type: attribute
+      - share_across_attention_and_ffn: True
+      - top_k: 4
+- data:
+  - max_context_pairs: 6
+  - num_context_pairs: 2
+  - testing_data_dir: data/synthetic_data/distributional_alignment/val
+  - training_data_dir: data/synthetic_data/distributional_alignment/train
+- dataloader:
+  - batch_size: 32
+  - drop_last_eval: False
+  - drop_last_train: False
+  - num_workers: 4
+  - persistent_workers: True
+  - pin_memory: False
+  - prefetch_factor: 2
+- dsla:
+  - enabled: False
+  - hybrid_ratio: 0.125
+  - memory_threshold_mb: 4096
+  - sensitivity_metric: entropy
+  - use_adaptive_runtime: True
+- enable_cuda_optimizations: False
+- evaluation:
+  - allow_env_overrides: False
+  - create_submission: True
+  - data_dir: jarc_reactor/data/evaluation_data
+  - debug_mode: True
+  - include_synthetic_data: False
+  - mode: all
+  - output_dir: evaluation_results
+  - save_predictions: True
+  - synthetic_data_dir: jarc_reactor/data/synthetic_data/evaluation
+- finetuning:
+  - learning_rate: 1e-05
+  - max_epochs: 100
+  - mode: all
+  - num_random_tasks: 10
+  - patience: 5
+  - save_dir: finetuning_results
+  - specific_tasks: []
+- gradient_conflict_handler: none
+- grokfast:
+  - _target_: jarc_reactor.callbacks.grokfast.GrokfastCallback
+  - alpha: 0.94
+  - ddp_sync: False
+  - enabled: False
+  - filter: ema
+  - lamb: 3.56
+  - log_every_n_steps: 0
+  - log_stats: True
+  - ma_cpu_offload: True
+  - ma_warmup: True
+  - max_norm_ratio: 1.0
+  - start_epoch: 0
+  - step_size_factor: 0.4
+  - window: 199
+- infodrop:
+  - T_t1: 0.85
+  - T_t2: 0.99
+  - T_t3: 0.23
+  - enabled: False
+  - h: 1.0
+  - k: 600
+  - learnable: False
+  - r0_t1: 0.95
+  - r0_t2: 0.56
+  - r0_t3: 0.62
+- karl:
+  - adversary_hidden: 64
+  - enabled: False
+  - freq: 16
+  - k_g: 3
+  - lam: 0.04
+  - n_dir: 16
+  - subsample: 64
+  - sync_adversary: False
+  - sync_period: step
+- logging:
+  - console_logging:
+    - enable: True
+  - debug_mode: False
+  - file_logging:
+    - backup_count: 5
+    - enable: True
+    - log_file_name: jarc_reactor_app.log
+    - max_bytes: 10485760
+  - level: INFO
+  - log_dir: logs/app
+- metrics:
+  - confidence_threshold: 0.5
+  - dense_objective_weights:
+    - cell: 0.0
+    - exact: 0.2
+    - tol: 0.8
+  - grid_tol_thresholds: [0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.98, 0.99]
+- mks:
+  - apply_in_forward: True
+  - apply_in_forward_layers: ['Linear']
+  - bake_after_training: False
+  - baked_checkpoint_name: mks_baked.ckpt
+  - checkpoint_tag: mks
+  - clip_grad_alpha: 0.0
+  - ddp_mode: rank0_broadcast
+  - emit_baked_checkpoint: False
+  - enabled: False
+  - freeze_patience: 0
+  - log_prefix: mks
+  - loss_norm: per_param_mean
+  - lr_gate: 0.1
+  - metrics:
+    - export_csv: False
+    - export_json: False
+    - per_layer_hist: False
+  - optimizer: adam
+  - pause_during_swa: True
+  - prune_after_bake: False
+  - prune_layers: ['Linear']
+  - pruned_checkpoint_name: mks_pruned.ckpt
+  - remove_gates_after_bake: False
+  - row_bias_behavior: ignore
+  - save_state: True
+  - structured: none
+  - val_batches: 5
+  - whitelist: ['weight']
+- model:
+  - S_shapes: None
+  - V_colours: None
+  - alternate_attention_mode:
+    - context_grid:
+      - per_head: True
+    - enabled: False
+    - encoder_seq:
+      - enabled: False
+      - interval_steps: 1
+      - mode: grad_x_attn
+      - sample_first_only: True
+      - stride: 2
+      - topk_heads: 2
+  - amp_enabled: False
+  - anticopy:
+    - cap_per_layer: 0.1
+    - enabled: False
+    - mode: reparam
+    - registry_path: None
+    - routing:
+      - calibration:
+        - bias: 0.0
+        - w_overlap: 0.0
+        - w_risk: 0.0
+      - calibration_path: None
+      - dry_run: False
+      - force_strength: None
+      - log_metrics: True
+      - s_cap_global: 0.1
+      - s_default: 0.05
+      - s_max: 0.3
+      - s_min: 0.0
+      - warmup_steps: 500
+  - attention_type: vanilla
+  - bam:
+    - apply_to: both
+    - beta_neg_fraction_max: 0.05
+    - bias_gain: 0.9875
+    - cross:
+      - mode: per_pair
+      - prior_1d_weight: 1.0
+      - prior_2d_weight: 0.5
+      - seq_2d:
+        - distance_chunk_size: None
+        - metric: euclidean
+        - normalize: True
+        - source: grid
+      - use_1d_prior: False
+      - use_2d_prior: False
+    - diagnostics:
+      - curve_L: 64
+      - curve_sample_heads: 2
+      - enabled: False
+      - log_param_stats: True
+      - max_samples: 2
+      - save_attention: False
+      - save_bias: False
+      - z_metrics: False
+    - enabled: False
+    - enforce_beta_fraction: False
+    - initialization:
+      - alpha_init: -0.83
+      - beta_init: 1.2
+      - mu_init: 0.0
+      - scheme: custom
+    - learn_alpha: True
+    - learn_beta: True
+    - learn_mu: False
+    - per_head: True
+    - precision:
+      - eps: 1e-05
+      - max_abs_bias: 80.0
+    - prior: ggd
+    - prior_2d_weight: 0.5
+    - prior_2d_weight_seq: 0.5
+    - seq_2d:
+      - distance_chunk_size: None
+      - metric: euclidean
+      - normalize: True
+      - source: grid
+    - ssmax:
+      - enabled: False
+      - learnable: True
+      - s_init: 0.7
+      - s_max: 2.0
+      - scale_max: 16.0
+    - ssmax_cross:
+      - enabled: False
+      - learnable: True
+      - s_init: 0.7
+      - s_max: 2.0
+      - scale_max: 16.0
+    - use_2d_prior: True
+    - use_2d_prior_seq: True
+  - cebr_alpha: 0.01
+  - cebr_beta: 0.007
+  - cebr_gamma: 0.0005
+  - cebr_head:
+    - alpha_max: 0.1
+    - alpha_min: 1e-06
+    - beta_max: 0.1
+    - beta_min: 1e-06
+    - enabled: False
+    - learnable: False
+    - orc_beta_macro: 0.005
+    - orc_beta_meso: 0.008
+    - orc_beta_micro: 0.01
+    - p_min: 0.001
+    - power_iters: 3
+    - tau_eps: 0.2
+    - tau_global: 0.5
+    - topk_orc: 16
+    - ve_alpha_macro: 0.005
+    - ve_alpha_meso: 0.008
+    - ve_alpha_micro: 0.01
+  - checkpoint_path: logs/training/checkpoints/model-epoch=05-step=3696-train_loss=train_loss=0.530532539.ckpt
+  - conditioning:
+    - bridge:
+      - apply_to_decoder: True
+      - apply_to_encoder: False
+      - dropout: 0.10367856411950743
+      - film:
+        - enabled: True
+        - gain: 1.3
+        - per_layer: True
+      - gate_pad_positions: True
+      - heads: 8
+      - hidden_factor: 1.7050584891564025
+      - schedule:
+        - alpha_max: 1.23644199612413
+        - tiny_grid_boost: True
+        - warmup_steps: 300
+      - tokens: 2
+      - type: concat_mlp
+    - per_layer_film:
+      - enabled: False
+      - gain: 1.0
+    - post_decoder_film:
+      - enabled: False
+      - gain: 1.0
+  - context_effect_gain: 4.0
+  - context_encoder:
+    - attn_dropout: 0.1
+    - comp_mode: cross_out_diff_prod
+    - d_model: 32
+    - dropout_rate: 0.0
+    - dynamic_pairs: True
+    - ffn_dropout: 0.1
+    - grid_height: 30
+    - grid_layers: 2
+    - grid_width: 30
+    - latent:
+      - dim: 32
+      - elbo_weight: 1.0
+      - enabled: True
+      - use_as_context: False
+    - n_head: 4
+    - order_comp_use_layernorm: True
+    - order_sensitive: False
+    - pad_token_id: 10
+    - pe_dropout: 0.0
+    - pe_type: rotary
+    - pixel_layers: 2
+    - pool_type: attn
+    - set_refine:
+      - K: 4
+      - dropout: 0.0
+      - enabled: True
+      - heads: 2
+      - layers: 1
+    - use_positional_encoding: True
+    - vocab_size: 11
+    - weighted_pool: True
+  - context_encoder_name: legacy
+  - context_scaling_factor: 3.0
+  - cumoe:
+    - apply_to: ['encoder']
+    - capacity_factor_eval: 2.0
+    - capacity_factor_train: 1.0
+    - diagnostics:
+      - enabled: False
+      - log_every_n_steps: 100
+      - max_tokens: 2048
+    - enabled: False
+    - expert_hidden: 128
+    - load_balance_alpha: 0.01
+    - num_experts: 16
+    - ponder:
+      - adapter_kind: none
+      - beta_kl: 0.05
+      - cond_embed_dim: 64
+      - cond_static_keys: []
+      - cond_vocab: 8
+      - enabled: False
+      - eps_halt: 0.05
+      - film_use_bias: True
+      - lora_rank: 8
+      - loss:
+        - use_expected_task: True
+        - use_kl: True
+        - use_ponder_cost: False
+      - pi_prior: 0.7
+      - tau_ponder: 0.0
+      - tmax_attn: 1
+      - tmax_ffn: 3
+      - use_condition_embed: False
+      - use_no_repeat: True
+    - premix:
+      - global_tokens: 0
+      - low_rank_q: 16
+      - pool_stride: 1
+      - use_prototypes: False
+    - router:
+      - noise: none
+      - temperature: 1.0
+      - type: attribute
+    - safe_fallback: True
+    - share_across_attention_and_ffn: True
+    - top_k: 2
+  - d_ff: 640
+  - d_model: 160
+  - d_pi: 64
+  - decoder_dropout_rate: 0.1478408456696605
+  - decoder_layers: 3
+  - deq:
+    - amp_enabled: False
+    - backward_tol: 1e-08
+    - damping: 1.0
+    - ddp_no_sync: True
+    - enabled: False
+    - fallback_unroll_depth: 0
+    - forward_tol: 1e-06
+    - init: learned
+    - line_search: False
+    - log_metrics: True
+    - mask_aware_residual: True
+    - max_iter_bwd: 5
+    - max_iter_fwd: 9
+    - residual_norm: max
+    - solver: broyden
+    - warm_start_across_batches: False
+  - dgm:
+    - edge_dim: 16
+    - enabled: False
+    - fuse_alpha: 0.5
+    - fuse_mode: or
+    - k_init: 5
+    - k_max: 32
+    - metric: euclidean
+    - poisson_temp: 0.67
+    - sampler: discrete
+    - schedule: warmup-2|anneal-8|freeze
+    - sparsity_reg: 0.001
+  - distance_chunk_size: None
+  - dropout_rate: 0.16712351989226623
+  - encoder_dropout_rate: 0.1
+  - encoder_layers: 1
+  - eval_final_clamp: False
+  - eval_stabilization: False
+  - frm:
+    - enabled: False
+    - lambda_init: 0.001
+    - learnable_lambda: True
+    - mode: spectral
+    - ntk_subsample_max: 1024
+    - schedule: warmup-2|anneal-5|freeze
+    - spectral_every_k: 10
+    - spectral_topk: 64
+    - use_autocast: True
+    - var_kl_weight: 1.0
+    - var_prior_std: 0.1
+    - var_sample_count: 1
+    - var_sample_tokens_max: 256
+  - gauge_alpha: 0.0
+  - hnet: None
+  - info_dl:
+    - enabled: False
+    - heads_per_batch: 4
+    - start_after_steps: 500
+    - update_every: 100
+    - weight: 0.01
+  - insertion:
+    - decode:
+      - max_steps: None
+      - min_conf: None
+      - random_seed: None
+      - selection_k: 2
+      - strategy: inverseentropy
+    - enabled: True
+    - eval_gating: True
+    - gating_logit_shift: 9.094797657729512
+    - pad_marks_complete: False
+    - slot_state:
+      - predicted:
+        - enabled: False
+        - eos_conf_threshold: 2.775
+    - train_gating: False
+  - k_nn: 16
+  - legacy_context_encoder: False
+  - looped:
+    - T: 2
+    - b: 4
+    - b_cap: None
+    - checkpointing:
+      - enabled: False
+      - use_reentrant: False
+    - diagnostics:
+      - log_deltas: False
+      - log_per_iter_loss: False
+    - enabled: False
+    - eval_disable_dropout: True
+    - injection_mode: pre
+    - input_injection: True
+    - ponder:
+      - beta_kl: 0.05
+      - enabled: False
+      - eps_halt: 0.05
+      - halting_feature: mean
+      - loss:
+        - adaptive_tbptt: False
+        - aggregation: single
+        - tbptt_quantile: 0.9
+        - use_expected_task: True
+        - use_kl: True
+        - use_ponder_cost: False
+      - pi_prior: 0.7
+      - tau_ponder: 0.0
+      - tmax_loop: 6
+    - scheduler: None
+  - lora:
+    - in_features: 128
+    - out_features: 128
+    - rank: 128
+    - use_lora: False
+  - loss:
+    - expected_cost:
+      - a: 0.23064095722377861
+      - anchor_ce_alpha: 0.2294614393904159
+      - b: 0.34831402083838997
+      - c: 0.42899754673525625
+      - class_weights_enabled: True
+      - d: 0.8913154239848878
+      - d_finish: 0.7831992030719889
+      - enabled: True
+      - entropy_floor_beta: 0.3216174192430753
+      - risk:
+        - alpha: 1.2434210194713966
+        - beta: 0.0
+        - enabled: False
+        - gamma: 0.0
+        - t_max: 0.8643429359846962
+        - t_min: 0.5777814700402562
+        - warmup_frac: 0.18272488764301195
+  - loss_mode: expected_cost
+  - max_h: 30
+  - max_w: 30
+  - model_name: transformer
+  - n_head: 4
+  - nora:
+    - apply_to: ['encoder', 'decoder']
+    - base_activation: gelu
+    - deg_p: 5
+    - deg_q: 4
+    - denom_eps: 0.001
+    - enabled: False
+    - groups: 32
+    - init: gelu_rational
+    - log_stats: True
+    - lora:
+    - nora_plus_lora: False
+    - per_layer_lr: None
+    - ponder_phi:
+      - T_max: 5
+      - beta_kl: 0.05
+      - deterministic_eval: True
+      - enabled: True
+      - eps_halt: 0.05
+      - features:
+        - use_curvature: True
+        - use_improvement: True
+        - use_margin: True
+        - use_saturation: True
+      - m_max: 6
+      - mdl_lambda: 0.0001
+      - n_max: 6
+      - pi_prior: 0.6
+      - slice_rank: 1
+      - tau_ponder: 0.0
+    - rank: 2
+    - share_across_layers: False
+    - stable_form: True
+    - weight_decay: 0.0
+  - norm_first: True
+  - output_augmented: False
+  - output_dim: 30
+  - pad_token_id: 10
+  - sam_enabled: True
+  - sar:
+    - adapt_every_k_batches: 1
+    - alpha: 0.0
+    - bank_decay: 0.05
+    - bank_min_classes: 100
+    - beta: 50.0
+    - classes: None
+    - ema_entropy_decay: 0.99
+    - enabled: True
+    - entropy_aggregator: sequence_mean
+    - entropy_threshold_factor: 0.4
+    - feature_hook: penultimate
+    - ignore_gating_for_entropy: True
+    - log_metrics: True
+    - max_adapt_steps_per_batch: 1
+    - max_selected_per_batch: None
+    - mode: sar
+    - optimizer:
+      - lr: 0.00025
+      - momentum: 0.9
+      - name: sgd
+      - weight_decay: 0.0
+    - recovery_threshold_factor: 0.02
+    - rho: 0.05
+    - trainable: ['norm_affine']
+  - shape_ctr_tau: 0.1
+  - shape_d_feats: 16
+  - shape_tau: 1.0
+  - taus: [0.1, 0.5, 1.0]
+  - tdm_nystrom:
+    - cache_ss: False
+    - cheby_order: 8
+    - enabled: False
+    - k_nn: 48
+    - m: 256
+    - n_components: 64
+    - normalize_rows: True
+    - selector: random
+    - tau_list: [1.0, 4.0, 16.0]
+  - tpa:
+    - d_k: None
+    - enabled: False
+    - in_features: 128
+    - n_param_ffn: 3072
+    - n_param_k: 768
+    - n_param_o: 768
+    - n_param_q: 768
+    - n_param_v: 768
+    - out_features: 128
+    - rank: 128
+    - sparse: True
+    - topk: 64
+    - use_lora: False
+  - tri_temporal_distance: False
+  - use_single_decoder: True
+  - use_tri_scale_ffn: False
+  - use_tri_temporal: False
+  - vocab_size: 11
+- optimizer:
+  - alpha_inf: 5e-05
+  - alpha_max: 0.0001
+  - alpha_min: 1e-12
+  - base:
+    - _target_: torch.optim.Adam
+    - betas: [0.9, 0.999]
+    - eps: 1e-08
+    - weight_decay: 0.0
+  - beta: 5e-05
+  - betas: [0.95, 0.999]
+  - eps: 1e-08
+  - lr: 0.0018498849832733245
+  - name: adam
+  - transition_steps: 100
+  - vector_alphas: True
+  - weight_decay: 0.0
+- optuna:
+  - base_seed: 1337
+  - best_params_path: jarc_reactor/optimization/best_params_v40.json
+  - delete_study: False
+  - multi_objective:
+    - enabled: True
+    - pruning_metric: val_loss
+    - targets: [{'metric': 'val_loss', 'direction': 'minimize'}, {'metric': 'val_grid_accuracy', 'direction': 'maximize'}]
+  - n_trials: 300
+  - param_ranges:
+    - callbacks.cgm.delta:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.5
+      - low: 0.05
+    - callbacks.cgm.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.cgm.freq:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 8
+      - low: 3
+    - callbacks.cgm.lambda_val:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.2
+      - log: True
+      - low: 0.01
+    - callbacks.cwe.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.cwe.eps:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.001
+      - log: True
+      - low: 1e-06
+    - callbacks.cwe.whiten_k:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 500
+      - low: 50
+      - step: 50
+    - callbacks.fd_pcgrad.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.fd_pcgrad.freq:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 5
+      - low: 1
+    - callbacks.guda.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.guda.freq:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 8
+      - low: 1
+    - callbacks.guda.lr_max:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.1
+      - log: True
+      - low: 0.01
+    - callbacks.guda.lr_min:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.001
+      - log: True
+      - low: 1e-05
+    - callbacks.guda.rng_seed:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 10000
+      - low: 0
+    - callbacks.karl.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.karl.freq:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 8
+      - low: 1
+    - callbacks.karl.k_g:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 3
+      - low: 1
+    - callbacks.karl.lam:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.5
+      - log: True
+      - low: 0.05
+    - callbacks.karl.n_dir:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [4, 8, 16]
+    - callbacks.mks.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, True, True, True, False]
+    - callbacks.mks.lr_gate:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.2
+      - log: True
+      - low: 0.01
+    - callbacks.mks.val_batches:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 4
+      - low: 1
+    - callbacks.racf.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.racf.inference_theta:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [0.0, 90.0, 180.0, 270.0]
+    - callbacks.sam.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.zpr.bias_fisher:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.zpr.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - callbacks.zpr.epoch_interval:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 20
+      - low: 5
+      - step: 5
+    - callbacks.zpr.freeze_batches:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 2
+      - low: 0
+    - callbacks.zpr.pct:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [0.05, 0.08, 0.1, 0.12]
+    - data.num_context_pairs:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [1, 2]
+    - dataloader.batch_size:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [1, 2, 4]
+    - dgm.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - dsla.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - dsla.hybrid_ratio:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 1.0
+      - low: 0.5
+    - frm.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - grokfast.alpha:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.99
+      - low: 0.9
+    - grokfast.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - grokfast.filter:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: ['ema', 'ma']
+    - grokfast.lamb:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 10.0
+      - low: 0.5
+    - grokfast.start_epoch:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 10
+      - low: 0
+    - grokfast.window:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 200
+      - low: 50
+    - info_dl.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - info_dl.weight:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 1.0
+      - log: True
+      - low: 0.01
+    - infodrop.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - model.d_pi:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [64, 128, 256]
+    - model.decoder_dropout_rate:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.6
+      - low: 0.2
+    - model.k_nn:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 1000
+      - low: 100
+      - step: 100
+    - model.looped.b:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 8
+      - low: 2
+    - model.looped.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - model.looped.input_injection:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - model.model_name:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: ['default', 'hnet2d1d_t3_cs']
+    - model.use_tri_scale_ffn:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - model.use_tri_temporal:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - rdrop.alpha:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 10.0
+      - low: 1.0
+    - rdrop.enabled:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - rdrop.p:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.25
+      - low: 0.05
+    - rdrop.share_dropout_mask:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - sam.adaptive:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - sam.rho:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.1
+      - low: 0.01
+    - scheduler.T_0:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 20
+      - low: 5
+    - scheduler.T_mult:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 3
+      - low: 1
+    - scheduler.eta_min:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 1e-06
+      - log: True
+      - low: 1e-08
+    - scheduler.use_cosine_annealing:
+      - _target_: jarc_reactor.config_schema.CategoricalChoice
+      - choices: [True, False]
+    - training.early_stopping_patience:
+      - _target_: jarc_reactor.config_schema.IntRange
+      - high: 50
+      - low: 10
+    - training.learning_rate:
+      - _target_: jarc_reactor.config_schema.FloatRange
+      - high: 0.0008
+      - log: True
+      - low: 5e-05
+  - pruner_type: hyperband
+  - pruning:
+    - _target_: optuna.pruners.HyperbandPruner
+    - max_resource: 100
+    - min_resource: 1
+    - reduction_factor: 3
+  - storage_url: sqlite:///jarc_optuna.db
+  - study_name: jarc_optimization_v40_focused_bakeoff
+- poe:
+  - apply_ttt: False
+  - dfs_threshold: 0.2
+  - enabled: False
+  - max_candidates: 32
+  - num_augments: 16
+  - second_guess: False
+  - ttt_lr: 0.001
+  - ttt_steps: 3
+- rdrop:
+  - alpha: 0.08
+  - apply_insertion_gating_for_kl: False
+  - enabled: False
+  - force_fp32_kl: True
+  - k: 1
+  - kl_clip_max: 0.0
+  - log_val_kl: True
+  - share_dropout_mask: False
+  - use_concat: True
+- regulariser_hypergrad:
+  - alpha_max: 10.0
+  - alpha_min: 1e-06
+  - enabled: False
+  - init:
+    - cebr_alpha: 0.035
+    - cebr_beta: 0.07
+    - cebr_gamma: 0.03
+    - gauge_alpha: 0.03
+    - rdrop_alpha: 0.05
+  - rho:
+    - cebr_alpha: 0.001
+    - cebr_beta: 0.001
+    - cebr_gamma: 0.001
+    - gauge_alpha: 0.001
+    - rdrop_alpha: 0.001
+  - schedule:
+    - total_steps: 20000
+    - type: cosine
+    - warmup_steps: 500
+- repro:
+  - trial_seed: 42
+- scheduler:
+  - T_0: 6
+  - T_mult: 1
+  - eta_min: 1.6816632143867157e-06
+  - use_cosine_annealing: True
+- sleep:
+  - adaptive: True
+  - alpha_curv: 4.0
+  - alpha_dream: 20.0
+  - alpha_entropy: 30.0
+  - alpha_siesta: 0.5
+  - dream:
+    - aug_rotate: True
+    - aug_translate: True
+    - lambda_grid_ce: 0.1
+    - spatial_sigma: 0.12
+  - ema_halflife: 128.0
+  - enabled: False
+  - entropy_eps: 0.05
+  - eta_scale: 0.01
+  - gamma_dream: 0.05
+  - hidden_queue: 128
+  - k_curv: 300
+  - k_curv_min: 100
+  - k_dream: 1000
+  - k_dream_min: 300
+  - k_scale: 5000
+  - k_scale_min: 2000
+  - k_siesta: 256
+  - k_siesta_min: 64
+  - lambda_align: 0.1
+  - lambda_curv: 1.0
+  - r_proj: 32
+  - use_entropy: True
+- speculative_decoding:
+  - P_init: 3
+  - P_max: 4
+  - P_min: 1
+  - acc_high: 0.8
+  - acc_low: 0.36
+  - alpha: 0.7
+  - coarse_P: 4
+  - coarse_accept_thres: 0.4
+  - draft_len: 30
+  - draft_patches: 4
+  - edit_tol: 1
+  - enabled: False
+  - entropy_refresh: 16
+  - entropy_thresh: 1.2
+  - fine_P: 2
+  - max_mismatch: 1
+  - num_samples: 48
+  - patch_size: 2
+  - seed: 42
+  - suffix_k: 30
+  - temperature: 0.25
+  - use_in_eval: False
+  - window: 12
+- training:
+  - calibration_on_train: True
+  - change_weight: 9.441393779897725
+  - check_val_every_n_epoch: 1
+  - checkpoint_dir: jarc_reactor/checkpoints
+  - checkpoint_guard:
+    - min_matched_param_ratio: 0.5
+    - verify_shapes: True
+  - class_balanced_loss: False
+  - class_balanced_max_weight: 2.2
+  - class_balanced_min_weight: 0.2
+  - class_balanced_smoothing_eps: 0.0
+  - current_data_is_synthetic: False
+  - device_choice: auto
+  - dice_loss_enabled: True
+  - dice_loss_weight: 0.2
+  - early_stopping_patience: 10
+  - epoch_time_limit_minutes: 8
+  - fast_dev_run: False
+  - gate_warmup_epochs: 0
+  - gradient_clip_val: 1.0
+  - include_synthetic_training_data: False
+  - kd_tau: 0.0
+  - kd_weight: 0.0
+  - lambda_conf: 0.0
+  - lambda_cov: 0.05
+  - lambda_kl: 0.03
+  - lambda_rule: 0.05
+  - learning_rate: 0.0001
+  - limit_val_batches: 200
+  - log_every_n_steps: 10
+  - max_epochs: 150
+  - monitor_metric: val_grid_accuracy
+  - monitor_mode: max
+  - precision: 16
+  - resume_from_checkpoint_pl: None
+  - scheduled_sampling:
+    - enabled: False
+    - probability: linear(start=0.0, end=0.5, steps=10000)
+  - swa:
+    - alpha1: 0.05
+    - alpha2: 0.001
+    - alpha_const: 0.01
+    - bn_max_batches: None
+    - bn_recompute: True
+    - bn_recompute_loader: train
+    - capture: min_lr
+    - capture_every_n_steps: 0
+    - cycle_len_steps: 2000
+    - ddp_bn_mode: broadcast
+    - ddp_sync_bn_update: True
+    - diagnostics:
+      - enabled: False
+      - eval_loader: val
+      - line_eval: True
+      - line_points: 21
+      - max_batches: 10
+      - output_dir: None
+      - plane_eval: False
+      - plane_grid: 21
+      - plane_t_max: 1.0
+      - random_rays: 0
+      - ray_points: 21
+      - ray_t_max: 1.0
+      - save_csv: True
+      - save_plots: False
+      - seed: None
+    - enabled: False
+    - eval_with_swa: True
+    - keep_base_checkpoint: True
+    - pause_schedulers: True
+    - resume: True
+    - save_swa_checkpoint: True
+    - schedule: cyclical
+    - start_epoch: None
+  - synthetic_data_dir: jarc_reactor/data/synthetic_data/training
+  - tau_anneal_epochs: 0
+  - train_from_checkpoint: False
+  - training_data_dir: jarc_reactor/data/training_data/training
+  - training_log_dir: logs/training
+  - val_check_interval: 1000
+- use_best_params: False
+
+## METADATA
+--------------------------------------------------------------------------------
+- epoch: 3
+- global_step: 6000
+- pytorch-lightning_version: 2.5.3
+- loops: dict
+- callbacks: dict
+- optimizer_states: list
+- lr_schedulers: list
+- MixedPrecision: dict
+- hparams_name: NoneType
+
+## SUMMARY STATISTICS
+--------------------------------------------------------------------------------
+Total parameters: 3,639,066
+Total state dict keys: 292
+Checkpoint size (MB): 19.81
