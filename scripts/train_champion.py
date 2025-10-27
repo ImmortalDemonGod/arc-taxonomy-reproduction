@@ -11,6 +11,7 @@ Uses CrossEntropyLoss (Option A - simple, standard approach).
 """
 import sys
 from pathlib import Path
+import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateMonitor
 
@@ -23,6 +24,10 @@ from src.data.champion_data import create_champion_dataloader
 
 def main():
     """Train Champion architecture (Exp 3)."""
+    
+    # Performance optimizations for Tensor Cores (A6000)
+    # Uses TensorFloat32 for ~2-3x faster matmuls with minimal precision loss
+    torch.set_float32_matmul_precision('high')
     
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
@@ -86,6 +91,11 @@ def main():
         use_context=True,
         use_bridge=True,
     )
+    
+    # PyTorch 2.0+ compile for ~20-30% additional speedup
+    # Note: First epoch will be slower (compilation time)
+    print("Compiling model with torch.compile...")
+    model = torch.compile(model)
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
