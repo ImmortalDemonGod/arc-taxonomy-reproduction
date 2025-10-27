@@ -119,7 +119,7 @@ class ChampionLightningModule(pl.LightningModule):
     
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
         """Validation step with grid-level and transformation metrics."""
-        src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = batch
+        src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids = batch
         
         # Target shifting for proper next-token prediction
         batch_size = tgt.size(0)
