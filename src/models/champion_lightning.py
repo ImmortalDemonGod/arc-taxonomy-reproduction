@@ -155,8 +155,13 @@ class ChampionLightningModule(pl.LightningModule):
                 copy_metrics = compute_copy_metrics_on_batch(src_shifted, tgt_output, preds)
                 self.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
                 self.log('val_change_precision', copy_metrics['change_precision'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
-                self.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+                self.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
                 self.log('val_copy_rate', copy_metrics['copy_rate'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+                
+                # Transformation quality score: F1 * cell_accuracy
+                # Combines transformation detection with prediction accuracy
+                transformation_quality_score = copy_metrics['transformation_f1'] * grid_metrics['cell_accuracy']
+                self.log('val_transformation_quality_score', transformation_quality_score, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
             except Exception as e:
                 # Transformation metrics may fail if shapes don't align - log but don't crash
                 pass

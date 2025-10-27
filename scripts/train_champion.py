@@ -92,10 +92,11 @@ def main():
         use_bridge=True,
     )
     
-    # PyTorch 2.0+ compile for ~20-30% additional speedup
-    # Note: First epoch will be slower (compilation time)
-    print("Compiling model with torch.compile...")
-    model = torch.compile(model)
+    # PyTorch 2.0+ compile disabled due to dynamic shape recompilation issues
+    # The model hits torch.compile cache_size_limit (64) causing constant recompilation
+    # This makes training SLOWER than without compile due to pauses mid-batch
+    # Re-enable when using static batch sizes or increase cache limit
+    # model = torch.compile(model)
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
