@@ -24,7 +24,7 @@ def test_champion_dataset():
     assert len(dataset) > 0, "Should load examples"
     
     # Get first example
-    src, tgt, ctx_input, ctx_output, src_shape, tgt_shape = dataset[0]
+    src, tgt, ctx_input, ctx_output, src_shape, tgt_shape, task_id = dataset[0]
     
     assert src.dim() == 1, "src should be 1D"
     assert tgt.dim() == 1, "tgt should be 1D"
@@ -48,7 +48,7 @@ def test_champion_dataloader():
         shuffle=False,
     )
     
-    src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = next(iter(dataloader))
+    src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids = next(iter(dataloader))
     
     # Verify batch properties
     assert src.dim() == 2, "src should be (B, L)"
@@ -81,30 +81,30 @@ def test_contract_satisfaction():
         num_context_pairs=2,
     )
     
-    src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = next(iter(dataloader))
+    src_batch, tgt_batch, ctx_input_batch, ctx_output_batch, src_shapes, tgt_shapes, task_ids = next(iter(dataloader))
     
     # Contract checks
-    assert ctx_in.dim() == 4, "FAILED: ctx_in should be (B, N, H, W)"
-    assert ctx_out.dim() == 4, "FAILED: ctx_out should be (B, N, H, W)"
-    assert ctx_in.shape == ctx_out.shape, "FAILED: Context shapes must match"
-    assert ctx_in.dtype == torch.long, "FAILED: dtype should be long"
+    assert ctx_input_batch.dim() == 4, "FAILED: ctx_in should be (B, N, H, W)"
+    assert ctx_output_batch.dim() == 4, "FAILED: ctx_out should be (B, N, H, W)"
+    assert ctx_input_batch.shape == ctx_output_batch.shape, "FAILED: Context shapes must match"
+    assert ctx_input_batch.dtype == torch.long, "FAILED: dtype should be long"
     
     # Verify num_pairs
-    assert ctx_in.size(1) == 2, "FAILED: Should have 2 context pairs"
+    assert ctx_input_batch.size(1) == 2, "FAILED: Should have 2 context pairs"
     
     # Verify matching H, W
-    assert ctx_in.shape[2:] == ctx_out.shape[2:], "FAILED: H, W must match"
+    assert ctx_input_batch.shape[2:] == ctx_output_batch.shape[2:], "FAILED: H, W must match"
     
     # Verify shapes are provided
-    assert len(src_shapes) == src.size(0), "FAILED: Should have shape for each example"
-    assert len(tgt_shapes) == tgt.size(0), "FAILED: Should have shape for each example"
+    assert len(src_shapes) == src_batch.size(0), "FAILED: Should have shape for each example"
+    assert len(tgt_shapes) == tgt_batch.size(0), "FAILED: Should have shape for each example"
     
     print("✅ All contract requirements satisfied")
-    print(f"   src: {src.shape}, tgt: {tgt.shape}")
-    print(f"   ctx_in: {ctx_in.shape}")
-    print(f"   ctx_out: {ctx_out.shape}")
+    print(f"   src: {src_batch.shape}, tgt: {tgt_batch.shape}")
+    print(f"   ctx_in: {ctx_input_batch.shape}")
+    print(f"   ctx_out: {ctx_output_batch.shape}")
     print(f"   Grid shapes: src={src_shapes[0]}, tgt={tgt_shapes[0]}")
-    print(f"   H, W match: {ctx_in.shape[2:] == ctx_out.shape[2:]}")
+    print(f"   H, W match: {ctx_input_batch.shape[2:] == ctx_output_batch.shape[2:]}")
 
 
 if __name__ == "__main__":
