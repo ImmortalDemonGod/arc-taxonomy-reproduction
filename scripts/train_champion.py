@@ -29,13 +29,13 @@ def main():
     # Uses TensorFloat32 for ~2-3x faster matmuls with minimal precision loss
     torch.set_float32_matmul_precision('high')
     
-    # Increase torch.compile cache limit to handle dynamic shapes
-    # Default is 64 which causes constant recompilation with varying grid sizes
-    # Dataset analysis shows 870+ unique source shapes, 855+ target shapes
-    # Conservative estimate: 743,850 possible (src × tgt) combinations
-    # Setting to very high value (effectively unlimited for our use case)
+    # Disable torch.compile cache limit to handle dynamic shapes
+    # Dataset has 870+ unique source shapes, 855+ target shapes
+    # With batching and context, actual combinations are unpredictable
+    # Setting to sys.maxsize (effectively unlimited) to avoid recompilation
     import torch._dynamo as dynamo
-    dynamo.config.cache_size_limit = 8192  # Should handle all realistic combinations
+    import sys
+    dynamo.config.cache_size_limit = sys.maxsize  # Unlimited
     
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
@@ -101,24 +101,24 @@ def main():
     )
     
     # PyTorch 2.0+ compile for ~20-30% additional speedup
-    # Cache limit set to 8192 to handle all grid shape variations
-    print("Compiling model with torch.compile (cache_size_limit=8192)...")
+    # Cache limit set to unlimited (sys.maxsize) to handle all shape variations
+    print("Compiling model with torch.compile (cache_size_limit=unlimited)...")
     model = torch.compile(model)
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
         dirpath="checkpoints/exp_3_champion",
-        filename="champion-{epoch:02d}-{val_grid_accuracy:.4f}",
-        monitor="val_grid_accuracy",  # Monitor grid-solving (headline metric)
-        mode="max",
+        filename="champion-{epoch:02d}-{val_loss:.4f}",
+        monitor="val_loss",  # Monitor loss (standard practice)
+        mode="min",
         save_top_k=3,
         save_last=True,
     )
     
     early_stop_callback = EarlyStopping(
-        monitor="val_grid_accuracy",  # Stop when grid-solving plateaus
+        monitor="val_loss",  # Stop when loss plateaus
         patience=7,  # Trial 69 value
-        mode="max",
+        mode="min",
         verbose=True,
     )
     
