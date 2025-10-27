@@ -219,8 +219,15 @@ class ChampionLightningModule(pl.LightningModule):
                 category_stats[category]['total'] += 1
         
         # Print per-category accuracy
+        # IMPORTANT: Use explicit print + flush to avoid Paperspace log truncation
         if category_stats:
-            print("\n" + "="*70)
+            import sys
+            
+            # Force newlines to separate from progress bar
+            print("\n\n")
+            sys.stdout.flush()
+            
+            print("="*70)
             print("PER-CATEGORY VALIDATION ACCURACY (Epoch {})".format(self.current_epoch))
             print("="*70)
             print(f"{'Category':<12} {'Correct':<10} {'Total':<10} {'Accuracy':<10}")
@@ -237,7 +244,11 @@ class ChampionLightningModule(pl.LightningModule):
             overall_acc = (total_correct / total * 100) if total > 0 else 0
             print("-"*70)
             print(f"{'OVERALL':<12} {total_correct:<10} {total:<10} {overall_acc:>8.2f}%")
-            print("="*70 + "\n")
+            print("="*70)
+            print("\n")
+            
+            # Explicit flush to ensure it appears in Paperspace logs
+            sys.stdout.flush()
         
         # Clear for next epoch
         self.validation_step_outputs.clear()
