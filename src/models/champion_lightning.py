@@ -8,8 +8,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
 
-from .champion_architecture import ChampionArchitecture
-from ..utils.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
+from .champion_architecture import ChampionArchitecture, create_champion_architecture
+from ..evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 
 class ChampionLightningModule(pl.LightningModule):

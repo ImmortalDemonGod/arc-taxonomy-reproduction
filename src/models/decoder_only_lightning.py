@@ -15,7 +15,7 @@ from .decoder_only_baseline import (
     compute_decoder_only_loss,
     flatten_grid_to_sequence,
 )
-from ..utils.metrics import compute_grid_accuracy
+from ..evaluation.metrics import compute_grid_accuracy
 
 
 class DecoderOnlyLightningModule(pl.LightningModule):

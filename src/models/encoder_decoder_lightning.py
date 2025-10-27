@@ -10,8 +10,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch_lightning as pl
 
-from .encoder_decoder_architecture import EncoderDecoderArchitecture
-from ..utils.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
+from .encoder_decoder_baseline import GenericEncoderDecoder, create_encoder_decoder_model
+from ..evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 
 class EncoderDecoderLightningModule(pl.LightningModule):
