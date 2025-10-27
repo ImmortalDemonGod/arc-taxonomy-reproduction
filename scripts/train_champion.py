@@ -35,9 +35,8 @@ def main():
     # Get data files from distributional_alignment dataset (Phase 1B - 400 tasks)
     # This is the correct pretraining dataset that produced champion_bootstrap.ckpt
     import json
-    # Path: reproduction/scripts -> publications -> arc_reactor -> data/synthetic_data
-    arc_reactor_root = Path(__file__).parent.parent.parent.parent.parent
-    data_dir = arc_reactor_root / "data" / "synthetic_data" / "distributional_alignment"
+    # Data is now bundled in the reproduction repo
+    data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
     
     # Load split manifest to get train/val split
     with open(data_dir / "split_manifest.json") as f:
