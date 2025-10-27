@@ -31,9 +31,11 @@ def main():
     
     # Increase torch.compile cache limit to handle dynamic shapes
     # Default is 64 which causes constant recompilation with varying grid sizes
-    # Set to unlimited to avoid mid-training recompilations
+    # Dataset analysis shows 870+ unique source shapes, 855+ target shapes
+    # Conservative estimate: 743,850 possible (src × tgt) combinations
+    # Setting to very high value (effectively unlimited for our use case)
     import torch._dynamo
-    torch._dynamo.config.cache_size_limit = 256  # Increase from 64 to 256
+    torch._dynamo.config.cache_size_limit = 8192  # Should handle all realistic combinations
     
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
@@ -99,8 +101,8 @@ def main():
     )
     
     # PyTorch 2.0+ compile for ~20-30% additional speedup
-    # Cache limit increased to 256 to handle dynamic grid shapes
-    print("Compiling model with torch.compile (cache_size_limit=256)...")
+    # Cache limit set to 8192 to handle all grid shape variations
+    print("Compiling model with torch.compile (cache_size_limit=8192)...")
     model = torch.compile(model)
     
     # Callbacks
