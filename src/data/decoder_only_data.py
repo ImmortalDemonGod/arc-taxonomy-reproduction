@@ -169,4 +169,6 @@ def create_decoder_only_dataloader(
         batch_size=batch_size,
         shuffle=shuffle,
         collate_fn=lambda batch: collate_decoder_only(batch, dataset.pad_token),
+        num_workers=4,
+        pin_memory=True,
     )

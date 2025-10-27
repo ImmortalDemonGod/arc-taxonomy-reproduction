@@ -307,4 +307,6 @@ def create_champion_dataloader(
         batch_size=batch_size,
         shuffle=shuffle,
         collate_fn=lambda batch: collate_champion(batch, dataset.pad_token),
+        num_workers=4,              # Parallel data loading
+        pin_memory=True,            # Faster GPU transfer
     )

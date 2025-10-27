@@ -109,7 +109,8 @@ class DecoderOnlyLightningModule(pl.LightningModule):
         )
         
         # Log metrics
-        self.log('train_loss', loss, prog_bar=True, on_step=True, on_epoch=True)
+        batch_size = sequences.size(0)
+        self.log('train_loss', loss, batch_size=batch_size, prog_bar=True, on_step=True, on_epoch=True)
         
         return loss
     
@@ -132,14 +133,15 @@ class DecoderOnlyLightningModule(pl.LightningModule):
         )
         
         # Compute accuracy (ignoring pad tokens)
+        batch_size = sequences.size(0)
         preds = logits.argmax(dim=-1)
         non_pad_mask = targets != self.pad_token
         if non_pad_mask.sum() > 0:
             correct = (preds == targets) & non_pad_mask
             accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, prog_bar=True, on_step=False, on_epoch=True)
+            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
         return loss
     

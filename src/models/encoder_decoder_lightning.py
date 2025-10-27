@@ -58,7 +58,7 @@ class EncoderDecoderLightningModule(pl.LightningModule):
     
     def training_step(self, batch, batch_idx: int) -> torch.Tensor:
         """
-        Training step.
+        Training step with proper target shifting.
         
         Args:
             batch: Tuple of (src, tgt) from data loader
@@ -69,42 +69,59 @@ class EncoderDecoderLightningModule(pl.LightningModule):
         """
         src, tgt = batch
         
-        # Forward pass - model predicts next token
-        # So input to decoder is tgt, output should predict tgt shifted by 1
-        logits = self(src, tgt)
+        # Target shifting for proper next-token prediction
+        batch_size = tgt.size(0)
         
-        # Simple cross-entropy loss (ignore pad tokens)
+        if tgt.size(1) <= 1:
+            return None
+        
+        tgt_input = tgt[:, :-1]   # Decoder input: remove last token
+        tgt_output = tgt[:, 1:]   # Loss target: predict next token
+        
+        # Forward pass with shifted target
+        logits = self(src, tgt_input)
+        
+        # Cross-entropy loss on shifted target
         loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
-            tgt.reshape(-1),
+            tgt_output.reshape(-1),
             ignore_index=self.pad_token,
         )
         
-        self.log('train_loss', loss, prog_bar=True, on_step=True, on_epoch=True)
+        self.log('train_loss', loss, batch_size=batch_size, prog_bar=True, on_step=True, on_epoch=True)
         
         return loss
     
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
-        """Validation step."""
+        """Validation step with proper target shifting."""
         src, tgt = batch
         
-        logits = self(src, tgt)
+        # Target shifting
+        batch_size = tgt.size(0)
+        
+        if tgt.size(1) <= 1:
+            return None
+        
+        tgt_input = tgt[:, :-1]
+        tgt_output = tgt[:, 1:]
+        
+        logits = self(src, tgt_input)
         
         loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
-            tgt.reshape(-1),
+            tgt_output.reshape(-1),
             ignore_index=self.pad_token,
         )
         
-        # Compute accuracy
+        # Compute accuracy on shifted target
         preds = logits.argmax(dim=-1)
-        non_pad_mask = tgt != self.pad_token
+        non_pad_mask = tgt_output != self.pad_token
         if non_pad_mask.sum() > 0:
-            correct = (preds == tgt) & non_pad_mask
+            correct = (preds == tgt_output) & non_pad_mask
             accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, prog_bar=True, on_step=False, on_epoch=True)
+            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
         return loss
     

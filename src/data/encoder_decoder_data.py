@@ -183,4 +183,6 @@ def create_encoder_decoder_dataloader(
         batch_size=batch_size,
         shuffle=shuffle,
         collate_fn=lambda batch: collate_encoder_decoder(batch, dataset.pad_token),
+        num_workers=4,
+        pin_memory=True,
     )

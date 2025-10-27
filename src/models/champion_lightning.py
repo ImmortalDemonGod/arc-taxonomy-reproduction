@@ -73,7 +73,7 @@ class ChampionLightningModule(pl.LightningModule):
     
     def training_step(self, batch, batch_idx: int) -> torch.Tensor:
         """
-        Training step.
+        Training step with proper target shifting.
         
         Args:
             batch: Tuple of (src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes) from data loader
@@ -84,52 +84,70 @@ class ChampionLightningModule(pl.LightningModule):
         """
         src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = batch
         
+        # Target shifting for proper next-token prediction
+        # Decoder input: tgt[:-1] (remove last token)
+        # Loss target: tgt[1:] (remove first token, predict next)
+        batch_size = tgt.size(0)
+        
+        if tgt.size(1) <= 1:
+            # Skip examples with only 1 token (can't shift)
+            return None
+        
+        tgt_input = tgt[:, :-1]   # Decoder sees all but last token
+        tgt_output = tgt[:, 1:]   # Predict next token
+        
         # Use actual grid shapes from data loader
-        # For batch, we need to process each example with its own shape
-        # For now, use first example's shape (simplified for smoke test)
-        # Real training would need per-example processing or require same shapes
         src_shape = src_shapes[0]
         tgt_shape = tgt_shapes[0]
         
-        # Forward pass with actual shapes
-        logits = self(src, tgt, src_shape, tgt_shape, ctx_in, ctx_out)
+        # Forward pass with shifted target
+        logits = self(src, tgt_input, src_shape, tgt_shape, ctx_in, ctx_out)
         
-        # Cross-entropy loss
+        # Cross-entropy loss on shifted target
         loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
-            tgt.reshape(-1),
+            tgt_output.reshape(-1),
             ignore_index=self.pad_token,
         )
         
-        self.log('train_loss', loss, prog_bar=True, on_step=True, on_epoch=True)
+        self.log('train_loss', loss, batch_size=batch_size, prog_bar=True, on_step=True, on_epoch=True)
         
         return loss
     
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
-        """Validation step."""
+        """Validation step with proper target shifting."""
         src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes = batch
+        
+        # Target shifting for proper next-token prediction
+        batch_size = tgt.size(0)
+        
+        if tgt.size(1) <= 1:
+            return None
+        
+        tgt_input = tgt[:, :-1]
+        tgt_output = tgt[:, 1:]
         
         # Use actual grid shapes from data loader
         src_shape = src_shapes[0]
         tgt_shape = tgt_shapes[0]
         
-        logits = self(src, tgt, src_shape, tgt_shape, ctx_in, ctx_out)
+        logits = self(src, tgt_input, src_shape, tgt_shape, ctx_in, ctx_out)
         
         loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
-            tgt.reshape(-1),
+            tgt_output.reshape(-1),
             ignore_index=self.pad_token,
         )
         
-        # Compute accuracy
+        # Compute accuracy on shifted target
         preds = logits.argmax(dim=-1)
-        non_pad_mask = tgt != self.pad_token
+        non_pad_mask = tgt_output != self.pad_token
         if non_pad_mask.sum() > 0:
-            correct = (preds == tgt) & non_pad_mask
+            correct = (preds == tgt_output) & non_pad_mask
             accuracy = correct.sum().float() / non_pad_mask.sum()
-            self.log('val_accuracy', accuracy, prog_bar=True, on_step=False, on_epoch=True)
+            self.log('val_accuracy', accuracy, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        self.log('val_loss', loss, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
         return loss
     

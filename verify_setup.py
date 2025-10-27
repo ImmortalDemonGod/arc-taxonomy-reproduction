@@ -141,12 +141,33 @@ def check_disk_space():
         lines = result.stdout.strip().split('\n')
         if len(lines) > 1:
             parts = lines[1].split()
-            available = parts[3]
-            details = f"{available} available"
-            # Rough check: need at least 2GB
-            avail_gb = float(available.replace('G', '').replace('M', '')) if 'G' in available else 0
-            status = avail_gb > 2
-            return print_check("Disk Space", status, details)
+            if len(parts) >= 4:
+                available = parts[3]
+                details = f"{available} available"
+                
+                # Parse size more robustly
+                # Handle formats like "2.5G", "500M", "171T", "1.5K"
+                try:
+                    value_str = available.rstrip('TGMK')
+                    value = float(value_str)
+                    
+                    # Convert to GB for comparison
+                    if 'T' in available:
+                        avail_gb = value * 1024  # TB to GB
+                    elif 'G' in available:
+                        avail_gb = value
+                    elif 'M' in available:
+                        avail_gb = value / 1024  # MB to GB
+                    elif 'K' in available:
+                        avail_gb = value / (1024 * 1024)  # KB to GB
+                    else:
+                        avail_gb = value / (1024 * 1024 * 1024)  # Bytes to GB
+                    
+                    # Need at least 2GB
+                    status = avail_gb >= 2
+                    return print_check("Disk Space", status, details)
+                except (ValueError, IndexError):
+                    pass
     except:
         pass
     
