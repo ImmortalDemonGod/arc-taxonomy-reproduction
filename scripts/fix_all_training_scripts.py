@@ -6,7 +6,14 @@ def fix_training_script(script_path: Path, exp_name: str, per_task_subdir: str):
     """Fix a training script."""
     content = script_path.read_text()
     
-    # 1. Add argparse import after sys import
+    # 1. Add torch import if missing
+    if 'import torch\n' not in content and 'import torch ' not in content:
+        content = content.replace(
+            'import pytorch_lightning as pl',
+            'import torch\nimport pytorch_lightning as pl'
+        )
+    
+    # 2. Add argparse import after sys import
     if 'import argparse' not in content:
         content = content.replace(
             'import sys\nfrom pathlib import Path',
@@ -21,7 +28,14 @@ def fix_training_script(script_path: Path, exp_name: str, per_task_subdir: str):
             return match.group(1) + '\n    # Parse CLI arguments\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\'--fast_dev_run\', type=int, default=None,\n                        help=\'Run fast_dev_run with N batches for testing\')\n    args, unknown = parser.parse_known_args()\n    fast_dev_run = args.fast_dev_run\n'
         content = re.sub(main_pattern, add_arg_parse, content)
     
-    # 3. Fix PerTaskMetricsLogger to use experiment-specific subdirectory
+    # 3. Add Tensor Core optimization after seed_everything
+    if "torch.set_float32_matmul_precision('high')" not in content:
+        content = content.replace(
+            'pl.seed_everything(307, workers=True)',
+            "pl.seed_everything(307, workers=True)\n    \n    # Set matmul precision for Tensor Cores (A6000 optimization)\n    torch.set_float32_matmul_precision('high')"
+        )
+    
+    # 4. Fix PerTaskMetricsLogger to use experiment-specific subdirectory
     content = re.sub(
         r'per_task_logger = PerTaskMetricsLogger\(\)',
         f'per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics/{per_task_subdir}")',

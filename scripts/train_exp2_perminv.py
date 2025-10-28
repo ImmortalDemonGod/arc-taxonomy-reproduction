@@ -9,6 +9,7 @@ import sys
 import argparse
 from pathlib import Path
 import json
+import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
@@ -33,6 +34,9 @@ def main():
     
     # Set seed for reproducibility
     pl.seed_everything(307, workers=True)
+    
+    # Set matmul precision for Tensor Cores (A6000 optimization)
+    torch.set_float32_matmul_precision('high')
     
     # Data paths
     data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
