@@ -41,6 +41,15 @@
 
 ## How to Start Training
 
+**Option 1: Using the training script (RECOMMENDED - saves console output)**
+```bash
+cd /path/to/reproduction
+./run_training.sh champion
+```
+
+Console output will be saved to: `logs/console_output/champion_training_YYYYMMDD_HHMMSS.log`
+
+**Option 2: Direct Python execution**
 ```bash
 cd /path/to/reproduction
 python scripts/train_champion.py
@@ -132,22 +141,25 @@ If GPU crashes mid-training:
 
 ## Monitoring Training Overnight
 
-### Option 1: TensorBoard
+### Option 1: Console Output (Real-time)
+```bash
+# Find the latest log file
+latest_log=$(ls -t logs/console_output/champion_training_*.log | head -1)
+
+# Monitor in real-time
+tail -f "$latest_log"
+```
+
+### Option 2: TensorBoard (Visual)
 ```bash
 tensorboard --logdir logs/champion_training/
 # Open browser to http://localhost:6006
 ```
 
-### Option 2: Check Latest CSV
+### Option 3: Latest Metrics (CSV)
 ```bash
 # Get most recent per-category metrics
 tail -10 $(ls -t logs/per_task_metrics/epoch_*_per_category.csv | head -1)
-```
-
-### Option 3: Check Console Output
-```bash
-# If running with nohup
-tail -f nohup.out
 ```
 
 ## Expected Output Location
@@ -156,6 +168,8 @@ After training completes, you'll have:
 
 ```
 logs/
+├── console_output/              # Full console logs (NEW!)
+│   └── champion_training_YYYYMMDD_HHMMSS.log
 ├── champion_training/           # TensorBoard logs
 ├── champion_csv/                # Epoch-level CSV logs
 └── per_task_metrics/            # Detailed per-task CSVs
