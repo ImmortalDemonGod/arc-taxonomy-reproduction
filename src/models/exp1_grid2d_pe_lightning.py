@@ -79,7 +79,7 @@ class Exp1Grid2DPELightningModule(pl.LightningModule):
     
     def training_step(self, batch: Tuple, batch_idx: int) -> torch.Tensor:
         """Training step."""
-        src, tgt = batch
+        src, tgt, task_ids = batch
         
         # Create shifted target (input to decoder)
         tgt_input = tgt[:, :-1]  # Remove last token

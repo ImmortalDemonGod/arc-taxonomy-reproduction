@@ -91,14 +91,14 @@ class BaselineDecoderOnlyLightningModule(pl.LightningModule):
         Training step.
         
         Args:
-            batch: Token sequences (B, L) - includes input SEP output
+            batch: Tuple of (sequences, task_ids) from data loader
             batch_idx: Batch index
             
         Returns:
             Loss tensor
         """
-        # Batch is just the sequences tensor
-        sequences = batch
+        # Unpack batch
+        sequences, task_ids = batch
         
         # Create input (all but last token) and targets (all but first token)
         input_ids = sequences[:, :-1]

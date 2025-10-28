@@ -66,13 +66,13 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         Training step with proper target shifting.
         
         Args:
-            batch: Tuple of (src, tgt) from data loader
+            batch: Tuple of (src, tgt, task_ids) from data loader
             batch_idx: Batch index
             
         Returns:
             Loss tensor
         """
-        src, tgt = batch
+        src, tgt, task_ids = batch
         
         # Target shifting for proper next-token prediction
         batch_size = tgt.size(0)
