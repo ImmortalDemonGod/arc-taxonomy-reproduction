@@ -172,8 +172,13 @@ def main():
     
     print(f"\n{'='*70}")
     print(f"Training complete!")
-    print(f"Best checkpoint: {checkpoint_callback.best_model_path}")
-    print(f"Best val_loss: {checkpoint_callback.best_model_score:.4f}")
+    # Only print checkpoint info if not in fast_dev_run mode
+    if not fast_dev_run:
+        print(f"Best checkpoint: {checkpoint_callback.best_model_path}")
+        if checkpoint_callback.best_model_score is not None:
+            print(f"Best val_loss: {checkpoint_callback.best_model_score:.4f}")
+    else:
+        print(f"Fast dev run completed (5 batches)")
     print(f"{'='*70}\n")
 
 
