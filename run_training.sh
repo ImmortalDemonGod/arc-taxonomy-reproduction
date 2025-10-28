@@ -1,14 +1,17 @@
 #!/bin/bash
 #
 # Quick training launcher for ARC Taxonomy Ablation Study
-# Usage: ./run_training.sh [baseline|exp0|exp1|exp2|exp3|all|test]
+# Usage: ./run_training.sh [baseline|exp0|exp1|exp2|exp3|all|test|test-arch]
 #
 # Experiments:
 #   baseline - Decoder-Only (catastrophic failure baseline)
 #   exp0     - Generic Encoder-Decoder (+17% gain)
 #   exp1     - + Grid2D Positional Encoding (+15% gain)
 #   exp2     - + Permutation-Invariant Embedding (+3% gain)
-#   exp3     - + Context Bridge (Champion) (+24% gain)
+#   exp3     - + Context Bridge (Champion) (+24% gain) [default]
+#   all      - Train all 5 experiments sequentially
+#   test     - Fast smoke test (5 batches per model)
+#   test-arch - Architecture validation (pytest)
 #
 
 set -e  # Exit on error
@@ -143,21 +146,41 @@ case "$experiment" in
         print_info "Logs saved to: logs/console_output/*_${timestamp}.log"
         ;;
     test)
-        print_info "Running comprehensive ablation test..."
+        print_info "Running FAST smoke test (fast_dev_run on all 5 experiments)..."
+        print_info "This validates all models can run without full training."
+        print_info ""
+        print_info "[1/5] Testing Baseline..."
+        python3 scripts/train_baseline_decoder_only.py --trainer.fast_dev_run=5
+        print_info "[2/5] Testing Exp 0..."
+        python3 scripts/train_exp0_encoder_decoder.py --trainer.fast_dev_run=5
+        print_info "[3/5] Testing Exp 1..."
+        python3 scripts/train_exp1_grid2d_pe.py --trainer.fast_dev_run=5
+        print_info "[4/5] Testing Exp 2..."
+        python3 scripts/train_exp2_perminv.py --trainer.fast_dev_run=5
+        print_info "[5/5] Testing Exp 3 (Champion)..."
+        python3 scripts/train_exp3_champion.py --trainer.fast_dev_run=5
+        print_info ""
+        print_info "✅ All 5 experiments passed smoke test!"
+        ;;
+    test-arch)
+        print_info "Running architecture validation tests..."
         python3 scripts/test_complete_ablation.py
         ;;
     *)
         print_error "Unknown experiment: $experiment"
-        echo "Usage: $0 [baseline|exp0|exp1|exp2|exp3|all|test]"
+        echo "Usage: $0 [baseline|exp0|exp1|exp2|exp3|all|test|test-arch]"
         echo ""
         echo "Ablation Study Experiments:"
-        echo "  baseline  - Decoder-Only (catastrophic failure baseline)"
-        echo "  exp0      - Generic Encoder-Decoder (+17% gain)"
-        echo "  exp1      - + Grid2D Positional Encoding (+15% gain)"
-        echo "  exp2      - + Permutation-Invariant Embedding (+3% gain)"
-        echo "  exp3      - + Context Bridge (Champion) (+24% gain) [default]"
-        echo "  all       - Train all 5 experiments sequentially"
-        echo "  test      - Run quick validation test"
+        echo "  baseline   - Decoder-Only (catastrophic failure baseline)"
+        echo "  exp0       - Generic Encoder-Decoder (+17% gain)"
+        echo "  exp1       - + Grid2D Positional Encoding (+15% gain)"
+        echo "  exp2       - + Permutation-Invariant Embedding (+3% gain)"
+        echo "  exp3       - + Context Bridge (Champion) (+24% gain) [default]"
+        echo "  all        - Train all 5 experiments sequentially (full training)"
+        echo ""
+        echo "Testing Options:"
+        echo "  test       - Fast smoke test (5 batches per model, ~2 min)"
+        echo "  test-arch  - Architecture validation tests (pytest)"
         echo ""
         echo "Aliases:"
         echo "  -1, 0, 1, 2, 3   - Numeric experiment IDs"
