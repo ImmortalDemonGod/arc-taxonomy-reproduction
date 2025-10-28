@@ -64,8 +64,8 @@ class Exp1Grid2DPELightningModule(pl.LightningModule):
         # Loss function
         self.criterion = nn.CrossEntropyLoss(ignore_index=pad_token)
         
-        # Metrics storage
-        self.validation_outputs = []
+        # For per-category metric collection
+        self.validation_step_outputs = []
     
     def forward(self, src: torch.Tensor, tgt: torch.Tensor) -> torch.Tensor:
         """Forward pass."""
@@ -103,6 +103,8 @@ class Exp1Grid2DPELightningModule(pl.LightningModule):
     
     def validation_step(self, batch, batch_idx: int):
         """Validation step."""
+        from src.evaluation.metrics import compute_grid_accuracy
+        
         src, tgt, task_ids = batch
         
         # Create shifted target
@@ -119,45 +121,46 @@ class Exp1Grid2DPELightningModule(pl.LightningModule):
             tgt_shifted.reshape(-1)
         )
         
-        # Grid accuracy (exact match)
-        predictions = logits.argmax(dim=-1)
-        grid_correct = (predictions == tgt_shifted).all(dim=1).float().sum()
+        # Get predictions
+        preds = logits.argmax(dim=-1)
         
-        # Cell accuracy (per-token)
-        cell_correct = (predictions == tgt_shifted).float().sum()
-        total_cells = (tgt_shifted != self.hparams.pad_token).sum()
+        # Compute grid-level accuracy metrics
+        grid_metrics = compute_grid_accuracy(preds, tgt_shifted, self.hparams.pad_token)
+        self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
-        # Store outputs
-        self.validation_outputs.append({
-            'val_loss': loss,
-            'grid_correct': grid_correct,
-            'total_grids': batch_size,
-            'cell_correct': cell_correct,
-            'total_cells': total_cells,
+        # Compute per-example cell counts for category aggregation
+        valid_mask = (tgt_shifted != self.hparams.pad_token)
+        correct_cells = (preds == tgt_shifted) & valid_mask
+        cell_correct_counts = correct_cells.sum(dim=1)  # Per-example
+        cell_total_counts = valid_mask.sum(dim=1)  # Per-example
+        
+        # Store per-task metrics for category aggregation
+        self.validation_step_outputs.append({
+            'task_ids': task_ids,
+            'grid_correct': grid_metrics['grid_correct'],
+            'cell_correct_counts': cell_correct_counts,
+            'cell_total_counts': cell_total_counts,
         })
         
-        return {'val_loss': loss}
+        self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        
+        return loss
     
     def on_validation_epoch_end(self) -> None:
-        """Aggregate validation metrics."""
-        # Aggregate
-        avg_loss = torch.stack([x['val_loss'] for x in self.validation_outputs]).mean()
-        total_grid_correct = sum(x['grid_correct'] for x in self.validation_outputs)
-        total_grids = sum(x['total_grids'] for x in self.validation_outputs)
-        total_cell_correct = sum(x['cell_correct'] for x in self.validation_outputs)
-        total_cells = sum(x['total_cells'] for x in self.validation_outputs)
+        """Aggregate and print per-category metrics at end of validation epoch."""
+        from .validation_helpers import load_task_categories, aggregate_validation_metrics, print_category_table
         
-        # Compute accuracies
-        grid_accuracy = total_grid_correct / total_grids if total_grids > 0 else 0.0
-        cell_accuracy = total_cell_correct / total_cells if total_cells > 0 else 0.0
+        if not self.validation_step_outputs:
+            return
         
-        # Log
-        self.log('val_loss', avg_loss, prog_bar=True)
-        self.log('val_grid_accuracy', grid_accuracy, prog_bar=True)
-        self.log('val_cell_accuracy', cell_accuracy, prog_bar=True)
+        # Load task categories and aggregate metrics
+        task_categories = load_task_categories()
+        category_stats = aggregate_validation_metrics(self.validation_step_outputs, task_categories)
+        print_category_table(category_stats, self.current_epoch)
         
-        # Clear outputs
-        self.validation_outputs.clear()
+        # Clear for next epoch
+        self.validation_step_outputs.clear()
     
     def configure_optimizers(self):
         """Configure optimizer and scheduler."""

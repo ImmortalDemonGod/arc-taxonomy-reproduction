@@ -127,6 +127,12 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
+        # Compute per-example cell counts for category aggregation
+        valid_mask = (tgt_output != self.pad_token)
+        correct_cells = (preds == tgt_output) & valid_mask
+        cell_correct_counts = correct_cells.sum(dim=1)  # Per-example
+        cell_total_counts = valid_mask.sum(dim=1)  # Per-example
+        
         # Compute transformation quality metrics
         if src.size(1) > 1:
             src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_output.size(1)]
@@ -145,8 +151,8 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         self.validation_step_outputs.append({
             'task_ids': task_ids,
             'grid_correct': grid_metrics['grid_correct'],
-            'cell_correct_counts': grid_metrics['cell_correct_counts'],
-            'cell_total_counts': grid_metrics['cell_total_counts'],
+            'cell_correct_counts': cell_correct_counts,
+            'cell_total_counts': cell_total_counts,
         })
         
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)

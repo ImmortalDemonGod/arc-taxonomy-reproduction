@@ -147,12 +147,18 @@ class BaselineDecoderOnlyLightningModule(pl.LightningModule):
         self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
+        # Compute per-example cell counts for category aggregation
+        valid_mask = (targets != self.pad_token)
+        correct_cells = (preds == targets) & valid_mask
+        cell_correct_counts = correct_cells.sum(dim=1)  # Per-example
+        cell_total_counts = valid_mask.sum(dim=1)  # Per-example
+        
         # Store per-task metrics for category aggregation
         self.validation_step_outputs.append({
             'task_ids': task_ids,
             'grid_correct': grid_metrics['grid_correct'],
-            'cell_correct_counts': grid_metrics['cell_correct_counts'],
-            'cell_total_counts': grid_metrics['cell_total_counts'],
+            'cell_correct_counts': cell_correct_counts,
+            'cell_total_counts': cell_total_counts,
         })
         
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
