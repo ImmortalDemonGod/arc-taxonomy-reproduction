@@ -82,7 +82,21 @@ case "$experiment" in
         ;;
     champion|3)
         print_info "Training Champion model (Exp 3)..."
-        python3 scripts/train_champion.py
+        
+        # Create logs directory if it doesn't exist
+        mkdir -p logs/console_output
+        
+        # Generate timestamp for log file
+        timestamp=$(date +"%Y%m%d_%H%M%S")
+        log_file="logs/console_output/champion_training_${timestamp}.log"
+        
+        print_info "Console output will be saved to: $log_file"
+        print_info "You can monitor progress with: tail -f $log_file"
+        
+        # Run training with output both to console AND log file
+        python3 scripts/train_champion.py 2>&1 | tee "$log_file"
+        
+        print_info "Training complete! Full log saved to: $log_file"
         ;;
     all)
         print_info "Training ALL experiments sequentially..."
