@@ -52,7 +52,6 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
             d_ff=d_ff,
             dropout=dropout,
         )
-        self.sep_token = sep_token
         self.pad_token = pad_token
         
         # For per-category metric collection

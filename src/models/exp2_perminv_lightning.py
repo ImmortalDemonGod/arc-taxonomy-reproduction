@@ -54,7 +54,6 @@ class Exp2PermInvLightningModule(pl.LightningModule):
             dropout=dropout,
             pad_idx=pad_token,
         )
-        self.sep_token = sep_token
         self.pad_token = pad_token
         
         # Loss function
