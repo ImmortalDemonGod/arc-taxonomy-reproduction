@@ -1,0 +1,61 @@
+[0;32m[INFO][0m Checking Python version...
+[0;32m[INFO][0m Python version OK: 3.11.9
+[1;33m[WARN][0m No virtual environment detected. Recommended to use venv.
+[0;32m[INFO][0m Run: python3 -m venv venv && source venv/bin/activate
+[0;32m[INFO][0m Checking dependencies...
+[0;32m[INFO][0m Dependencies OK
+[0;32m[INFO][0m Checking for GPU...
+[1;33m[WARN][0m No GPU detected. Training will use CPU (slow)
+[0;32m[INFO][0m Checking data...
+[0;32m[INFO][0m Found      400 task files
+[0;32m[INFO][0m Running FAST smoke test (fast_dev_run=5 batches on all 5 experiments)...
+[0;32m[INFO][0m This validates all models can run without full training.
+[0;32m[INFO][0m 
+[0;32m[INFO][0m [1/5] Testing Baseline...
+Seed set to 307
+Using 16bit Automatic Mixed Precision (AMP)
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/amp/grad_scaler.py:136: UserWarning: torch.cuda.amp.GradScaler is enabled, but CUDA is not available.  Disabling.
+  warnings.warn(
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 5 batch(es). Logging and checkpointing is suppressed.
+
+  | Name  | Type             | Params | Mode 
+---------------------------------------------------
+0 | model | DecoderOnlyModel | 1.7 M  | train
+---------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.942     Total estimated model params size (MB)
+61        Modules in train mode
+0         Modules in eval mode
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:425: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/utils/data/dataloader.py:683: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, then device pinned memory won't be used.
+  warnings.warn(warn_msg)
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:425: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+
+======================================================================
+TRAINING: Baseline (Decoder-Only)
+======================================================================
+Dataset: distributional_alignment (same as Champion)
+Train tasks: 308
+Val tasks: 92
+Total tasks: 400
+Architecture: Decoder-Only with RoPE
+Training config: Trial 69 hyperparameters
+Loss function: CrossEntropyLoss (Option A)
+======================================================================
+
+PerTaskMetricsLogger initialized
+  Log directory: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/baseline
+  Task categories loaded: 400 tasks
+Starting training...
+Checkpoints will be saved to: checkpoints/exp_-1_decoder_only/
+
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/5 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/5 [00:00<?, ?it/s] /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+Epoch 0:  20%|██        | 1/5 [00:13<00:54,  0.07it/s]Epoch 0:  20%|██        | 1/5 [00:13<00:54,  0.07it/s, train_loss_step=35.00]./run_training.sh: line 90:  7538 Killed: 9               python3 scripts/train_baseline_decoder_only.py --fast_dev_run=5
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

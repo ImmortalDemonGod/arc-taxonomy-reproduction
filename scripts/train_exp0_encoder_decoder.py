@@ -99,7 +99,10 @@ def main():
         save_last=True,
     )
     
-    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics/exp0")
+    per_task_logger = PerTaskMetricsLogger(
+        log_dir="logs/per_task_metrics/exp0",
+        experiment_name="exp0_encoder_decoder"
+    )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     

@@ -98,7 +98,10 @@ def main():
         save_last=True,
     )
     
-    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics/exp2")
+    per_task_logger = PerTaskMetricsLogger(
+        log_dir="logs/per_task_metrics/exp2",
+        experiment_name="exp2_perminv"
+    )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     

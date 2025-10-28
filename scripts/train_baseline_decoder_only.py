@@ -100,8 +100,11 @@ def main():
         save_last=True,
     )
     
-    # Per-task metrics logger (experiment-specific directory)
-    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics/baseline")
+    # Per-task metrics logger (experiment-specific directory and filename)
+    per_task_logger = PerTaskMetricsLogger(
+        log_dir="logs/per_task_metrics/baseline",
+        experiment_name="baseline"
+    )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     

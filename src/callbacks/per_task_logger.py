@@ -21,16 +21,18 @@ class PerTaskMetricsLogger(pl.Callback):
     Writes files after each epoch to survive GPU crashes.
     """
     
-    def __init__(self, log_dir: str = "logs/per_task_metrics"):
+    def __init__(self, log_dir: str = "logs/per_task_metrics", experiment_name: str = "experiment"):
         """
         Initialize logger.
         
         Args:
             log_dir: Directory to save CSV files
+            experiment_name: Name of experiment to include in filenames
         """
         super().__init__()
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
+        self.experiment_name = experiment_name
         
         # Load task categories if available
         self.task_categories = self._load_task_categories()
@@ -105,11 +107,11 @@ class PerTaskMetricsLogger(pl.Callback):
                     task_metrics[task_id]['metric_count'] += 1
         
         # Write per-task CSV
-        per_task_file = self.log_dir / f"epoch_{epoch:03d}_per_task.csv"
+        per_task_file = self.log_dir / f"{self.experiment_name}_epoch_{epoch:03d}_per_task.csv"
         self._write_per_task_csv(per_task_file, task_metrics, epoch)
         
         # Write per-category CSV
-        per_category_file = self.log_dir / f"epoch_{epoch:03d}_per_category.csv"
+        per_category_file = self.log_dir / f"{self.experiment_name}_epoch_{epoch:03d}_per_category.csv"
         self._write_per_category_csv(per_category_file, task_metrics, epoch)
         
         print(f"\n✓ Saved per-task metrics to {per_task_file.name}")

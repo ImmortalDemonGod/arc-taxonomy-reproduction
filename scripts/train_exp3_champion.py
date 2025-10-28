@@ -131,7 +131,8 @@ def main():
     # Per-task metrics logger - writes CSV files after each epoch
     # Robust to GPU crashes - all data is on disk immediately
     per_task_logger = PerTaskMetricsLogger(
-        log_dir="logs/per_task_metrics/exp3"
+        log_dir="logs/per_task_metrics/exp3",
+        experiment_name="exp3_champion"
     )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')

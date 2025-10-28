@@ -57,9 +57,9 @@ def test_per_task_logger_writes_csv(tmp_path):
     # Call the callback
     logger.on_validation_epoch_end(trainer, pl_module)
     
-    # Check that files were created
-    per_task_file = log_dir / "epoch_000_per_task.csv"
-    per_category_file = log_dir / "epoch_000_per_category.csv"
+    # Check that files were created (with default experiment name)
+    per_task_file = log_dir / "experiment_epoch_000_per_task.csv"
+    per_category_file = log_dir / "experiment_epoch_000_per_category.csv"
     
     assert per_task_file.exists(), "Per-task CSV not created"
     assert per_category_file.exists(), "Per-category CSV not created"
@@ -99,11 +99,11 @@ def test_per_task_logger_multiple_epochs(tmp_path):
     trainer = MockTrainer(current_epoch=1)
     logger.on_validation_epoch_end(trainer, pl_module)
     
-    # Check both epoch files exist
-    assert (log_dir / "epoch_000_per_task.csv").exists()
-    assert (log_dir / "epoch_001_per_task.csv").exists()
-    assert (log_dir / "epoch_000_per_category.csv").exists()
-    assert (log_dir / "epoch_001_per_category.csv").exists()
+    # Check both epoch files exist (with default experiment name)
+    assert (log_dir / "experiment_epoch_000_per_task.csv").exists()
+    assert (log_dir / "experiment_epoch_001_per_task.csv").exists()
+    assert (log_dir / "experiment_epoch_000_per_category.csv").exists()
+    assert (log_dir / "experiment_epoch_001_per_category.csv").exists()
 
 
 def test_per_task_logger_handles_empty_outputs(tmp_path):
@@ -148,8 +148,8 @@ def test_per_task_logger_aggregates_by_category(tmp_path):
     trainer = MockTrainer(current_epoch=0)
     logger.on_validation_epoch_end(trainer, pl_module)
     
-    # Check category CSV
-    per_category_file = log_dir / "epoch_000_per_category.csv"
+    # Check category CSV (with default experiment name)
+    per_category_file = log_dir / "experiment_epoch_000_per_category.csv"
     with open(per_category_file) as f:
         reader = csv.DictReader(f)
         rows = list(reader)
