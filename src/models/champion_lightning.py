@@ -185,9 +185,11 @@ class ChampionLightningModule(pl.LightningModule):
                 self.log('val_transformation_quality_score', transformation_quality_score, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
                 
                 # Store per-example for category aggregation (tensors on CPU)
-                step_output['copy_rate'] = copy_metrics['copy_rate_per_example'].cpu()
-                step_output['change_recall'] = copy_metrics['change_recall_per_example'].cpu()
-                step_output['trans_quality'] = (copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())).cpu()
+                # Note: Replace any NaN values with 0.0 to prevent NaN propagation in aggregation
+                step_output['copy_rate'] = torch.nan_to_num(copy_metrics['copy_rate_per_example'], nan=0.0).cpu()
+                step_output['change_recall'] = torch.nan_to_num(copy_metrics['change_recall_per_example'], nan=0.0).cpu()
+                trans_quality_per_example = copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())
+                step_output['trans_quality'] = torch.nan_to_num(trans_quality_per_example, nan=0.0).cpu()
             except Exception as e:
                 # Log the error but don't crash training
                 import sys
