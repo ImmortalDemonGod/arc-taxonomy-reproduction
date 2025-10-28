@@ -131,12 +131,19 @@ class Exp2PermInvLightningModule(pl.LightningModule):
         cell_total_counts = valid_mask.sum(dim=1)  # Per-example
         
         # Store per-task metrics for category aggregation
-        self.validation_step_outputs.append({
+        step_output = {
             'task_ids': task_ids,
             'grid_correct': grid_metrics['grid_correct'],
             'cell_correct_counts': cell_correct_counts,
             'cell_total_counts': cell_total_counts,
-        })
+        }
+        
+        # Add transformation metrics (CENTRALIZED in validation_helpers)
+        from .validation_helpers import add_transformation_metrics
+        src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_shifted.size(1)]
+        add_transformation_metrics(step_output, src_shifted, tgt_shifted, preds, cell_correct_counts, cell_total_counts, self, batch_size)
+        
+        self.validation_step_outputs.append(step_output)
         
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
@@ -159,24 +166,5 @@ class Exp2PermInvLightningModule(pl.LightningModule):
     
     def configure_optimizers(self):
         """Configure optimizer and scheduler."""
-        optimizer = Adam(
-            self.parameters(),
-            lr=self.hparams.learning_rate,
-            betas=(self.hparams.beta1, self.hparams.beta2),
-            weight_decay=self.hparams.weight_decay,
-        )
-        
-        scheduler = CosineAnnealingWarmRestarts(
-            optimizer,
-            T_0=6,
-            T_mult=1,
-            eta_min=1.6816632143867157e-06,
-        )
-        
-        return {
-            'optimizer': optimizer,
-            'lr_scheduler': {
-                'scheduler': scheduler,
-                'interval': 'epoch',
-            }
-        }
+        from .validation_helpers import create_trial69_optimizer_and_scheduler
+        return create_trial69_optimizer_and_scheduler(self)

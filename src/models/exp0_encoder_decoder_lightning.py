@@ -11,7 +11,7 @@ import torch.nn.functional as F
 import pytorch_lightning as pl
 
 from .encoder_decoder_baseline import GenericEncoderDecoder, create_encoder_decoder_model
-from ..evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
+from ..evaluation.metrics import compute_grid_accuracy
 
 
 class Exp0EncoderDecoderLightningModule(pl.LightningModule):
@@ -132,27 +132,20 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         cell_correct_counts = correct_cells.sum(dim=1)  # Per-example
         cell_total_counts = valid_mask.sum(dim=1)  # Per-example
         
-        # Compute transformation quality metrics
-        if src.size(1) > 1:
-            src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_output.size(1)]
-            try:
-                copy_metrics = compute_copy_metrics_on_batch(src_shifted, tgt_output, preds)
-                self.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
-                self.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
-                
-                # Transformation quality score: F1 * cell_accuracy
-                transformation_quality_score = copy_metrics['transformation_f1'] * grid_metrics['cell_accuracy']
-                self.log('val_transformation_quality_score', transformation_quality_score, batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
-            except Exception:
-                pass
-        
         # Store per-task metrics for category aggregation
-        self.validation_step_outputs.append({
+        step_output = {
             'task_ids': task_ids,
             'grid_correct': grid_metrics['grid_correct'],
             'cell_correct_counts': cell_correct_counts,
             'cell_total_counts': cell_total_counts,
-        })
+        }
+        
+        # Add transformation metrics (CENTRALIZED in validation_helpers)
+        from .validation_helpers import add_transformation_metrics
+        src_shifted = src[:, 1:] if src.size(1) == tgt.size(1) else src[:, :tgt_output.size(1)]
+        add_transformation_metrics(step_output, src_shifted, tgt_output, preds, cell_correct_counts, cell_total_counts, self, batch_size)
+        
+        self.validation_step_outputs.append(step_output)
         
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
@@ -175,24 +168,5 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
     
     def configure_optimizers(self):
         """Configure optimizer and learning rate scheduler to match Trial 69."""
-        optimizer = torch.optim.Adam(
-            self.parameters(),
-            lr=self.hparams.learning_rate,
-            betas=(self.hparams.beta1, self.hparams.beta2),
-            weight_decay=self.hparams.weight_decay,
-        )
-        
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-            optimizer,
-            T_0=6,
-            T_mult=1,
-            eta_min=1.6816632143867157e-06,
-        )
-        
-        return {
-            'optimizer': optimizer,
-            'lr_scheduler': {
-                'scheduler': scheduler,
-                'interval': 'epoch',
-            },
-        }
+        from .validation_helpers import create_trial69_optimizer_and_scheduler
+        return create_trial69_optimizer_and_scheduler(self)

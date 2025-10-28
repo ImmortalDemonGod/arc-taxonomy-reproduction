@@ -7,7 +7,91 @@ import sys
 from pathlib import Path
 from collections import defaultdict
 import json
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
+import torch
+import pytorch_lightning as pl
+
+
+def create_trial69_optimizer_and_scheduler(pl_module: pl.LightningModule) -> dict:
+    """
+    Create optimizer and scheduler matching Trial 69 configuration.
+    
+    CENTRALIZED FUNCTION - All ablation models use identical optimizer config.
+    
+    Args:
+        pl_module: Lightning module with hparams (learning_rate, beta1, beta2, weight_decay)
+    
+    Returns:
+        Dict with optimizer and lr_scheduler config for PyTorch Lightning
+    """
+    optimizer = torch.optim.Adam(
+        pl_module.parameters(),
+        lr=pl_module.hparams.learning_rate,
+        betas=(pl_module.hparams.beta1, pl_module.hparams.beta2),
+        weight_decay=pl_module.hparams.weight_decay,
+    )
+    
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+        optimizer,
+        T_0=6,
+        T_mult=1,
+        eta_min=1.6816632143867157e-06,
+    )
+    
+    return {
+        'optimizer': optimizer,
+        'lr_scheduler': {
+            'scheduler': scheduler,
+            'interval': 'epoch',
+        },
+    }
+
+
+def add_transformation_metrics(
+    step_output: Dict[str, Any],
+    src: torch.Tensor,
+    tgt: torch.Tensor,
+    preds: torch.Tensor,
+    cell_correct_counts: torch.Tensor,
+    cell_total_counts: torch.Tensor,
+    pl_module: pl.LightningModule,
+    batch_size: int
+) -> None:
+    """
+    Compute and add transformation metrics to step_output.
+    
+    CENTRALIZED FUNCTION - All models use this to ensure consistency.
+    
+    Args:
+        step_output: Dict to add metrics to (modified in-place)
+        src: Source input tensor
+        tgt: Target output tensor
+        preds: Model predictions
+        cell_correct_counts: Per-example correct cell counts
+        cell_total_counts: Per-example total cell counts
+        pl_module: Lightning module (for logging)
+        batch_size: Batch size (for logging)
+    """
+    from ..evaluation.metrics import compute_copy_metrics_on_batch
+    
+    if src.size(1) <= 1:
+        return  # Skip if sequence too short
+    
+    try:
+        copy_metrics = compute_copy_metrics_on_batch(src, tgt, preds)
+        
+        # Log aggregated metrics
+        pl_module.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_copy_rate', copy_metrics['copy_rate'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        
+        # Store per-example metrics for category aggregation (tensors on CPU)
+        step_output['copy_rate'] = torch.nan_to_num(copy_metrics['copy_rate_per_example'], nan=0.0).cpu()
+        step_output['change_recall'] = torch.nan_to_num(copy_metrics['change_recall_per_example'], nan=0.0).cpu()
+        trans_quality_per_example = copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())
+        step_output['trans_quality'] = torch.nan_to_num(trans_quality_per_example, nan=0.0).cpu()
+    except Exception:
+        pass  # Silently skip if computation fails
 
 
 def load_task_categories() -> Dict[str, str]:

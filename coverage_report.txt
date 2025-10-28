@@ -1,0 +1,37 @@
+........................................................................ [ 43%]
+.............................s.......................................... [ 87%]
+..................../Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/inorout.py:509: CoverageWarning: Module src/models/validation_helpers was never imported. (module-not-imported)
+  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/inorout.py:509: CoverageWarning: Module src/callbacks/per_task_logger was never imported. (module-not-imported)
+  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/coverage/control.py:915: CoverageWarning: No data was collected. (no-data-collected)
+  self._warn("No data was collected.", slug="no-data-collected")
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytest_cov/plugin.py:358: CovReportWarning: Failed to generate report: No data to report.
+
+  warnings.warn(CovReportWarning(message), stacklevel=1)
+
+WARNING: Failed to generate report: No data to report.
+
+                                                                         [100%]
+=============================== warnings summary ===============================
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_champion_dataloader.py::test_champion_dataloader
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_champion_dataloader.py::test_contract_satisfaction
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_decoder_only_dataloader.py::test_dataloader_creation
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_decoder_only_dataloader.py::test_contract_satisfaction
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_encoder_decoder_dataloader.py::test_encoder_decoder_dataloader
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_encoder_decoder_dataloader.py::test_contract_satisfaction
+  /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/utils/data/dataloader.py:683: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, then device pinned memory won't be used.
+    warnings.warn(warn_msg)
+
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_champion_training.py: 3 warnings
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_lightning_training.py: 6 warnings
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_lightning_validation.py: 5 warnings
+  /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/core/module.py:441: You are trying to `self.log()` but the `self.trainer` reference is not registered on the model yet. This is most likely because the model hasn't been passed to the `Trainer`
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.11.9-final-0 _______________
+
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_equivalence.py:159: Architecture mismatch - needs full jarc_reactor TransformerModel
+163 passed, 1 skipped, 20 warnings in 8.98s

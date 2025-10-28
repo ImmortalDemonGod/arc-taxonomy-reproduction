@@ -1,0 +1,260 @@
+Seed set to 307
+Using 16bit Automatic Mixed Precision (AMP)
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/amp/grad_scaler.py:136: UserWarning: torch.cuda.amp.GradScaler is enabled, but CUDA is not available.  Disabling.
+  warnings.warn(
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 1 batch(es). Logging and checkpointing is suppressed.
+
+  | Name  | Type             | Params | Mode 
+---------------------------------------------------
+0 | model | DecoderOnlyModel | 1.7 M  | train
+---------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.942     Total estimated model params size (MB)
+61        Modules in train mode
+0         Modules in eval mode
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:425: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/utils/data/dataloader.py:683: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, then device pinned memory won't be used.
+  warnings.warn(warn_msg)
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:425: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+
+======================================================================
+FAST DEV RUN TEST - ALL MODELS
+======================================================================
+Data: 5 train, 2 val files
+Running 1 train batch + 1 val batch per model
+
+
+[1/5] Testing Baseline (Decoder-Only, 1.74M params)...
+
+======================================================================
+TESTING: Baseline (Decoder-Only)
+======================================================================
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/1 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s] /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.19it/s]Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.19it/s, train_loss_step=66.40]
+Validation: |          | 0/? [00:00<?, ?it/s][A
+Validation:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0: 100%|██████████| 1/1 [00:01<00:00,  0.71it/s][A
+
+
+============================================================================================================================================
+PER-CATEGORY VALIDATION ACCURACY (Epoch 0)
+============================================================================================================================================
+Category     Grids    Grid Acc     Cell Acc     Copy Rate    Ch Recall    Trans Qual  
+--------------------------------------------------------------------------------------------------------------------------------------------
+S3           4              0.00%       61.75%        1.00%        0.00%      0.0029
+--------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL      4              0.00%       61.75%        1.00%        0.00%      0.0029
+============================================================================================================================================
+
+
+
+                                                                      [AEpoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.44it/s, train_loss_step=66.40, val_grid_accuracy=0.000, val_cell_accuracy=0.618]Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.44it/s, train_loss_step=66.40, val_grid_accuracy=0.000, val_cell_accuracy=0.618, train_loss_epoch=66.40]`Trainer.fit` stopped: `max_steps=1` reached.
+Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.44it/s, train_loss_step=66.40, val_grid_accuracy=0.000, val_cell_accuracy=0.618, train_loss_epoch=66.40]/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/nn/modules/transformer.py:382: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(
+Using 16bit Automatic Mixed Precision (AMP)
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 1 batch(es). Logging and checkpointing is suppressed.
+
+  | Name  | Type                  | Params | Mode 
+--------------------------------------------------------
+0 | model | GenericEncoderDecoder | 1.7 M  | train
+--------------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.836     Total estimated model params size (MB)
+61        Modules in train mode
+0         Modules in eval mode
+
+✅ Baseline (Decoder-Only): PASSED
+
+[2/5] Testing Exp 0 (Encoder-Decoder, 1.71M params)...
+
+======================================================================
+TESTING: Exp 0 (Encoder-Decoder)
+======================================================================
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/1 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s] Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.59it/s]Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.59it/s, train_loss_step=7.220]
+Validation: |          | 0/? [00:00<?, ?it/s][A
+Validation:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0: 100%|██████████| 1/1 [00:00<00:00,  3.52it/s][A
+
+
+============================================================================================================================================
+PER-CATEGORY VALIDATION ACCURACY (Epoch 0)
+============================================================================================================================================
+Category     Grids    Grid Acc     Cell Acc     Copy Rate    Ch Recall    Trans Qual  
+--------------------------------------------------------------------------------------------------------------------------------------------
+S3           4              0.00%       20.92%        0.07%        1.00%      0.0327
+--------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL      4              0.00%       20.92%        0.07%        1.00%      0.0327
+============================================================================================================================================
+
+
+
+                                                                      [AEpoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.08it/s, train_loss_step=7.220, val_grid_accuracy=0.000, val_cell_accuracy=0.209]Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.08it/s, train_loss_step=7.220, val_grid_accuracy=0.000, val_cell_accuracy=0.209, train_loss_epoch=7.220]`Trainer.fit` stopped: `max_steps=1` reached.
+Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.08it/s, train_loss_step=7.220, val_grid_accuracy=0.000, val_cell_accuracy=0.209, train_loss_epoch=7.220]Using 16bit Automatic Mixed Precision (AMP)
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 1 batch(es). Logging and checkpointing is suppressed.
+
+  | Name      | Type                       | Params | Mode 
+-----------------------------------------------------------------
+0 | model     | EncoderDecoderWithGrid2DPE | 1.7 M  | train
+1 | criterion | CrossEntropyLoss           | 0      | train
+-----------------------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.836     Total estimated model params size (MB)
+62        Modules in train mode
+0         Modules in eval mode
+
+✅ Exp 0 (Encoder-Decoder): PASSED
+
+[3/5] Testing Exp 1 (+ Grid2D PE, 1.71M params)...
+
+======================================================================
+TESTING: Exp 1 (+ Grid2D PE)
+======================================================================
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/1 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s] /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pytorch_lightning/utilities/data.py:79: Trying to infer the `batch_size` from an ambiguous collection. The batch size we found is 4. To avoid any miscalculations, use `self.log(..., batch_size=batch_size)`.
+Epoch 0: 100%|██████████| 1/1 [00:01<00:00,  0.82it/s]Epoch 0: 100%|██████████| 1/1 [00:01<00:00,  0.82it/s, train_loss_step=5.120]
+Validation: |          | 0/? [00:00<?, ?it/s][A
+Validation:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0: 100%|██████████| 1/1 [00:00<00:00, 13.43it/s][A
+
+
+============================================================================================================================================
+PER-CATEGORY VALIDATION ACCURACY (Epoch 0)
+============================================================================================================================================
+Category     Grids    Grid Acc     Cell Acc     Copy Rate    Ch Recall    Trans Qual  
+--------------------------------------------------------------------------------------------------------------------------------------------
+S3           4              0.00%       40.80%        0.22%        0.78%      0.0759
+--------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL      4              0.00%       40.80%        0.22%        0.78%      0.0759
+============================================================================================================================================
+
+
+
+                                                                      [AEpoch 0: 100%|██████████| 1/1 [00:01<00:00,  0.76it/s, train_loss_step=5.120, val_grid_accuracy=0.000, val_cell_accuracy=0.408]Epoch 0: 100%|██████████| 1/1 [00:01<00:00,  0.76it/s, train_loss_step=5.120, val_grid_accuracy=0.000, val_cell_accuracy=0.408]`Trainer.fit` stopped: `max_steps=1` reached.
+Epoch 0: 100%|██████████| 1/1 [00:01<00:00,  0.76it/s, train_loss_step=5.120, val_grid_accuracy=0.000, val_cell_accuracy=0.408]Using 16bit Automatic Mixed Precision (AMP)
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 1 batch(es). Logging and checkpointing is suppressed.
+
+  | Name      | Type                     | Params | Mode 
+---------------------------------------------------------------
+0 | model     | EDWithGrid2DPEAndPermInv | 1.7 M  | train
+1 | criterion | CrossEntropyLoss         | 0      | train
+---------------------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.836     Total estimated model params size (MB)
+62        Modules in train mode
+0         Modules in eval mode
+
+✅ Exp 1 (+ Grid2D PE): PASSED
+
+[4/5] Testing Exp 2 (+ PermInv, 1.71M params)...
+
+======================================================================
+TESTING: Exp 2 (+ PermInv)
+======================================================================
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/1 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s] Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  2.04it/s]Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  2.04it/s, train_loss_step=4.690]
+Validation: |          | 0/? [00:00<?, ?it/s][A
+Validation:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0: 100%|██████████| 1/1 [00:00<00:00, 14.23it/s][A
+
+
+============================================================================================================================================
+PER-CATEGORY VALIDATION ACCURACY (Epoch 0)
+============================================================================================================================================
+Category     Grids    Grid Acc     Cell Acc     Copy Rate    Ch Recall    Trans Qual  
+--------------------------------------------------------------------------------------------------------------------------------------------
+S3           4              0.00%        0.00%        0.00%        1.00%      0.0000
+--------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL      4              0.00%        0.00%        0.00%        1.00%      0.0000
+============================================================================================================================================
+
+
+
+                                                                      [AEpoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.74it/s, train_loss_step=4.690, val_grid_accuracy=0.000, val_cell_accuracy=0.000]Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.74it/s, train_loss_step=4.690, val_grid_accuracy=0.000, val_cell_accuracy=0.000]`Trainer.fit` stopped: `max_steps=1` reached.
+Epoch 0: 100%|██████████| 1/1 [00:00<00:00,  1.74it/s, train_loss_step=4.690, val_grid_accuracy=0.000, val_cell_accuracy=0.000]Using 16bit Automatic Mixed Precision (AMP)
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+Running in `fast_dev_run` mode: will run the requested loop using 1 batch(es). Logging and checkpointing is suppressed.
+
+  | Name  | Type                 | Params | Mode 
+-------------------------------------------------------
+0 | model | ChampionArchitecture | 1.7 M  | train
+-------------------------------------------------------
+1.7 M     Trainable params
+0         Non-trainable params
+1.7 M     Total params
+6.898     Total estimated model params size (MB)
+85        Modules in train mode
+0         Modules in eval mode
+
+✅ Exp 2 (+ PermInv): PASSED
+
+[5/5] Testing Exp 3 (Champion, 1.71M params)...
+
+======================================================================
+TESTING: Exp 3 (Champion)
+======================================================================
+Training: |          | 0/? [00:00<?, ?it/s]Training:   0%|          | 0/1 [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s] Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.47it/s]Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.47it/s, train_loss_step=2.830]
+Validation: |          | 0/? [00:00<?, ?it/s][A
+Validation:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s][A
+Validation DataLoader 0: 100%|██████████| 1/1 [00:00<00:00,  3.43it/s][A
+
+
+============================================================================================================================================
+PER-CATEGORY VALIDATION ACCURACY (Epoch 0)
+============================================================================================================================================
+Category     Grids    Grid Acc     Cell Acc     Copy Rate    Ch Recall    Trans Qual  
+--------------------------------------------------------------------------------------------------------------------------------------------
+S3           4              0.00%       23.45%        0.19%        0.50%      0.0000
+--------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL      4              0.00%       23.45%        0.19%        0.50%      0.0000
+============================================================================================================================================
+
+
+
+                                                                      [AEpoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.41it/s, train_loss_step=2.830, val_grid_accuracy=0.000, val_cell_accuracy=0.235]Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.41it/s, train_loss_step=2.830, val_grid_accuracy=0.000, val_cell_accuracy=0.235, train_loss_epoch=2.830]`Trainer.fit` stopped: `max_steps=1` reached.
+Epoch 0: 100%|██████████| 1/1 [00:02<00:00,  0.41it/s, train_loss_step=2.830, val_grid_accuracy=0.000, val_cell_accuracy=0.235, train_loss_epoch=2.830]
+✅ Exp 3 (Champion): PASSED
+
+======================================================================
+SUMMARY
+======================================================================
+Baseline            : ✅ PASSED
+Exp 0               : ✅ PASSED
+Exp 1               : ✅ PASSED
+Exp 2               : ✅ PASSED
+Exp 3               : ✅ PASSED
+
+======================================================================
+🎉 ALL MODELS READY FOR TRAINING!
+======================================================================
+
