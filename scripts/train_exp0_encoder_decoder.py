@@ -127,6 +127,7 @@ def main():
         log_every_n_steps=10,
         enable_progress_bar=True,
         enable_model_summary=True,
+        fast_dev_run=fast_dev_run if fast_dev_run else False,  # CLI override for testing
     )
     
     print("Starting training...")

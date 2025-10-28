@@ -117,15 +117,15 @@ def main():
     # Trainer
     trainer = pl.Trainer(
         max_epochs=100,
-        accelerator='auto',
-        devices=1,
-        precision='16-mixed',
-        gradient_clip_val=1.0,
+        precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
+        gradient_clip_val=1.0,  # Trial 69
+        deterministic=False,  # Set to False for MPS compatibility (Mac)
         callbacks=[checkpoint_callback, per_task_logger, lr_monitor],
         logger=[tb_logger, csv_logger],
-        deterministic=False,  # For MPS compatibility
-        enable_progress_bar=True,
         log_every_n_steps=10,
+        enable_progress_bar=True,
+        enable_model_summary=True,
+        fast_dev_run=fast_dev_run if fast_dev_run else False,  # CLI override for testing
     )
     
     # Print model summary
