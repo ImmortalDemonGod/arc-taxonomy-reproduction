@@ -163,6 +163,7 @@ def compute_copy_metrics_on_batch(
         return tensor.mean() if tensor.numel() > 0 else torch.zeros((), device=tensor.device, dtype=tensor.dtype)
 
     return {
+        # Batch-averaged scalar metrics (for logging)
         "copy_rate": _mean_as_tensor(copy_rate),
         "change_recall": _mean_as_tensor(change_recall),
         "change_precision": _mean_as_tensor(change_precision),
@@ -170,4 +171,9 @@ def compute_copy_metrics_on_batch(
         "pct_changed_target": _mean_as_tensor(pct_changed_target),
         "pct_changed_pred": _mean_as_tensor(pct_changed_pred),
         "cell_accuracy": _mean_as_tensor(cell_accuracy),
+        # Per-example tensors (for per-task logging)
+        "copy_rate_per_example": copy_rate,
+        "change_recall_per_example": change_recall,
+        "change_precision_per_example": change_precision,
+        "transformation_f1_per_example": transformation_f1,
     }

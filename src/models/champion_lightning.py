@@ -189,8 +189,11 @@ class ChampionLightningModule(pl.LightningModule):
                 step_output['change_recall'] = copy_metrics['change_recall_per_example'].cpu()
                 step_output['trans_quality'] = (copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())).cpu()
             except Exception as e:
-                # Transformation metrics may fail if shapes don't align - log but don't crash
-                pass
+                # Log the error but don't crash training
+                import sys
+                print(f"\n⚠️  Warning: Transformation metrics failed: {e}", file=sys.stderr)
+                print(f"   src_shifted shape: {src_shifted.shape}, tgt_output shape: {tgt_output.shape}, preds shape: {preds.shape}", file=sys.stderr)
+                sys.stderr.flush()
         
         self.validation_step_outputs.append(step_output)
         
