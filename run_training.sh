@@ -1,7 +1,14 @@
 #!/bin/bash
 #
-# Quick training launcher for ARC Taxonomy experiments
-# Usage: ./run_training.sh [decoder-only|encoder-decoder|champion|all]
+# Quick training launcher for ARC Taxonomy Ablation Study
+# Usage: ./run_training.sh [baseline|exp0|exp1|exp2|exp3|all|test]
+#
+# Experiments:
+#   baseline - Decoder-Only (catastrophic failure baseline)
+#   exp0     - Generic Encoder-Decoder (+17% gain)
+#   exp1     - + Grid2D Positional Encoding (+15% gain)
+#   exp2     - + Permutation-Invariant Embedding (+3% gain)
+#   exp3     - + Context Bridge (Champion) (+24% gain)
 #
 
 set -e  # Exit on error
@@ -69,59 +76,92 @@ task_count=$(ls -1 data/distributional_alignment/*.json 2>/dev/null | grep -v -E
 print_info "Found $task_count task files"
 
 # Determine which experiment to run
-experiment="${1:-champion}"
+experiment="${1:-exp3}"
+
+# Create logs directory if it doesn't exist
+mkdir -p logs/console_output
+
+# Generate timestamp for log file
+timestamp=$(date +"%Y%m%d_%H%M%S")
 
 case "$experiment" in
-    decoder-only|-1)
-        print_info "Training Decoder-Only baseline (Exp -1)..."
-        python3 scripts/train_decoder_only.py
+    baseline|-1)
+        print_info "Training Baseline: Decoder-Only (catastrophic failure)..."
+        log_file="logs/console_output/baseline_${timestamp}.log"
+        print_info "Console output will be saved to: $log_file"
+        python3 scripts/train_baseline_decoder_only.py 2>&1 | tee "$log_file"
+        print_info "Baseline training complete! Log: $log_file"
         ;;
-    encoder-decoder|0)
-        print_info "Training Encoder-Decoder baseline (Exp 0)..."
-        python3 scripts/train_encoder_decoder.py
+    exp0|0)
+        print_info "Training Exp 0: Generic Encoder-Decoder (+17% over baseline)..."
+        log_file="logs/console_output/exp0_${timestamp}.log"
+        print_info "Console output will be saved to: $log_file"
+        python3 scripts/train_exp0_encoder_decoder.py 2>&1 | tee "$log_file"
+        print_info "Exp 0 training complete! Log: $log_file"
         ;;
-    champion|3)
-        print_info "Training Champion model (Exp 3)..."
-        
-        # Create logs directory if it doesn't exist
-        mkdir -p logs/console_output
-        
-        # Generate timestamp for log file
-        timestamp=$(date +"%Y%m%d_%H%M%S")
-        log_file="logs/console_output/champion_training_${timestamp}.log"
-        
+    exp1|1)
+        print_info "Training Exp 1: + Grid2D Positional Encoding (+15% over Exp 0)..."
+        log_file="logs/console_output/exp1_${timestamp}.log"
+        print_info "Console output will be saved to: $log_file"
+        python3 scripts/train_exp1_grid2d_pe.py 2>&1 | tee "$log_file"
+        print_info "Exp 1 training complete! Log: $log_file"
+        ;;
+    exp2|2)
+        print_info "Training Exp 2: + Permutation-Invariant Embedding (+3% over Exp 1)..."
+        log_file="logs/console_output/exp2_${timestamp}.log"
+        print_info "Console output will be saved to: $log_file"
+        python3 scripts/train_exp2_perminv.py 2>&1 | tee "$log_file"
+        print_info "Exp 2 training complete! Log: $log_file"
+        ;;
+    exp3|3|champion)
+        print_info "Training Exp 3 (Champion): + Context Bridge (+24% over Exp 2)..."
+        log_file="logs/console_output/exp3_champion_${timestamp}.log"
         print_info "Console output will be saved to: $log_file"
         print_info "You can monitor progress with: tail -f $log_file"
-        
-        # Run training with output both to console AND log file
-        python3 scripts/train_champion.py 2>&1 | tee "$log_file"
-        
-        print_info "Training complete! Full log saved to: $log_file"
+        python3 scripts/train_exp3_champion.py 2>&1 | tee "$log_file"
+        print_info "Champion training complete! Log: $log_file"
         ;;
     all)
-        print_info "Training ALL experiments sequentially..."
-        print_info "[1/3] Decoder-Only..."
-        python3 scripts/train_decoder_only.py
-        print_info "[2/3] Encoder-Decoder..."
-        python3 scripts/train_encoder_decoder.py
-        print_info "[3/3] Champion..."
-        python3 scripts/train_champion.py
-        print_info "All experiments complete!"
+        print_info "Training ALL ablation experiments sequentially..."
+        print_info ""
+        print_info "[1/5] Baseline (Decoder-Only)..."
+        python3 scripts/train_baseline_decoder_only.py 2>&1 | tee "logs/console_output/baseline_${timestamp}.log"
+        print_info ""
+        print_info "[2/5] Exp 0 (Encoder-Decoder)..."
+        python3 scripts/train_exp0_encoder_decoder.py 2>&1 | tee "logs/console_output/exp0_${timestamp}.log"
+        print_info ""
+        print_info "[3/5] Exp 1 (+ Grid2D PE)..."
+        python3 scripts/train_exp1_grid2d_pe.py 2>&1 | tee "logs/console_output/exp1_${timestamp}.log"
+        print_info ""
+        print_info "[4/5] Exp 2 (+ PermInv)..."
+        python3 scripts/train_exp2_perminv.py 2>&1 | tee "logs/console_output/exp2_${timestamp}.log"
+        print_info ""
+        print_info "[5/5] Exp 3 (Champion)..."
+        python3 scripts/train_exp3_champion.py 2>&1 | tee "logs/console_output/exp3_${timestamp}.log"
+        print_info ""
+        print_info "All 5 ablation experiments complete!"
+        print_info "Logs saved to: logs/console_output/*_${timestamp}.log"
         ;;
     test)
-        print_info "Running quick test..."
-        python3 scripts/test_all_training.py
+        print_info "Running comprehensive ablation test..."
+        python3 scripts/test_complete_ablation.py
         ;;
     *)
         print_error "Unknown experiment: $experiment"
-        echo "Usage: $0 [decoder-only|encoder-decoder|champion|all|test]"
+        echo "Usage: $0 [baseline|exp0|exp1|exp2|exp3|all|test]"
         echo ""
-        echo "Options:"
-        echo "  decoder-only      - Train Decoder-Only baseline (Exp -1)"
-        echo "  encoder-decoder   - Train Encoder-Decoder baseline (Exp 0)"
-        echo "  champion          - Train Champion model (Exp 3) [default]"
-        echo "  all               - Train all experiments sequentially"
-        echo "  test              - Run quick validation test"
+        echo "Ablation Study Experiments:"
+        echo "  baseline  - Decoder-Only (catastrophic failure baseline)"
+        echo "  exp0      - Generic Encoder-Decoder (+17% gain)"
+        echo "  exp1      - + Grid2D Positional Encoding (+15% gain)"
+        echo "  exp2      - + Permutation-Invariant Embedding (+3% gain)"
+        echo "  exp3      - + Context Bridge (Champion) (+24% gain) [default]"
+        echo "  all       - Train all 5 experiments sequentially"
+        echo "  test      - Run quick validation test"
+        echo ""
+        echo "Aliases:"
+        echo "  -1, 0, 1, 2, 3   - Numeric experiment IDs"
+        echo "  champion         - Alias for exp3"
         exit 1
         ;;
 esac
