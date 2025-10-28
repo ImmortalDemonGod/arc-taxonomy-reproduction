@@ -12,7 +12,7 @@ from .champion_architecture import ChampionArchitecture, create_champion_archite
 from ..evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 
-class ChampionLightningModule(pl.LightningModule):
+class Exp3ChampionLightningModule(pl.LightningModule):
     """
     Lightning module for Champion model with context pairs.
     

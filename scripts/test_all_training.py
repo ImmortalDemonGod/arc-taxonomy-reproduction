@@ -67,33 +67,33 @@ def main():
     
     results = {}
     
-    # Test 1: Decoder-Only
-    print("\n[1/3] Testing Decoder-Only...")
+    # Test 1: Decoder-Only (PARAMETER-MATCHED: 1.74M)
+    print("\n[1/3] Testing Decoder-Only (1.74M params)...")
     train_loader = create_decoder_only_dataloader(train_files, batch_size=4, shuffle=True)
     val_loader = create_decoder_only_dataloader(val_files, batch_size=4, shuffle=False)
     model = DecoderOnlyLightningModule(
         vocab_size=11,
         context_length=512,
-        d_model=128,
-        num_layers=2,
+        d_model=164,  # Matched
+        num_layers=4,  # Matched
         num_heads=4,
-        d_ff=512,
-        dropout=0.1,
+        d_ff=656,  # Matched
+        dropout=0.167,
     )
     results['Decoder-Only'] = test_model('Decoder-Only', model, train_loader, val_loader)
     
-    # Test 2: Encoder-Decoder
-    print("\n[2/3] Testing Encoder-Decoder...")
+    # Test 2: Encoder-Decoder (PARAMETER-MATCHED: 1.71M)
+    print("\n[2/3] Testing Encoder-Decoder (1.71M params)...")
     train_loader = create_encoder_decoder_dataloader(train_files, batch_size=4, shuffle=True)
     val_loader = create_encoder_decoder_dataloader(val_files, batch_size=4, shuffle=False)
     model = EncoderDecoderLightningModule(
         vocab_size=11,
-        d_model=128,
-        num_encoder_layers=2,
-        num_decoder_layers=2,
+        d_model=168,  # Matched
+        num_encoder_layers=1,  # Matched
+        num_decoder_layers=3,  # Matched
         num_heads=4,
-        d_ff=512,
-        dropout=0.1,
+        d_ff=672,  # Matched
+        dropout=0.167,
     )
     results['Encoder-Decoder'] = test_model('Encoder-Decoder', model, train_loader, val_loader)
     

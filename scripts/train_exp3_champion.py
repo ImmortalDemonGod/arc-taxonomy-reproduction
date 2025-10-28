@@ -19,7 +19,7 @@ from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.models.champion_lightning import ChampionLightningModule
+from src.models.exp3_champion_lightning import Exp3ChampionLightningModule
 from src.data.champion_data import create_champion_dataloader
 from src.callbacks import PerTaskMetricsLogger
 
@@ -84,7 +84,7 @@ def main():
     
     # Create model with Trial 69-aligned configuration
     # Using architecture parameters from Trial 69
-    model = ChampionLightningModule(
+    model = Exp3ChampionLightningModule(
         vocab_size=11,
         d_model=160,  # Trial 69 value
         num_encoder_layers=1,  # Trial 69 value
@@ -111,7 +111,7 @@ def main():
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
-        dirpath="checkpoints/exp_3_champion",
+        dirpath="checkpoints/exp3_champion",
         filename="champion-{epoch:02d}-{val_loss:.4f}",
         monitor="val_loss",  # Monitor loss (standard practice)
         mode="min",

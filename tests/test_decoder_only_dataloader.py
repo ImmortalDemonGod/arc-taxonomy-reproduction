@@ -34,12 +34,15 @@ def test_sequence_format():
     task_files = list(DATA_DIR.glob("*.json"))[:2]
     dataset = DecoderOnlyARCDataset(task_files, sep_token=10, max_seq_len=512)
     
-    # Get first sequence
-    seq = dataset[0]
+    # Get first sequence and task_id
+    seq, task_id = dataset[0]
     
-    # Verify it's 1D tensor of longs
+    # Verify sequence is 1D tensor of longs
     assert seq.dim() == 1, "Sequence should be 1D"
     assert seq.dtype == torch.long, "Sequence should be long dtype"
+    
+    # Verify task_id is a string
+    assert isinstance(task_id, str), "Task ID should be a string"
     
     # Check for SEP token (10)
     sep_positions = (seq == 10).nonzero(as_tuple=True)[0]
@@ -51,16 +54,19 @@ def test_sequence_format():
 
 def test_collate_function():
     """Test collate function pads sequences correctly."""
-    # Create mock sequences of different lengths
+    # Create mock sequences with task_ids
     seq1 = torch.tensor([1, 2, 3], dtype=torch.long)
     seq2 = torch.tensor([4, 5, 6, 7, 8], dtype=torch.long)
     seq3 = torch.tensor([9], dtype=torch.long)
     
-    batch = [seq1, seq2, seq3]
-    padded = collate_decoder_only(batch, pad_token=10)
+    batch = [(seq1, 'task1'), (seq2, 'task2'), (seq3, 'task3')]
+    padded, task_ids = collate_decoder_only(batch, pad_token=10)
     
     # Check shape
     assert padded.shape == (3, 5), f"Expected (3, 5), got {padded.shape}"
+    
+    # Check task_ids
+    assert task_ids == ['task1', 'task2', 'task3'], "Task IDs should be preserved"
     
     # Check padding
     assert (padded[0, 3:] == 10).all(), "First sequence should be padded"
@@ -82,12 +88,13 @@ def test_dataloader_creation():
         shuffle=False,
     )
     
-    # Get first batch
-    batch = next(iter(dataloader))
+    # Get a batch
+    batch, task_ids = next(iter(dataloader))
     
-    # Verify batch properties
     assert isinstance(batch, torch.Tensor)
-    assert batch.dim() == 2, "Batch should be 2D"
+    assert batch.dim() == 2
+    assert isinstance(task_ids, list)
+    assert all(isinstance(tid, str) for tid in task_ids), "Batch should be 2D"
     assert batch.dtype == torch.long
     assert batch.size(0) <= 4, "Batch size should be ≤ 4"
     
@@ -105,19 +112,15 @@ def test_contract_satisfaction():
     3. dtype: torch.long
     """
     task_files = list(DATA_DIR.glob("*.json"))[:5]
-    dataloader = create_decoder_only_dataloader(
-        task_files,
-        batch_size=8,
-        shuffle=False,
-    )
+    dataloader = create_decoder_only_dataloader(task_files, batch_size=8)
     
-    batch = next(iter(dataloader))
+    batch, task_ids = next(iter(dataloader))
     
-    # Contract check 1: Batch shape
+    # Contract checks
     assert batch.dim() == 2, "FAILED: Batch should be (batch_size, seq_len)"
-    
-    # Contract check 2: dtype
-    assert batch.dtype == torch.long, "FAILED: Batch should be torch.long"
+    assert batch.dtype == torch.long, "FAILED: Batch should be long dtype"
+    assert isinstance(task_ids, list), "FAILED: task_ids should be a list"
+    assert len(task_ids) == batch.size(0), "FAILED: task_ids length should match batch size"
     
     # Contract check 3: Contains SEP tokens
     has_sep = (batch == 10).any(dim=1).all()

@@ -5,14 +5,17 @@ Trains from scratch on 18 foundational V2 tasks to establish baseline performanc
 """
 import sys
 from pathlib import Path
+import json
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateMonitor
+from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.models.decoder_only_lightning import DecoderOnlyLightningModule
+from src.models.baseline_decoder_only_lightning import BaselineDecoderOnlyLightningModule
 from src.data.decoder_only_data import create_decoder_only_dataloader
+from src.callbacks import PerTaskMetricsLogger
 
 
 def main():
@@ -21,26 +24,27 @@ def main():
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
     
-    # Get data files
-    data_dir = Path(__file__).parent.parent / "data" / "tasks"
-    task_files = sorted(list(data_dir.glob("*.json")))
+    # Get data files - MUST match Champion's data source
+    data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
+    
+    # Load split manifest to get train/val split
+    with open(data_dir / "split_manifest.json") as f:
+        split_info = json.load(f)
+    
+    train_files = [data_dir / fname for fname in split_info["train_files"]]
+    val_files = [data_dir / fname for fname in split_info["val_files"]]
     
     print(f"\n{'='*70}")
-    print(f"TRAINING: Exp -1 (Decoder-Only Baseline)")
+    print(f"TRAINING: Baseline (Decoder-Only)")
     print(f"{'='*70}")
-    print(f"Task files: {len(task_files)}")
+    print(f"Dataset: distributional_alignment (same as Champion)")
+    print(f"Train tasks: {len(train_files)}")
+    print(f"Val tasks: {len(val_files)}")
+    print(f"Total tasks: {len(train_files) + len(val_files)}")
     print(f"Architecture: Decoder-Only with RoPE")
     print(f"Training config: Trial 69 hyperparameters")
     print(f"Loss function: CrossEntropyLoss (Option A)")
     print(f"{'='*70}\n")
-    
-    # Split data: 80% train, 20% val
-    split_idx = int(len(task_files) * 0.8)
-    train_files = task_files[:split_idx]
-    val_files = task_files[split_idx:]
-    
-    print(f"Train files: {len(train_files)}")
-    print(f"Val files: {len(val_files)}\n")
     
     # Create data loaders with Trial 69 batch size
     train_loader = create_decoder_only_dataloader(
@@ -57,15 +61,15 @@ def main():
         max_seq_len=512,
     )
     
-    # Create model with Trial 69-aligned configuration
-    model = DecoderOnlyLightningModule(
+    # Create model (PARAMETER-MATCHED to Champion: 1.74M params)
+    model = BaselineDecoderOnlyLightningModule(
         vocab_size=11,
         context_length=512,
-        d_model=128,
-        num_layers=2,
+        d_model=164,  # Matched to Champion
+        num_layers=4,  # Deeper to match param count
         num_heads=4,
-        d_ff=512,
-        dropout=0.1,
+        d_ff=656,  # Matched to Champion
+        dropout=0.167,
         learning_rate=0.0018498849832733245,  # Trial 69
         weight_decay=0.0,  # Trial 69
         beta1=0.95,  # Trial 69
@@ -77,7 +81,7 @@ def main():
     
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
-        dirpath="checkpoints/exp_-1_decoder_only",
+        dirpath="checkpoints/baseline_decoder_only",
         filename="decoder_only-{epoch:02d}-{val_loss:.4f}",
         monitor="val_loss",
         mode="min",
@@ -85,14 +89,23 @@ def main():
         save_last=True,
     )
     
-    early_stop_callback = EarlyStopping(
-        monitor="val_loss",
-        patience=7,  # Trial 69 value
-        mode="min",
-        verbose=True,
-    )
+    # Per-task metrics logger
+    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics")
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
+    
+    # TensorBoard and CSV loggers
+    tb_logger = TensorBoardLogger(
+        save_dir="logs",
+        name="baseline_decoder_only_training",
+        version=None,
+    )
+    
+    csv_logger = CSVLogger(
+        save_dir="logs",
+        name="baseline_decoder_only_csv",
+        version=None,
+    )
     
     # Create trainer with Trial 69 configuration
     # Note: Using '16-mixed' for precision on Mac/MPS compatibility
@@ -101,7 +114,8 @@ def main():
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
-        callbacks=[checkpoint_callback, early_stop_callback, lr_monitor],
+        callbacks=[checkpoint_callback, per_task_logger, lr_monitor],
+        logger=[tb_logger, csv_logger],
         log_every_n_steps=10,
         enable_progress_bar=True,
         enable_model_summary=True,

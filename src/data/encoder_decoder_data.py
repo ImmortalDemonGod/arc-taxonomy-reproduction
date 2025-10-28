@@ -47,6 +47,7 @@ class EncoderDecoderARCDataset(Dataset):
         
         # Load all examples as (src, tgt) pairs
         self.examples: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        self.task_ids: List[str] = []  # Track task ID for each example
         self._load_data()
     
     def _load_data(self):
@@ -55,6 +56,9 @@ class EncoderDecoderARCDataset(Dataset):
             try:
                 with open(task_file) as f:
                     task_data = json.load(f)
+                
+                # Extract task ID from filename
+                task_id = task_file.stem  # e.g., '007bbfb7' from '007bbfb7.json'
                 
                 # Process training examples
                 for example in task_data.get('train', []):
@@ -65,6 +69,7 @@ class EncoderDecoderARCDataset(Dataset):
                     # Only include if within max length
                     if src.size(0) <= self.max_seq_len and tgt.size(0) <= self.max_seq_len:
                         self.examples.append((src, tgt))
+                        self.task_ids.append(task_id)
                 
             except Exception as e:
                 print(f"Warning: Failed to load {task_file}: {e}")
@@ -97,37 +102,40 @@ class EncoderDecoderARCDataset(Dataset):
     def __len__(self) -> int:
         return len(self.examples)
     
-    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor, str]:
         """
-        Get (src, tgt) pair by index.
+        Get (src, tgt, task_id) by index.
         
         Returns:
-            Tuple of (src, tgt) where:
+            Tuple of (src, tgt, task_id) where:
             - src: 1D tensor of input tokens
             - tgt: 1D tensor of output tokens
+            - task_id: str task identifier
         """
-        return self.examples[idx]
+        src, tgt = self.examples[idx]
+        return src, tgt, self.task_ids[idx]
 
 
 def collate_encoder_decoder(
-    batch: List[Tuple[torch.Tensor, torch.Tensor]], 
+    batch: List[Tuple[torch.Tensor, torch.Tensor, str]], 
     pad_token: int = 10
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> Tuple[torch.Tensor, torch.Tensor, List[str]]:
     """
     Collate function for encoder-decoder batches.
     
     Pads src and tgt sequences separately.
     
     Args:
-        batch: List of (src, tgt) tuples
+        batch: List of (src, tgt, task_id) tuples
         pad_token: Token ID to use for padding
         
     Returns:
-        Tuple of (src_batch, tgt_batch) where:
+        Tuple of (src_batch, tgt_batch, task_ids) where:
         - src_batch: (batch_size, max_src_len)
         - tgt_batch: (batch_size, max_tgt_len)
+        - task_ids: List of task identifiers
     """
-    srcs, tgts = zip(*batch)
+    srcs, tgts, task_ids = zip(*batch)
     
     # Pad src sequences
     max_src_len = max(src.size(0) for src in srcs)
@@ -151,7 +159,7 @@ def collate_encoder_decoder(
             padded_tgt = tgt
         padded_tgts.append(padded_tgt)
     
-    return torch.stack(padded_srcs), torch.stack(padded_tgts)
+    return torch.stack(padded_srcs), torch.stack(padded_tgts), list(task_ids)
 
 
 def create_encoder_decoder_dataloader(

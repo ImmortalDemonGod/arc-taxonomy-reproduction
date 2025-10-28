@@ -24,7 +24,10 @@ def test_encoder_decoder_dataset():
     assert len(dataset) > 0
     
     # Get first example
-    src, tgt = dataset[0]
+    src, tgt, task_id = dataset[0]
+    
+    # Verify task_id is a string
+    assert isinstance(task_id, str), "Task ID should be a string"
     
     assert src.dim() == 1, "src should be 1D"
     assert tgt.dim() == 1, "tgt should be 1D"
@@ -44,7 +47,11 @@ def test_encoder_decoder_dataloader():
         shuffle=False,
     )
     
-    src_batch, tgt_batch = next(iter(dataloader))
+    src_batch, tgt_batch, task_ids = next(iter(dataloader))
+    
+    # Verify task_ids
+    assert isinstance(task_ids, list), "task_ids should be a list"
+    assert all(isinstance(tid, str) for tid in task_ids), "All task_ids should be strings"
     
     # Verify batch properties
     assert src_batch.dim() == 2, "src_batch should be (B, L_src)"
@@ -67,7 +74,11 @@ def test_contract_satisfaction():
     task_files = list(DATA_DIR.glob("*.json"))[:5]
     dataloader = create_encoder_decoder_dataloader(task_files, batch_size=8)
     
-    src_batch, tgt_batch = next(iter(dataloader))
+    src_batch, tgt_batch, task_ids = next(iter(dataloader))
+    
+    # Verify task_ids
+    assert isinstance(task_ids, list), "FAILED: task_ids should be a list"
+    assert len(task_ids) == src_batch.size(0), "FAILED: task_ids length should match batch size"
     
     # Contract checks
     assert src_batch.dim() == 2, "FAILED: src should be (B, L_src)"

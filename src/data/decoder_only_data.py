@@ -50,6 +50,7 @@ class DecoderOnlyARCDataset(Dataset):
         
         # Load and linearize all examples
         self.sequences: List[torch.Tensor] = []
+        self.task_ids: List[str] = []  # Track task ID for each sequence
         self._load_data()
     
     def _load_data(self):
@@ -59,6 +60,9 @@ class DecoderOnlyARCDataset(Dataset):
                 with open(task_file) as f:
                     task_data = json.load(f)
                 
+                # Extract task ID from filename
+                task_id = task_file.stem  # e.g., '007bbfb7' from '007bbfb7.json'
+                
                 # Process training examples
                 for example in task_data.get('train', []):
                     seq = self._linearize_example(
@@ -67,6 +71,7 @@ class DecoderOnlyARCDataset(Dataset):
                     )
                     if seq.size(0) <= self.max_seq_len:
                         self.sequences.append(seq)
+                        self.task_ids.append(task_id)
                 
             except Exception as e:
                 print(f"Warning: Failed to load {task_file}: {e}")
@@ -101,35 +106,34 @@ class DecoderOnlyARCDataset(Dataset):
     def __len__(self) -> int:
         return len(self.sequences)
     
-    def __getitem__(self, idx: int) -> torch.Tensor:
-        """
-        Get sequence by index.
-        
-        Returns:
-            Tensor of shape (seq_len,) with token IDs
-        """
-        return self.sequences[idx]
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, str]:
+        """Get sequence and task_id by index."""
+        return self.sequences[idx], self.task_ids[idx]
 
 
-def collate_decoder_only(batch: List[torch.Tensor], pad_token: int = 10) -> torch.Tensor:
+def collate_decoder_only(batch: List[tuple[torch.Tensor, str]], pad_token: int = 10) -> tuple[torch.Tensor, List[str]]:
     """
     Collate function for decoder-only batches.
     
     Pads sequences to max length in batch.
     
     Args:
-        batch: List of 1D tensors (varying lengths)
+        batch: List of (sequence, task_id) tuples
         pad_token: Token ID to use for padding
         
     Returns:
+        Tuple of (padded_sequences, task_ids)
         Tensor of shape (batch_size, max_len)
     """
+    # Unpack sequences and task_ids
+    sequences, task_ids = zip(*batch)
+    
     # Find max length in batch
-    max_len = max(seq.size(0) for seq in batch)
+    max_len = max(seq.size(0) for seq in sequences)
     
     # Pad all sequences
     padded_batch = []
-    for seq in batch:
+    for seq in sequences:
         if seq.size(0) < max_len:
             padding = torch.full((max_len - seq.size(0),), pad_token, dtype=torch.long)
             padded_seq = torch.cat([seq, padding])
@@ -137,7 +141,7 @@ def collate_decoder_only(batch: List[torch.Tensor], pad_token: int = 10) -> torc
             padded_seq = seq
         padded_batch.append(padded_seq)
     
-    return torch.stack(padded_batch)
+    return torch.stack(padded_batch), list(task_ids)
 
 
 def create_decoder_only_dataloader(

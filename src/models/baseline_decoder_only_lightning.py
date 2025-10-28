@@ -18,7 +18,7 @@ from .decoder_only_baseline import (
 from ..evaluation.metrics import compute_grid_accuracy
 
 
-class DecoderOnlyLightningModule(pl.LightningModule):
+class BaselineDecoderOnlyLightningModule(pl.LightningModule):
     """
     Lightning module for training decoder-only baseline.
     
@@ -79,6 +79,9 @@ class DecoderOnlyLightningModule(pl.LightningModule):
         self.sep_token = sep_token
         self.pad_token = pad_token
         
+        # For per-category metric collection
+        self.validation_step_outputs = []
+        
     def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
         """Forward pass through model."""
         return self.model(input_ids)
@@ -117,9 +120,9 @@ class DecoderOnlyLightningModule(pl.LightningModule):
         
         return loss
     
-    def validation_step(self, batch: torch.Tensor, batch_idx: int) -> torch.Tensor:
+    def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
         """Validation step."""
-        sequences = batch
+        sequences, task_ids = batch
         
         # Create input and targets
         input_ids = sequences[:, :-1]
@@ -144,9 +147,32 @@ class DecoderOnlyLightningModule(pl.LightningModule):
         self.log('val_grid_accuracy', grid_metrics['grid_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_cell_accuracy', grid_metrics['cell_accuracy'], batch_size=batch_size, prog_bar=True, on_step=False, on_epoch=True)
         
+        # Store per-task metrics for category aggregation
+        self.validation_step_outputs.append({
+            'task_ids': task_ids,
+            'grid_correct': grid_metrics['grid_correct'],
+            'cell_correct_counts': grid_metrics['cell_correct_counts'],
+            'cell_total_counts': grid_metrics['cell_total_counts'],
+        })
+        
         self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         return loss
+    
+    def on_validation_epoch_end(self):
+        """Aggregate and print per-category metrics at end of validation epoch."""
+        from .validation_helpers import load_task_categories, aggregate_validation_metrics, print_category_table
+        
+        if not self.validation_step_outputs:
+            return
+        
+        # Load task categories and aggregate metrics
+        task_categories = load_task_categories()
+        category_stats = aggregate_validation_metrics(self.validation_step_outputs, task_categories)
+        print_category_table(category_stats, self.current_epoch)
+        
+        # Clear for next epoch
+        self.validation_step_outputs.clear()
     
     def configure_optimizers(self):
         """Configure optimizer and learning rate scheduler to match Trial 69."""
