@@ -4,6 +4,7 @@ Training script for Decoder-Only baseline (Exp -1).
 Trains from scratch on 18 foundational V2 tasks to establish baseline performance.
 """
 import sys
+import argparse
 from pathlib import Path
 import json
 import pytorch_lightning as pl
@@ -20,6 +21,12 @@ from src.callbacks import PerTaskMetricsLogger
 
 def main():
     """Train Decoder-Only baseline (Exp -1)."""
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--fast_dev_run', type=int, default=None,
+                        help='Run fast_dev_run with N batches for testing')
+    args, unknown = parser.parse_known_args()
+    fast_dev_run = args.fast_dev_run
     
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
@@ -89,14 +96,14 @@ def main():
         save_last=True,
     )
     
-    # Per-task metrics logger
-    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics")
+    # Per-task metrics logger (experiment-specific directory)
+    per_task_logger = PerTaskMetricsLogger(log_dir="logs/per_task_metrics/baseline")
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     
     # TensorBoard and CSV loggers
     tb_logger = TensorBoardLogger(
-        save_dir="logs",
+        save_dir="logs/baseline_decoder_only",
         name="baseline_decoder_only_training",
         version=None,
     )
@@ -119,6 +126,7 @@ def main():
         log_every_n_steps=10,
         enable_progress_bar=True,
         enable_model_summary=True,
+        fast_dev_run=fast_dev_run if fast_dev_run else False,  # CLI override for testing
     )
     
     print("Starting training...")

@@ -4,6 +4,7 @@ Training script for Encoder-Decoder baseline (Exp 0).
 Trains from scratch on 18 foundational V2 tasks to test E-D architecture contribution.
 """
 import sys
+import argparse
 from pathlib import Path
 import json
 import pytorch_lightning as pl
@@ -20,6 +21,13 @@ from src.callbacks import PerTaskMetricsLogger
 
 def main():
     """Train Encoder-Decoder baseline (Exp 0)."""
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--fast_dev_run', type=int, default=None,
+                        help='Run fast_dev_run with N batches for testing')
+    args, unknown = parser.parse_known_args()
+    fast_dev_run = args.fast_dev_run
+
     
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)

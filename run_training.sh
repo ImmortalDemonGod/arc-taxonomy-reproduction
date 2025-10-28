@@ -146,21 +146,21 @@ case "$experiment" in
         print_info "Logs saved to: logs/console_output/*_${timestamp}.log"
         ;;
     test)
-        print_info "Running FAST smoke test (fast_dev_run on all 5 experiments)..."
+        print_info "Running FAST smoke test (fast_dev_run=5 batches on all 5 experiments)..."
         print_info "This validates all models can run without full training."
         print_info ""
         print_info "[1/5] Testing Baseline..."
-        python3 scripts/train_baseline_decoder_only.py --trainer.fast_dev_run=5
+        python3 scripts/train_baseline_decoder_only.py --fast_dev_run=5
         print_info "[2/5] Testing Exp 0..."
-        python3 scripts/train_exp0_encoder_decoder.py --trainer.fast_dev_run=5
+        python3 scripts/train_exp0_encoder_decoder.py --fast_dev_run=5
         print_info "[3/5] Testing Exp 1..."
-        python3 scripts/train_exp1_grid2d_pe.py --trainer.fast_dev_run=5
+        python3 scripts/train_exp1_grid2d_pe.py --fast_dev_run=5
         print_info "[4/5] Testing Exp 2..."
-        python3 scripts/train_exp2_perminv.py --trainer.fast_dev_run=5
+        python3 scripts/train_exp2_perminv.py --fast_dev_run=5
         print_info "[5/5] Testing Exp 3 (Champion)..."
-        python3 scripts/train_exp3_champion.py --trainer.fast_dev_run=5
+        python3 scripts/train_exp3_champion.py --fast_dev_run=5
         print_info ""
-        print_info "✅ All 5 experiments passed smoke test!"
+        print_info "✅ All 5 experiments passed smoke test (5 batches each)!"
         ;;
     test-arch)
         print_info "Running architecture validation tests..."

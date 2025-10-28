@@ -10,6 +10,7 @@ Trains from scratch on 18 foundational V2 tasks with full champion architecture:
 Uses CrossEntropyLoss (Option A - simple, standard approach).
 """
 import sys
+import argparse
 from pathlib import Path
 import torch
 import pytorch_lightning as pl
@@ -26,6 +27,13 @@ from src.callbacks import PerTaskMetricsLogger
 
 def main():
     """Train Champion architecture (Exp 3)."""
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--fast_dev_run', type=int, default=None,
+                        help='Run fast_dev_run with N batches for testing')
+    args, unknown = parser.parse_known_args()
+    fast_dev_run = args.fast_dev_run
+
     
     # Performance optimizations for Tensor Cores (A6000)
     # Uses TensorFloat32 for ~2-3x faster matmuls with minimal precision loss

@@ -6,6 +6,7 @@ This experiment tests the contribution of 2D spatial bias over generic 1D encodi
 Expected result: +15-25% improvement over Exp 0 (Generic E-D baseline).
 """
 import sys
+import argparse
 from pathlib import Path
 import json
 import pytorch_lightning as pl
@@ -22,6 +23,13 @@ from src.callbacks import PerTaskMetricsLogger
 
 def main():
     """Train Exp 1: E-D + Grid2D PE."""
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--fast_dev_run', type=int, default=None,
+                        help='Run fast_dev_run with N batches for testing')
+    args, unknown = parser.parse_known_args()
+    fast_dev_run = args.fast_dev_run
+
     
     # Set seed for reproducibility
     pl.seed_everything(307, workers=True)
