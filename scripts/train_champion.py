@@ -13,13 +13,15 @@ import sys
 from pathlib import Path
 import torch
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateMonitor
+from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.champion_lightning import ChampionLightningModule
 from src.data.champion_data import create_champion_dataloader
+from src.callbacks import PerTaskMetricsLogger
 
 
 def main():
@@ -59,6 +61,8 @@ def main():
     print(f"Loss function: CrossEntropyLoss (Option A)")
     print(f"Context pairs: 2 (fixed)")
     print(f"Expected baseline: ~2.34% grid accuracy (champion_bootstrap)")
+    print(f"Early stopping: DISABLED (will train full 100 epochs)")
+    print(f"Per-task metrics: Saved to logs/per_task_metrics/ after each epoch")
     print(f"{'='*70}\n")
     
     # Create data loaders with Trial 69 batch size
@@ -113,25 +117,40 @@ def main():
         mode="min",
         save_top_k=3,
         save_last=True,
+        every_n_epochs=1,  # Save checkpoint every epoch for crash recovery
     )
     
-    early_stop_callback = EarlyStopping(
-        monitor="val_loss",  # Stop when loss plateaus
-        patience=7,  # Trial 69 value
-        mode="min",
-        verbose=True,
+    # Per-task metrics logger - writes CSV files after each epoch
+    # Robust to GPU crashes - all data is on disk immediately
+    per_task_logger = PerTaskMetricsLogger(
+        log_dir="logs/per_task_metrics"
     )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     
+    # Loggers for comprehensive metric tracking
+    tb_logger = TensorBoardLogger(
+        save_dir="logs",
+        name="champion_training",
+        version=None,  # Auto-increment version
+    )
+    
+    csv_logger = CSVLogger(
+        save_dir="logs",
+        name="champion_csv",
+        version=None,
+    )
+    
     # Create trainer with Trial 69 configuration
+    # NOTE: Early stopping REMOVED for overnight run - will train full 100 epochs
     # Note: Using '16-mixed' for precision on Mac/MPS compatibility
     trainer = pl.Trainer(
         max_epochs=100,
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
-        callbacks=[checkpoint_callback, early_stop_callback, lr_monitor],
+        callbacks=[checkpoint_callback, per_task_logger, lr_monitor],
+        logger=[tb_logger, csv_logger],  # Multiple loggers for comprehensive tracking
         log_every_n_steps=10,
         enable_progress_bar=True,
         enable_model_summary=True,

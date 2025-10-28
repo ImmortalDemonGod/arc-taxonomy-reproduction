@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.9, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/tomriddle1/Holistic-Performance-Enhancement
+configfile: pyproject.toml
+plugins: jaxtyping-0.3.3, anyio-4.9.0, asyncio-1.1.0, hypothesis-6.138.2, cov-6.2.1, mock-3.14.1, typeguard-4.4.4, hydra-core-1.3.2
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 129 items
+
+tests/test_bridge.py ...............                                     [ 11%]
+tests/test_champion_architecture.py .......                              [ 17%]
+tests/test_champion_dataloader.py ...                                    [ 19%]
+tests/test_checkpoint_utils.py ......                                    [ 24%]
+tests/test_data_loaders.py ........                                      [ 30%]
+tests/test_decoder_only_dataloader.py .....                              [ 34%]
+tests/test_decoder_only_model.py ......                                  [ 38%]
+tests/test_ed_with_grid2d_pe.py ......                                   [ 43%]
+tests/test_ed_with_grid2d_pe_and_perminv.py ......                       [ 48%]
+tests/test_embedding.py ...............                                  [ 59%]
+tests/test_encoder_decoder_baseline.py .....                             [ 63%]
+tests/test_encoder_decoder_dataloader.py ...                             [ 65%]
+tests/test_equivalence.py ....s.                                         [ 70%]
+tests/test_model.py .............                                        [ 80%]
+tests/test_nn_utils.py ...                                               [ 82%]
+tests/test_positional_encoding.py .............                          [ 93%]
+tests/test_positional_encoding_1d.py .........                           [100%]
+
+=============================== warnings summary ===============================
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_champion_dataloader.py::test_champion_dataloader
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_champion_dataloader.py::test_contract_satisfaction
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_decoder_only_dataloader.py::test_dataloader_creation
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_decoder_only_dataloader.py::test_contract_satisfaction
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_encoder_decoder_dataloader.py::test_encoder_decoder_dataloader
+cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/tests/test_encoder_decoder_dataloader.py::test_contract_satisfaction
+  /Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/utils/data/dataloader.py:683: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, then device pinned memory won't be used.
+    warnings.warn(warn_msg)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_equivalence.py:159: Architecture mismatch - needs full jarc_reactor TransformerModel
+================== 128 passed, 1 skipped, 6 warnings in 3.33s ==================
