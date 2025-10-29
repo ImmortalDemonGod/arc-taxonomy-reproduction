@@ -293,6 +293,8 @@ def create_champion_dataloader(
     batch_size: int = 8,
     shuffle: bool = True,
     task_categories: Dict[str, str] = None,  # Optional: task_id -> category mapping
+    num_workers: int = 0,  # Parallel data loading
+    pin_memory: bool = True,  # Faster GPU transfer
     **dataset_kwargs
 ) -> torch.utils.data.DataLoader:
     """
@@ -333,6 +335,6 @@ def create_champion_dataloader(
         batch_size=batch_size,
         shuffle=shuffle,
         collate_fn=lambda batch: collate_champion(batch, dataset.pad_token),
-        num_workers=0,              # Use 0 to avoid multiprocessing pickle errors
-        pin_memory=True,            # Faster GPU transfer
+        num_workers=num_workers,
+        pin_memory=pin_memory,
     )
