@@ -19,7 +19,7 @@ target_modules:
 
 # Training Hyperparameters (Per Task)
 training:
-  num_epochs: 50         # Sufficient for convergence on single-task data
+  # NO EPOCH CAP - trains until early stopping patience is reached
   learning_rate: 0.0001849  # EXACTLY 10x lower than Champion's 0.001849 LR
   batch_size: 4          # Small due to limited examples per task
   optimizer: "adamw"

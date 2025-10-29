@@ -181,12 +181,15 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     
     # Training history
     best_loss = float('inf')
+    best_model_state = None  # Store best model weights
     epochs_no_improve = 0
     training_history = []
     start_time = time.time()
     num_examples = len(loader.dataset) if hasattr(loader, 'dataset') else len(loader) * config['training']['batch_size']
     
-    for epoch in range(config['training']['num_epochs']):
+    # Remove epoch cap - train until early stopping
+    epoch = 0
+    while True:
         epoch_loss = 0.0
         count = 0
         
@@ -230,16 +233,23 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
         avg_loss = epoch_loss / count
         training_history.append({'epoch': epoch + 1, 'loss': avg_loss})
         
-        # Early stopping
+        # Early stopping - save best model
         if avg_loss < best_loss - config['training']['min_delta']:
             best_loss = avg_loss
             epochs_no_improve = 0
+            # Save best model state (deep copy to avoid reference issues)
+            import copy
+            best_model_state = copy.deepcopy(model.state_dict())
         else:
             epochs_no_improve += 1
             
         if epochs_no_improve >= config['training']['patience']:
-            # Early stopped
+            # Early stopped - restore best model
+            if best_model_state is not None:
+                model.load_state_dict(best_model_state)
             break
+        
+        epoch += 1
     
     training_time = time.time() - start_time
     
@@ -349,8 +359,8 @@ def main():
     print(f"LoRA config: rank={config['lora_rank']}, alpha={config['lora_alpha']}")
     print(f"Learning rate: {config['training']['learning_rate']:.7f} (10x lower than Champion)")
     print(f"Batch size: {config['training']['batch_size']}")
-    print(f"Max epochs per task: {config['training']['num_epochs']}")
-    print(f"Early stopping: patience={config['training']['patience']}")
+    print(f"Training: Until early stopping (patience={config['training']['patience']} epochs, min_delta={config['training']['min_delta']})")
+    print(f"Best model checkpoint: Automatically saved and restored")
     print(f"Output: {output_base_dir}")
     print(f"Device: {device}")
     if fast_dev_run:
