@@ -166,8 +166,8 @@ def main():
     # Parse CLI arguments (same as Champion training)
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fast_dev_run', type=int, default=None,
-                        help='Run fast dev test with N tasks for testing')
+    parser.add_argument('--fast_dev_run', type=int, nargs='?', const=2, default=None,
+                        help='Run fast dev test with N tasks (default: 2 if flag provided)')
     args, unknown = parser.parse_known_args()
     fast_dev_run = args.fast_dev_run
     
