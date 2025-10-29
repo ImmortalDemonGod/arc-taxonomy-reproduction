@@ -1,0 +1,37 @@
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/nn/modules/transformer.py:382: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  warnings.warn(
+/Users/tomriddle1/.pyenv/versions/3.11.9/lib/python3.11/site-packages/torch/utils/data/dataloader.py:683: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, then device pinned memory won't be used.
+  warnings.warn(warn_msg)
+Minimal LoRA Pipeline Test
+============================================================
+
+1. Loading Champion (CPU only)...
+   ✅ Loaded: 1,724,619 params
+
+2. Setting up LoRA...
+   ✅ LoRA ready: 168,960 trainable params (rest frozen)
+
+3. Loading one task...
+   ✅ Task a85d4709: 38 batches
+
+4. Testing forward pass (1 batch, no training)...
+   ✅ Forward pass works: output shape torch.Size([4, 521, 11])
+
+5. Testing backward pass (1 step, no optimization)...
+   ✅ Backward pass works: loss=0.2795
+
+6. Testing adapter save/load...
+   ✅ Saved to outputs/test_lora_minimal
+   ✅ Reloaded: 168,960 params
+
+============================================================
+🎉 ALL TESTS PASSED
+============================================================
+
+Pipeline is ready. LoRA:
+  - Correctly freezes base model
+  - Adds 168,960 trainable params
+  - Forward/backward work
+  - Save/load work
+
+Next: Run full training with `python scripts/train_atomic_loras.py`

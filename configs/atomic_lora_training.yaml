@@ -1,0 +1,56 @@
+# LoRA Configuration for Atomic Skill Training (Phase 0)
+# Based on critical design decisions from VISUAL_CLASSIFIER_IMPLEMENTATION.md
+
+# LoRA Architecture
+lora_rank: 16            # Balance between capacity and efficiency (~50k params per adapter)
+lora_alpha: 32           # Scaling factor (standard practice: 2×rank)
+lora_dropout: 0.0        # No dropout during fine-tuning (small datasets)
+
+# Target Modules (CRITICAL DECISION - documented in Decision #6)
+# Targeting feedforward layers in encoder/decoder
+# Champion uses PyTorch Transformer which has combined attention weights
+target_modules:
+  - "linear1"            # First feedforward layer in each transformer layer
+  - "linear2"            # Second feedforward layer in each transformer layer
+
+# Rationale: Feedforward layers capture task-specific transformations.
+# PyTorch Transformer doesn't expose q_proj/k_proj/v_proj separately.
+# These layers are where task-specific patterns are learned.
+
+# Training Hyperparameters (Per Task)
+training:
+  num_epochs: 50         # Sufficient for convergence on single-task data
+  learning_rate: 0.0001849  # EXACTLY 10x lower than Champion's 0.001849 LR
+  batch_size: 4          # Small due to limited examples per task
+  optimizer: "adamw"
+  weight_decay: 0.01     # Champion used 0.0, but LoRA benefits from regularization
+  max_grad_norm: 1.0     # Gradient clipping for stability
+  
+  # Early stopping
+  patience: 10           # Stop if no improvement for 10 epochs
+  min_delta: 0.001       # Minimum improvement threshold
+  
+  # Data collection
+  log_per_epoch: true    # Save per-epoch metrics for analysis
+  save_training_curve: true  # Save loss curves for each task
+
+# Model Loading
+champion_checkpoint: "weights/champion-epoch=36-val_loss=0.5926.ckpt"
+strip_lightning_prefix: true  # Remove "model." prefix from checkpoint keys
+
+# Data
+data_dir: "data/distributional_alignment"
+max_grid_size: 30        # Pad all grids to 30×30
+
+# Output
+output_dir: "outputs/atomic_loras"  # Where to save trained adapters
+collect_metadata: true   # Save task metadata (category, num_examples, etc)
+
+# Logging
+log_every_n_epochs: 5
+save_adapter: true
+adapter_output_format: "safetensors"  # Preferred over .bin for security
+
+# Parallelization
+num_workers: 4           # For data loading
+pin_memory: true         # Faster GPU transfer
