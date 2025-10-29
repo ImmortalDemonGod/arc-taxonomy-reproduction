@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.models.exp3_champion_lightning import Exp3ChampionLightningModule
 from src.data.champion_data import create_champion_dataloader
 from src.lora_utils import is_peft_available
+from src.evaluation.metrics import compute_grid_accuracy
 
 def load_champion(ckpt_path: Path, device: str) -> nn.Module:
     """Load Champion model from Lightning checkpoint."""
@@ -63,10 +64,9 @@ def setup_lora(model: nn.Module, config: dict) -> nn.Module:
 
 
 def evaluate_model(model: nn.Module, loader, device: str) -> dict:
-    """Evaluate model and return grid accuracy."""
+    """Evaluate model using standard compute_grid_accuracy function."""
     model.eval()
-    correct_grids = 0
-    total_grids = 0
+    all_correct = []
     
     with torch.no_grad():
         for batch in loader:
@@ -92,15 +92,21 @@ def evaluate_model(model: nn.Module, loader, device: str) -> dict:
                 
                 preds = torch.argmax(logits, dim=-1)
                 
-                # Grid accuracy: all tokens correct
-                for i in range(tgt_output.size(0)):
-                    if torch.equal(preds[i], tgt_output[i]):
-                        correct_grids += 1
-                    total_grids += 1
+                # Use standard metrics function
+                metrics = compute_grid_accuracy(preds, tgt_output, pad_token=10)
+                all_correct.append(metrics['grid_correct'])
             except:
                 continue
     
+    if len(all_correct) == 0:
+        return {'accuracy': 0.0, 'correct_grids': 0, 'total_grids': 0}
+    
+    # Aggregate results
+    grid_correct = torch.cat(all_correct)
+    correct_grids = grid_correct.sum().item()
+    total_grids = len(grid_correct)
     accuracy = (correct_grids / total_grids * 100) if total_grids > 0 else 0.0
+    
     return {
         'accuracy': accuracy,
         'correct_grids': correct_grids,
