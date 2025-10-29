@@ -88,12 +88,38 @@ echo "  Task files generated: $NEW_TASK_COUNT / 400"
 if [ "$NEW_TASK_COUNT" -eq 400 ]; then
     echo "  Status: ✅ SUCCESS"
     echo ""
-    echo "Data regeneration complete!"
-    echo "Split manifest is already up-to-date with size-aware stratification."
+    
+    # Create size-aware train/val split
+    echo "========================================================================"
+    echo "CREATING SIZE-AWARE SPLIT"
+    echo "========================================================================"
+    python3 "$SCRIPT_DIR/create_size_aware_split.py"
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ ERROR: Split creation failed"
+        exit 1
+    fi
+    
+    echo ""
+    echo "========================================================================"
+    echo "VERIFYING SPLIT QUALITY"
+    echo "========================================================================"
+    python3 "$SCRIPT_DIR/verify_split.py"
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ WARNING: Split verification had issues (but continuing)"
+    fi
+    
+    echo ""
+    echo "========================================================================"
+    echo "✅ DATA REGENERATION COMPLETE"
+    echo "========================================================================"
+    echo "Generated: 400 tasks × 150 samples = 60,000 examples"
+    echo "Split created: train/val with size-aware stratification"
     echo ""
     echo "Next steps:"
-    echo "  python3 scripts/verify_split.py       # Verify split quality"
-    echo "  ./run_training.sh champion            # Start training"
+    echo "  ./run_training.sh test      # Quick smoke test"
+    echo "  ./run_training.sh champion  # Full training"
     exit 0
 else
     echo "  Status: ❌ FAILED"
