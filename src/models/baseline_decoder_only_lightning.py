@@ -30,10 +30,10 @@ class BaselineDecoderOnlyLightningModule(pl.LightningModule):
         self,
         vocab_size: int = 11,
         context_length: int = 512,
-        d_model: int = 128,
-        num_layers: int = 2,
+        d_model: int = 168,  # Ablation parameter-matching: 1.7M params
+        num_layers: int = 4,  # Match total layers of E-D models (1+3)
         num_heads: int = 4,
-        d_ff: int = 512,
+        d_ff: int = 672,  # Ablation parameter-matching: 1.7M params
         rope_theta: float = 10000.0,
         dropout: float = 0.1,
         learning_rate: float = 0.0018498849832733245,  # Trial 69 optimized

@@ -25,11 +25,11 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
     def __init__(
         self,
         vocab_size: int = 11,
-        d_model: int = 128,
-        num_encoder_layers: int = 2,
-        num_decoder_layers: int = 2,
+        d_model: int = 168,  # Ablation parameter-matching: 1.7M params
+        num_encoder_layers: int = 1,  # Match Champion architecture
+        num_decoder_layers: int = 3,  # Match Champion architecture
         num_heads: int = 4,
-        d_ff: int = 512,
+        d_ff: int = 672,  # Ablation parameter-matching: 1.7M params
         dropout: float = 0.1,
         learning_rate: float = 0.0018498849832733245,  # Trial 69 optimized
         weight_decay: float = 0.0,  # Trial 69 had none
