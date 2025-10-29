@@ -495,9 +495,11 @@ def main():
     
     csv_file.close()
     
-    # Save detailed JSON summary
+    # Save detailed JSON summary (separate file for fast_dev_run)
     Path('outputs').mkdir(exist_ok=True)
-    with open('outputs/atomic_lora_training_summary.json', 'w') as f:
+    json_filename = 'atomic_lora_training_summary_fast_dev.json' if fast_dev_run else 'atomic_lora_training_summary.json'
+    json_path = Path('outputs') / json_filename
+    with open(json_path, 'w') as f:
         json.dump(results, f, indent=2)
     
     # Print final summary (same format as Champion)
@@ -509,12 +511,9 @@ def main():
     print(f"{'='*70}")
     print(f"Successful: {results['completed']}/{len(task_files)}")
     print(f"Failed: {results['failed']}/{len(task_files)}")
-    if not fast_dev_run:
-        print(f"Adapters saved to: {config['output_dir']}")
-    else:
-        print(f"Test adapters saved to: {config['output_dir']}")
+    print(f"Adapters saved to: {output_base_dir}")
     print(f"CSV metrics saved to: {csv_path}")
-    print(f"Detailed summary: outputs/atomic_lora_training_summary.json")
+    print(f"Detailed summary: {json_path}")
     print(f"{'='*70}\n")
 
 
