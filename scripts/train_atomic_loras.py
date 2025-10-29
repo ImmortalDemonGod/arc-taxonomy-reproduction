@@ -313,7 +313,11 @@ def main():
         task_files = task_files[:fast_dev_run]
     
     # RESUME CAPABILITY: Check for existing adapters
+    # Use separate dir for fast_dev_run to avoid interference
     output_base_dir = Path(config['output_dir'])
+    if fast_dev_run:
+        output_base_dir = output_base_dir.parent / f"{output_base_dir.name}_fast_dev"
+    
     existing_adapters = set()
     if output_base_dir.exists():
         for adapter_dir in output_base_dir.iterdir():
@@ -347,10 +351,10 @@ def main():
     print(f"Batch size: {config['training']['batch_size']}")
     print(f"Max epochs per task: {config['training']['num_epochs']}")
     print(f"Early stopping: patience={config['training']['patience']}")
-    print(f"Output: {config['output_dir']}")
+    print(f"Output: {output_base_dir}")
     print(f"Device: {device}")
     if fast_dev_run:
-        print(f"MODE: Fast dev run (testing only)")
+        print(f"MODE: Fast dev run (testing only - separate output dir)")
     print(f"{'='*70}\n")
     
     # Load base model
@@ -358,9 +362,11 @@ def main():
     print(f"Champion loaded: {sum(p.numel() for p in base_model.parameters()):,} params\n")
     
     # Create CSV log file (same pattern as ablations)
+    # Use separate CSV for fast_dev_run to avoid overwriting main results
     log_dir = Path("logs") / "atomic_loras"
     log_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = log_dir / "lora_training_metrics.csv"
+    csv_filename = "lora_training_metrics_fast_dev.csv" if fast_dev_run else "lora_training_metrics.csv"
+    csv_path = log_dir / csv_filename
     
     # CSV headers (matching ablations + LoRA-specific)
     csv_file = open(csv_path, 'w', newline='')
@@ -393,14 +399,14 @@ def main():
             
             loss, epochs, history, metadata = train_task(lora_model, task_file, config, device)
             
-            # Save adapter
-            output_dir = Path(config['output_dir']) / task_id
-            output_dir.mkdir(parents=True, exist_ok=True)
-            lora_model.save_pretrained(output_dir)
+            # Save adapter (use output_base_dir which handles fast_dev_run separation)
+            task_output_dir = output_base_dir / task_id
+            task_output_dir.mkdir(parents=True, exist_ok=True)
+            lora_model.save_pretrained(task_output_dir)
             
             # Save training curve if requested
             if config['training'].get('save_training_curve', False):
-                with open(output_dir / 'training_history.json', 'w') as f:
+                with open(task_output_dir / 'training_history.json', 'w') as f:
                     json.dump(history, f, indent=2)
             
             results['completed'] += 1
