@@ -35,6 +35,7 @@ class ChampionARCDataset(Dataset):
         max_grid_size: int = 30,
         pad_token: int = 10,
         task_categories: Dict[str, str] = None,  # Optional: task_id -> category mapping
+        split: str = 'train',  # Which split to use: 'train', 'test', or 'all'
     ):
         """
         Initialize dataset.
@@ -44,12 +45,15 @@ class ChampionARCDataset(Dataset):
             num_context_pairs: Number of context pairs to use
             max_grid_size: Maximum grid dimension (H, W)
             pad_token: Padding token ID
+            task_categories: Optional task_id -> category mapping
+            split: Which split to use - 'train' (default), 'test', or 'all' (train+test)
         """
         self.task_files = task_files
         self.num_context_pairs = num_context_pairs
         self.max_grid_size = max_grid_size
         self.pad_token = pad_token
         self.task_categories = task_categories or {}
+        self.split = split
         
         # Load all examples: (src, tgt, ctx_input, ctx_output, src_shape, tgt_shape, task_id)
         self.examples: List[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, tuple, tuple, str]] = []
@@ -75,8 +79,15 @@ class ChampionARCDataset(Dataset):
                 # Use first num_context_pairs as context
                 context_examples = train_examples[:self.num_context_pairs]
                 
-                # Use ALL train + test as query examples (context can also be queries)
-                query_examples = train_examples + test_examples
+                # Select query examples based on split parameter
+                if self.split == 'train':
+                    query_examples = train_examples
+                elif self.split == 'test':
+                    query_examples = test_examples
+                elif self.split == 'all':
+                    query_examples = train_examples + test_examples
+                else:
+                    raise ValueError(f"Invalid split: {self.split}. Must be 'train', 'test', or 'all'")
                 
                 for query in query_examples:
                     example = self._process_example(query, context_examples, task_id)
@@ -290,6 +301,7 @@ def create_champion_dataloader(
     batch_size: int = 8,
     shuffle: bool = True,
     task_categories: Dict[str, str] = None,  # Optional: task_id -> category mapping
+    split: str = 'train',  # Which split to use: 'train' (default), 'test', or 'all'
     **dataset_kwargs
 ) -> torch.utils.data.DataLoader:
     """
@@ -302,6 +314,7 @@ def create_champion_dataloader(
         batch_size: Batch size
         shuffle: Whether to shuffle
         task_categories: Optional dict mapping task_id -> category
+        split: Which split to use - 'train' (default), 'test', or 'all' (train+test)
         **dataset_kwargs: Additional args for dataset
         
     Returns:
@@ -318,7 +331,7 @@ def create_champion_dataloader(
             with open(categories_file) as f:
                 task_categories = json.load(f)
     
-    dataset = ChampionARCDataset(task_files, task_categories=task_categories, **dataset_kwargs)
+    dataset = ChampionARCDataset(task_files, task_categories=task_categories, split=split, **dataset_kwargs)
     
     return DataLoader(
         dataset,
