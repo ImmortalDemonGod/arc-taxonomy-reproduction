@@ -62,6 +62,52 @@ def setup_lora(model: nn.Module, config: dict) -> nn.Module:
     return get_peft_model(model, lora_config)
 
 
+def evaluate_model(model: nn.Module, loader, device: str) -> dict:
+    """Evaluate model and return grid accuracy."""
+    model.eval()
+    correct_grids = 0
+    total_grids = 0
+    
+    with torch.no_grad():
+        for batch in loader:
+            src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids = batch
+            src, tgt = src.to(device), tgt.to(device)
+            ctx_in, ctx_out = ctx_in.to(device), ctx_out.to(device)
+            
+            if tgt.size(1) <= 1:
+                continue
+            
+            tgt_input = tgt[:, :-1]
+            tgt_output = tgt[:, 1:]
+            
+            try:
+                logits = model(
+                    src=src,
+                    tgt=tgt_input,
+                    src_grid_shape=src_shapes[0],
+                    tgt_grid_shape=tgt_shapes[0],
+                    ctx_input=ctx_in,
+                    ctx_output=ctx_out
+                )
+                
+                preds = torch.argmax(logits, dim=-1)
+                
+                # Grid accuracy: all tokens correct
+                for i in range(tgt_output.size(0)):
+                    if torch.equal(preds[i], tgt_output[i]):
+                        correct_grids += 1
+                    total_grids += 1
+            except:
+                continue
+    
+    accuracy = (correct_grids / total_grids * 100) if total_grids > 0 else 0.0
+    return {
+        'accuracy': accuracy,
+        'correct_grids': correct_grids,
+        'total_grids': total_grids
+    }
+
+
 def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     """Train LoRA on one task. Returns (final_loss, epochs, training_history, metadata)."""
     # Use same data loader as Champion training
@@ -77,6 +123,9 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     
     if len(loader) == 0:
         return float('inf'), 0, [], {'num_examples': 0, 'error': 'no_examples'}
+    
+    # Evaluate base model BEFORE training
+    base_metrics = evaluate_model(model, loader, device)
     
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -151,12 +200,23 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     
     training_time = time.time() - start_time
     
-    # Metadata
+    # Evaluate AFTER training
+    final_metrics = evaluate_model(model, loader, device)
+    improvement = final_metrics['accuracy'] - base_metrics['accuracy']
+    
+    # Metadata (matching ablation scripts)
     metadata = {
         'num_examples': num_examples,
         'num_epochs_trained': len(training_history),
         'training_time_seconds': training_time,
-        'early_stopped': epochs_no_improve >= config['training']['patience']
+        'early_stopped': epochs_no_improve >= config['training']['patience'],
+        'base_accuracy': base_metrics['accuracy'],
+        'final_accuracy': final_metrics['accuracy'],
+        'improvement': improvement,
+        'base_correct': base_metrics['correct_grids'],
+        'base_total': base_metrics['total_grids'],
+        'final_correct': final_metrics['correct_grids'],
+        'final_total': final_metrics['total_grids']
     }
     
     return best_loss, len(training_history), training_history, metadata
@@ -220,11 +280,12 @@ def main():
     log_dir.mkdir(parents=True, exist_ok=True)
     csv_path = log_dir / "lora_training_metrics.csv"
     
-    # CSV headers (match Champion's per-task logging)
+    # CSV headers (match ablation scripts with accuracy metrics)
     csv_file = open(csv_path, 'w', newline='')
     csv_writer = csv.DictWriter(csv_file, fieldnames=[
-        'task_id', 'status', 'final_loss', 'epochs', 'num_examples',
-        'training_time_seconds', 'early_stopped', 'error'
+        'task_id', 'status', 'base_accuracy', 'final_accuracy', 'improvement',
+        'final_loss', 'epochs', 'num_examples', 'training_time_seconds',
+        'early_stopped', 'error'
     ])
     csv_writer.writeheader()
     csv_file.flush()
@@ -265,6 +326,9 @@ def main():
             csv_writer.writerow({
                 'task_id': task_id,
                 'status': 'success',
+                'base_accuracy': f"{metadata['base_accuracy']:.2f}",
+                'final_accuracy': f"{metadata['final_accuracy']:.2f}",
+                'improvement': f"{metadata['improvement']:.2f}",
                 'final_loss': f"{loss:.6f}",
                 'epochs': epochs,
                 'num_examples': metadata['num_examples'],
@@ -300,6 +364,9 @@ def main():
             csv_writer.writerow({
                 'task_id': task_id,
                 'status': 'failed',
+                'base_accuracy': '',
+                'final_accuracy': '',
+                'improvement': '',
                 'final_loss': '',
                 'epochs': '',
                 'num_examples': '',
