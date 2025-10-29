@@ -14,6 +14,7 @@ import sys
 import json
 import csv
 import time
+import fcntl
 from pathlib import Path
 
 import torch
@@ -28,6 +29,37 @@ from src.models.exp3_champion_lightning import Exp3ChampionLightningModule
 from src.data.champion_data import create_champion_dataloader
 from src.lora_utils import is_peft_available
 from src.evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
+
+
+def write_json_safely(json_path: Path, task_id: str, task_data: dict):
+    """Write task results to JSON with file locking for parallel safety."""
+    # Acquire exclusive lock
+    with open(json_path, 'a+') as f:  # a+ allows read and creates if missing
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        
+        try:
+            # Read current state
+            f.seek(0)
+            content = f.read()
+            if content.strip():
+                results = json.loads(content)
+            else:
+                results = {'completed': 0, 'failed': 0, 'tasks': {}}
+            
+            # Update with new task
+            results['tasks'][task_id] = task_data
+            if task_data['status'] == 'success':
+                results['completed'] = sum(1 for t in results['tasks'].values() if t['status'] == 'success')
+            else:
+                results['failed'] = sum(1 for t in results['tasks'].values() if t['status'] == 'failed')
+            
+            # Write back
+            f.seek(0)
+            f.truncate()
+            json.dump(results, f, indent=2)
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
 
 def load_champion(ckpt_path: Path, device: str) -> nn.Module:
     """Load Champion model from Lightning checkpoint."""
@@ -406,12 +438,15 @@ def main():
     csv_writer.writeheader()
     csv_file.flush()
     
-    results = {'completed': 0, 'failed': 0, 'tasks': {}}
-    
-    # JSON summary path (will update after each task for crash resilience)
+    # JSON summary path (will update after each task for crash resilience with file locking)
     json_filename = 'atomic_lora_training_summary_fast_dev.json' if fast_dev_run else 'atomic_lora_training_summary.json'
     json_path = Path('outputs') / json_filename
     Path('outputs').mkdir(exist_ok=True)
+    
+    # Initialize JSON file if doesn't exist
+    if not json_path.exists():
+        with open(json_path, 'w') as f:
+            json.dump({'completed': 0, 'failed': 0, 'tasks': {}}, f, indent=2)
     
     for task_file in tqdm(task_files, desc="Training"):
         task_id = task_file.stem
@@ -435,8 +470,7 @@ def main():
                 with open(task_output_dir / 'training_history.json', 'w') as f:
                     json.dump(history, f, indent=2)
             
-            results['completed'] += 1
-            results['tasks'][task_id] = {
+            task_data = {
                 'status': 'success',
                 'final_loss': loss,
                 'epochs': epochs,
@@ -471,9 +505,8 @@ def main():
             })
             csv_file.flush()
             
-            # Write JSON summary after each task (crash resilience)
-            with open(json_path, 'w') as f:
-                json.dump(results, f, indent=2)
+            # Write JSON summary safely (with file locking for parallel runs)
+            write_json_safely(json_path, task_id, task_data)
             
             # Clean up to avoid memory buildup
             del lora_model, task_base_model
@@ -490,8 +523,7 @@ def main():
             if len(traceback_str) < 500:  # Print full traceback if short
                 print(f"   Traceback:\n{traceback_str}")
             
-            results['failed'] += 1
-            results['tasks'][task_id] = {
+            task_data = {
                 'status': 'failed',
                 'error': error_msg,
                 'traceback': traceback_str
@@ -523,15 +555,14 @@ def main():
             })
             csv_file.flush()
             
-            # Write JSON summary after each task (crash resilience)
-            with open(json_path, 'w') as f:
-                json.dump(results, f, indent=2)
+            # Write JSON summary safely (with file locking for parallel runs)
+            write_json_safely(json_path, task_id, task_data)
     
     csv_file.close()
     
-    # Final JSON write (redundant but ensures final state is saved)
-    with open(json_path, 'w') as f:
-        json.dump(results, f, indent=2)
+    # Read final results from JSON
+    with open(json_path, 'r') as f:
+        results = json.load(f)
     
     # Print final summary (same format as Champion)
     print(f"\n{'='*70}")
@@ -540,8 +571,8 @@ def main():
     else:
         print(f"Training Complete!")
     print(f"{'='*70}")
-    print(f"Successful: {results['completed']}/{len(task_files)}")
-    print(f"Failed: {results['failed']}/{len(task_files)}")
+    print(f"Successful: {results['completed']}")
+    print(f"Failed: {results['failed']}")
     print(f"Adapters saved to: {output_base_dir}")
     print(f"CSV metrics saved to: {csv_path}")
     print(f"Detailed summary: {json_path}")
