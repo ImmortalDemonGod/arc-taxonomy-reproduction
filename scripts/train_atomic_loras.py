@@ -281,11 +281,19 @@ def main():
         except Exception as e:
             import traceback
             error_msg = str(e)
+            traceback_str = traceback.format_exc()
+            
+            # Print error immediately to console
+            print(f"\n❌ FAILED: {task_id}")
+            print(f"   Error: {error_msg}")
+            if len(traceback_str) < 500:  # Print full traceback if short
+                print(f"   Traceback:\n{traceback_str}")
+            
             results['failed'] += 1
             results['tasks'][task_id] = {
                 'status': 'failed',
                 'error': error_msg,
-                'traceback': traceback.format_exc()
+                'traceback': traceback_str
             }
             
             # Write failure to CSV
