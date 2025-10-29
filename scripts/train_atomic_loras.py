@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.models.exp3_champion_lightning import Exp3ChampionLightningModule
 from src.data.champion_data import create_champion_dataloader
 from src.lora_utils import is_peft_available
-from src.evaluation.metrics import compute_grid_accuracy
+from src.evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_on_batch
 
 def load_champion(ckpt_path: Path, device: str) -> nn.Module:
     """Load Champion model from Lightning checkpoint."""
@@ -64,9 +64,14 @@ def setup_lora(model: nn.Module, config: dict) -> nn.Module:
 
 
 def evaluate_model(model: nn.Module, loader, device: str) -> dict:
-    """Evaluate model using standard compute_grid_accuracy function."""
+    """Evaluate model using standard metrics (matching ablations)."""
     model.eval()
-    all_correct = []
+    all_grid_correct = []
+    all_cell_correct = []
+    all_cell_total = []
+    all_copy_rate = []
+    all_change_recall = []
+    all_trans_quality = []
     
     with torch.no_grad():
         for batch in loader:
@@ -92,25 +97,57 @@ def evaluate_model(model: nn.Module, loader, device: str) -> dict:
                 
                 preds = torch.argmax(logits, dim=-1)
                 
-                # Use standard metrics function
-                metrics = compute_grid_accuracy(preds, tgt_output, pad_token=10)
-                all_correct.append(metrics['grid_correct'])
+                # Grid and cell accuracy (matching ablations)
+                grid_metrics = compute_grid_accuracy(preds, tgt_output, pad_token=10)
+                all_grid_correct.append(grid_metrics['grid_correct'])
+                
+                # Cell-level accuracy
+                valid_mask = (tgt_output != 10)
+                correct_cells = ((preds == tgt_output) & valid_mask).sum().item()
+                total_cells = valid_mask.sum().item()
+                all_cell_correct.append(correct_cells)
+                all_cell_total.append(total_cells)
+                
+                # Copy metrics (matching ablations)
+                try:
+                    copy_metrics = compute_copy_metrics_on_batch(src, tgt_output, preds)
+                    all_copy_rate.append(copy_metrics['copy_rate'].item())
+                    all_change_recall.append(copy_metrics['change_recall'].item())
+                    all_trans_quality.append(copy_metrics['transformation_f1'].item())
+                except:
+                    # If copy metrics fail, use defaults
+                    all_copy_rate.append(0.0)
+                    all_change_recall.append(0.0)
+                    all_trans_quality.append(0.0)
             except:
                 continue
     
-    if len(all_correct) == 0:
-        return {'accuracy': 0.0, 'correct_grids': 0, 'total_grids': 0}
+    if len(all_grid_correct) == 0:
+        return {
+            'grid_accuracy': 0.0, 'cell_accuracy': 0.0,
+            'grid_correct': 0, 'grid_total': 0,
+            'cell_correct': 0, 'cell_total': 0,
+            'copy_rate': 0.0, 'change_recall': 0.0, 'transformation_quality': 0.0
+        }
     
-    # Aggregate results
-    grid_correct = torch.cat(all_correct)
-    correct_grids = grid_correct.sum().item()
-    total_grids = len(grid_correct)
-    accuracy = (correct_grids / total_grids * 100) if total_grids > 0 else 0.0
+    # Aggregate results (matching ablation pattern)
+    grid_correct = torch.cat(all_grid_correct)
+    grid_accuracy = (grid_correct.sum().item() / len(grid_correct) * 100)
+    
+    cell_correct_total = sum(all_cell_correct)
+    cell_total_total = sum(all_cell_total)
+    cell_accuracy = (cell_correct_total / cell_total_total * 100) if cell_total_total > 0 else 0.0
     
     return {
-        'accuracy': accuracy,
-        'correct_grids': correct_grids,
-        'total_grids': total_grids
+        'grid_accuracy': grid_accuracy,
+        'cell_accuracy': cell_accuracy,
+        'grid_correct': grid_correct.sum().item(),
+        'grid_total': len(grid_correct),
+        'cell_correct': cell_correct_total,
+        'cell_total': cell_total_total,
+        'copy_rate': sum(all_copy_rate) / len(all_copy_rate),
+        'change_recall': sum(all_change_recall) / len(all_change_recall),
+        'transformation_quality': sum(all_trans_quality) / len(all_trans_quality),
     }
 
 
@@ -208,21 +245,32 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     
     # Evaluate AFTER training
     final_metrics = evaluate_model(model, loader, device)
-    improvement = final_metrics['accuracy'] - base_metrics['accuracy']
+    grid_improvement = final_metrics['grid_accuracy'] - base_metrics['grid_accuracy']
+    cell_improvement = final_metrics['cell_accuracy'] - base_metrics['cell_accuracy']
     
-    # Metadata (matching ablation scripts)
+    # Metadata (matching ablation scripts + LoRA-specific)
     metadata = {
         'num_examples': num_examples,
         'num_epochs_trained': len(training_history),
         'training_time_seconds': training_time,
         'early_stopped': epochs_no_improve >= config['training']['patience'],
-        'base_accuracy': base_metrics['accuracy'],
-        'final_accuracy': final_metrics['accuracy'],
-        'improvement': improvement,
-        'base_correct': base_metrics['correct_grids'],
-        'base_total': base_metrics['total_grids'],
-        'final_correct': final_metrics['correct_grids'],
-        'final_total': final_metrics['total_grids']
+        # Grid accuracy
+        'base_grid_accuracy': base_metrics['grid_accuracy'],
+        'final_grid_accuracy': final_metrics['grid_accuracy'],
+        'grid_improvement': grid_improvement,
+        # Cell accuracy
+        'base_cell_accuracy': base_metrics['cell_accuracy'],
+        'final_cell_accuracy': final_metrics['cell_accuracy'],
+        'cell_improvement': cell_improvement,
+        # Counts
+        'grid_correct': final_metrics['grid_correct'],
+        'grid_total': final_metrics['grid_total'],
+        'cell_correct': final_metrics['cell_correct'],
+        'cell_total': final_metrics['cell_total'],
+        # Copy metrics
+        'copy_rate': final_metrics['copy_rate'],
+        'change_recall': final_metrics['change_recall'],
+        'transformation_quality': final_metrics['transformation_quality'],
     }
     
     return best_loss, len(training_history), training_history, metadata
@@ -249,12 +297,40 @@ def main():
     with open(data_dir / "split_manifest.json") as f:
         split_info = json.load(f)
     
+    # Load task categories (matching ablations)
+    task_categories = {}
+    categories_file = data_dir / "task_categories.json"
+    if categories_file.exists():
+        with open(categories_file) as f:
+            task_categories = json.load(f)
+        print(f"Loaded categories for {len(task_categories)} tasks\n")
+    
     # Use train_files for LoRA training (match Champion's training set)
     task_files = [data_dir / fname for fname in split_info["train_files"]]
     
     # Limit tasks if fast_dev_run specified
     if fast_dev_run:
         task_files = task_files[:fast_dev_run]
+    
+    # RESUME CAPABILITY: Check for existing adapters
+    output_base_dir = Path(config['output_dir'])
+    existing_adapters = set()
+    if output_base_dir.exists():
+        for adapter_dir in output_base_dir.iterdir():
+            if adapter_dir.is_dir() and (adapter_dir / "adapter_model.safetensors").exists():
+                existing_adapters.add(adapter_dir.name)
+    
+    # Filter out already-trained tasks
+    remaining_tasks = [f for f in task_files if f.stem not in existing_adapters]
+    
+    if len(existing_adapters) > 0:
+        print(f"\n⚠️  RESUME MODE: Found {len(existing_adapters)} existing adapters")
+        print(f"   Skipping completed tasks, will train {len(remaining_tasks)}/{len(task_files)} remaining\n")
+        task_files = remaining_tasks
+    
+    if len(task_files) == 0:
+        print("✅ All tasks already trained! Nothing to do.")
+        return
     
     # Print training summary (same format as Champion)
     print(f"\n{'='*70}")
@@ -286,10 +362,17 @@ def main():
     log_dir.mkdir(parents=True, exist_ok=True)
     csv_path = log_dir / "lora_training_metrics.csv"
     
-    # CSV headers (match ablation scripts with accuracy metrics)
+    # CSV headers (matching ablations + LoRA-specific)
     csv_file = open(csv_path, 'w', newline='')
     csv_writer = csv.DictWriter(csv_file, fieldnames=[
-        'task_id', 'status', 'base_accuracy', 'final_accuracy', 'improvement',
+        'task_id', 'category', 'status',
+        # Grid metrics
+        'base_grid_accuracy', 'final_grid_accuracy', 'grid_improvement',
+        # Cell metrics  
+        'base_cell_accuracy', 'final_cell_accuracy', 'cell_improvement',
+        # Copy metrics
+        'copy_rate', 'change_recall', 'transformation_quality',
+        # Training info
         'final_loss', 'epochs', 'num_examples', 'training_time_seconds',
         'early_stopped', 'error'
     ])
@@ -328,13 +411,25 @@ def main():
                 'metadata': metadata
             }
             
-            # Write to CSV (same as ablations)
+            # Write to CSV (matching ablations)
+            category = task_categories.get(task_id, 'unknown')
             csv_writer.writerow({
                 'task_id': task_id,
+                'category': category,
                 'status': 'success',
-                'base_accuracy': f"{metadata['base_accuracy']:.2f}",
-                'final_accuracy': f"{metadata['final_accuracy']:.2f}",
-                'improvement': f"{metadata['improvement']:.2f}",
+                # Grid metrics
+                'base_grid_accuracy': f"{metadata['base_grid_accuracy']:.2f}",
+                'final_grid_accuracy': f"{metadata['final_grid_accuracy']:.2f}",
+                'grid_improvement': f"{metadata['grid_improvement']:.2f}",
+                # Cell metrics
+                'base_cell_accuracy': f"{metadata['base_cell_accuracy']:.2f}",
+                'final_cell_accuracy': f"{metadata['final_cell_accuracy']:.2f}",
+                'cell_improvement': f"{metadata['cell_improvement']:.2f}",
+                # Copy metrics
+                'copy_rate': f"{metadata['copy_rate']:.4f}",
+                'change_recall': f"{metadata['change_recall']:.4f}",
+                'transformation_quality': f"{metadata['transformation_quality']:.4f}",
+                # Training info
                 'final_loss': f"{loss:.6f}",
                 'epochs': epochs,
                 'num_examples': metadata['num_examples'],
@@ -367,12 +462,22 @@ def main():
             }
             
             # Write failure to CSV
+            category = task_categories.get(task_id, 'unknown')
             csv_writer.writerow({
                 'task_id': task_id,
+                'category': category,
                 'status': 'failed',
-                'base_accuracy': '',
-                'final_accuracy': '',
-                'improvement': '',
+                # Empty metrics
+                'base_grid_accuracy': '',
+                'final_grid_accuracy': '',
+                'grid_improvement': '',
+                'base_cell_accuracy': '',
+                'final_cell_accuracy': '',
+                'cell_improvement': '',
+                'copy_rate': '',
+                'change_recall': '',
+                'transformation_quality': '',
+                # Training info
                 'final_loss': '',
                 'epochs': '',
                 'num_examples': '',
