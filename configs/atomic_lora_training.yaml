@@ -41,6 +41,9 @@ strip_lightning_prefix: true  # Remove "model." prefix from checkpoint keys
 # Data
 data_dir: "data/distributional_alignment"
 max_grid_size: 30        # Pad all grids to 30×30
+samples_per_task: 150    # Number of training samples per task
+                         # 150: Phase 0 (visual classifier - category centroids)
+                         # 400: Phase 1A-v2 style (test Neural Affinity across all 400 tasks)
 
 # Output
 output_dir: "outputs/atomic_loras"  # Where to save trained adapters

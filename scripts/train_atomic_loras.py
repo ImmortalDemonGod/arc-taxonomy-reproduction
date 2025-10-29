@@ -65,12 +65,13 @@ def setup_lora(model: nn.Module, config: dict) -> nn.Module:
 def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     """Train LoRA on one task. Returns (final_loss, epochs, training_history, metadata)."""
     # Use same data loader as Champion training
+    # Note: samples_per_task controlled by data generation (150 or 400)
     loader = create_champion_dataloader(
         [task_file],  # Single task
         batch_size=config['training']['batch_size'],
         shuffle=True,
         num_context_pairs=2,  # Match Champion
-        max_grid_size=35,  # Match Champion (150 samples/task)
+        max_grid_size=35,  # Match Champion
     )
     
     if len(loader) == 0:
