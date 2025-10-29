@@ -397,6 +397,11 @@ def main():
     
     results = {'completed': 0, 'failed': 0, 'tasks': {}}
     
+    # JSON summary path (will update after each task for crash resilience)
+    json_filename = 'atomic_lora_training_summary_fast_dev.json' if fast_dev_run else 'atomic_lora_training_summary.json'
+    json_path = Path('outputs') / json_filename
+    Path('outputs').mkdir(exist_ok=True)
+    
     for task_file in tqdm(task_files, desc="Training"):
         task_id = task_file.stem
         
@@ -455,6 +460,10 @@ def main():
             })
             csv_file.flush()
             
+            # Write JSON summary after each task (crash resilience)
+            with open(json_path, 'w') as f:
+                json.dump(results, f, indent=2)
+            
             # Clean up to avoid memory buildup
             del lora_model, task_base_model
             torch.cuda.empty_cache() if torch.cuda.is_available() else None
@@ -502,13 +511,14 @@ def main():
                 'error': error_msg[:100]  # Truncate long errors
             })
             csv_file.flush()
+            
+            # Write JSON summary after each task (crash resilience)
+            with open(json_path, 'w') as f:
+                json.dump(results, f, indent=2)
     
     csv_file.close()
     
-    # Save detailed JSON summary (separate file for fast_dev_run)
-    Path('outputs').mkdir(exist_ok=True)
-    json_filename = 'atomic_lora_training_summary_fast_dev.json' if fast_dev_run else 'atomic_lora_training_summary.json'
-    json_path = Path('outputs') / json_filename
+    # Final JSON write (redundant but ensures final state is saved)
     with open(json_path, 'w') as f:
         json.dump(results, f, indent=2)
     
