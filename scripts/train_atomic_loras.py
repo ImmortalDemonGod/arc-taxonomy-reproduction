@@ -194,6 +194,8 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
         shuffle=True,
         num_context_pairs=2,  # Match Champion
         max_grid_size=35,  # Match Champion
+        num_workers=config.get('num_workers', 4),  # Parallel data loading
+        pin_memory=config.get('pin_memory', True),  # Faster GPU transfer
     )
     
     if len(loader) == 0:
@@ -202,13 +204,16 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
     # Evaluate base model BEFORE training
     base_metrics = evaluate_model(model, loader, device)
     
+    # Optimizer (same as Champion but 10x lower LR)
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=config['training']['learning_rate'],
         weight_decay=config['training']['weight_decay']
     )
+    criterion = nn.CrossEntropyLoss(ignore_index=-100)
     
-    criterion = nn.CrossEntropyLoss(ignore_index=10)
+    # Mixed precision for 1.5-2x speedup without quality loss
+    scaler = torch.cuda.amp.GradScaler() if device == 'cuda' else None
     model.train()
     
     # Training history
@@ -228,8 +233,8 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
         for batch in loader:
             # champion_data returns: (src, tgt, ctx_input, ctx_output, src_grid_shape, tgt_grid_shape, task_id)
             src, tgt, ctx_in, ctx_out, src_shapes, tgt_shapes, task_ids = batch
-            src, tgt = src.to(device), tgt.to(device)
-            ctx_in, ctx_out = ctx_in.to(device), ctx_out.to(device)
+            src, tgt = src.to(device, non_blocking=True), tgt.to(device, non_blocking=True)
+            ctx_in, ctx_out = ctx_in.to(device, non_blocking=True), ctx_out.to(device, non_blocking=True)
             
             if tgt.size(1) <= 1:
                 continue
@@ -238,20 +243,38 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
             
             try:
                 optimizer.zero_grad()
-                logits = model(
-                    src=src,
-                    tgt=tgt_input,
-                    src_grid_shape=src_shapes[0],
-                    tgt_grid_shape=tgt_shapes[0],
-                    ctx_input=ctx_in,
-                    ctx_output=ctx_out
-                )
                 
-                loss = criterion(logits.reshape(-1, logits.size(-1)), tgt_output.reshape(-1))
-                loss.backward()
-                
-                torch.nn.utils.clip_grad_norm_(model.parameters(), config['training']['max_grad_norm'])
-                optimizer.step()
+                # Mixed precision training
+                if scaler is not None:
+                    with torch.cuda.amp.autocast():
+                        logits = model(
+                            src=src,
+                            tgt=tgt_input,
+                            src_grid_shape=src_shapes[0],
+                            tgt_grid_shape=tgt_shapes[0],
+                            ctx_input=ctx_in,
+                            ctx_output=ctx_out
+                        )
+                        loss = criterion(logits.reshape(-1, logits.size(-1)), tgt_output.reshape(-1))
+                    
+                    scaler.scale(loss).backward()
+                    scaler.unscale_(optimizer)
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), config['training']['max_grad_norm'])
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    logits = model(
+                        src=src,
+                        tgt=tgt_input,
+                        src_grid_shape=src_shapes[0],
+                        tgt_grid_shape=tgt_shapes[0],
+                        ctx_input=ctx_in,
+                        ctx_output=ctx_out
+                    )
+                    loss = criterion(logits.reshape(-1, logits.size(-1)), tgt_output.reshape(-1))
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), config['training']['max_grad_norm'])
+                    optimizer.step()
                 
                 epoch_loss += loss.item()
                 count += 1
@@ -414,7 +437,7 @@ def main():
     base_model = load_champion(Path(config['champion_checkpoint']), device)
     print(f"Champion loaded: {sum(p.numel() for p in base_model.parameters()):,} params\n")
     
-    # Create CSV log file (same pattern as ablations)
+    # Create log directories (for both CSV and process logs)
     # Use separate CSV for fast_dev_run to avoid overwriting main results
     log_dir = Path("logs") / "atomic_loras"
     log_dir.mkdir(parents=True, exist_ok=True)
