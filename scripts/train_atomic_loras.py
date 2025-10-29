@@ -129,7 +129,7 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
                 epoch_loss += loss.item()
                 count += 1
             except Exception as e:
-                logger.warning(f"Step failed: {e}")
+                print(f"⚠️  Step failed: {e}")
                 continue
         
         if count == 0:
@@ -146,7 +146,7 @@ def train_task(model: nn.Module, task_file: Path, config: dict, device: str):
             epochs_no_improve += 1
             
         if epochs_no_improve >= config['training']['patience']:
-            logger.info(f"Early stopping at epoch {epoch + 1}")
+            # Early stopped
             break
     
     training_time = time.time() - start_time
