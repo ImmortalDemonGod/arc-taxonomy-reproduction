@@ -487,8 +487,8 @@ Examples:
     parser.add_argument(
         '--rearc-path',
         type=Path,
-        default=Path(__file__).parent.parent.parent.parent.parent / 'external' / 're-arc',
-        help='Path to re-arc submodule (default: resolved from __file__ → arc_reactor/external/re-arc)'
+        default=Path(__file__).parent.parent / 'external' / 're-arc',
+        help='Path to re-arc submodule (default: reproduction_package/external/re-arc)'
     )
     
     parser.add_argument(
