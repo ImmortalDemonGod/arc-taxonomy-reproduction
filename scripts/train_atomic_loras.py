@@ -293,8 +293,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--fast_dev_run', type=int, nargs='?', const=2, default=None,
                         help='Run fast dev test with N tasks (default: 2 if flag provided)')
+    parser.add_argument('--task-range', type=str, default=None,
+                        help='Train specific task range, e.g., "0:200" or "200:400"')
     args, unknown = parser.parse_known_args()
     fast_dev_run = args.fast_dev_run
+    task_range = args.task_range
     
     config_path = Path('configs/atomic_lora_training.yaml')
     with open(config_path) as f:
@@ -317,6 +320,12 @@ def main():
     
     # Use train_files for LoRA training (match Champion's training set)
     task_files = [data_dir / fname for fname in split_info["train_files"]]
+    
+    # Apply task range if specified (for parallel runs)
+    if task_range:
+        start, end = map(int, task_range.split(':'))
+        task_files = task_files[start:end]
+        print(f"Task range: {start}:{end} ({len(task_files)} tasks)\n")
     
     # Limit tasks if fast_dev_run specified
     if fast_dev_run:
@@ -350,6 +359,8 @@ def main():
     print(f"\n{'='*70}")
     if fast_dev_run:
         print(f"FAST DEV RUN: Phase 0 - Atomic LoRA Skills ({fast_dev_run} tasks)")
+    elif task_range:
+        print(f"TRAINING: Phase 0 - Atomic LoRA Skills (tasks {task_range})")
     else:
         print(f"TRAINING: Phase 0 - Atomic LoRA Skills")
     print(f"{'='*70}")
