@@ -1,0 +1,70 @@
+======================================================================
+TaskEncoder Component Tests
+======================================================================
+
+Test Data:
+  Batch size: 4
+  Num demos: 3
+  Grid size: 30x30
+  Demo input shape: torch.Size([4, 3, 30, 30])
+  Demo output shape: torch.Size([4, 3, 30, 30])
+
+======================================================================
+Test 1: TaskEncoderCNN (Version A - Simple CNN)
+======================================================================
+  ✅ Model created: 420,976 parameters
+  ✅ Forward pass works (inference)
+     Input: torch.Size([4, 3, 30, 30])
+     Output: torch.Size([4, 256])
+  ✅ Output shape correct: (4, 256)
+  ✅ Backward pass works (training)
+
+  🎉 TaskEncoderCNN (Version A) works!
+
+======================================================================
+Test 2: TaskEncoderAdvanced (Version B - Champion's ContextEncoder)
+======================================================================
+  ✅ Model created: 1,246,688 parameters
+  ✅ Forward pass works (inference)
+     Input: torch.Size([4, 3, 30, 30])
+     Output: torch.Size([4, 256])
+  ✅ Output shape correct: (4, 256)
+  ✅ Backward pass works (training)
+
+  🎉 TaskEncoderAdvanced (Version B) works!
+
+======================================================================
+Test 3: Both models with embed_dim=400 (Phase 2)
+======================================================================
+  ✅ CNN output: torch.Size([4, 400])
+  ✅ Advanced output: torch.Size([4, 400])
+
+  🎉 Both models work with Phase 2 dimensions!
+
+======================================================================
+Test 4: Classification Head (Direct Classification - Phase 1)
+======================================================================
+  ✅ Encoder output: torch.Size([4, 256])
+  ✅ Classifier logits: torch.Size([4, 9])
+  ✅ Probabilities: torch.Size([4, 9])
+  ✅ Predictions: torch.Size([4])
+     Sample predictions: [6, 6, 6, 6]
+
+  🎉 Classification pipeline works!
+
+======================================================================
+🎉 ALL TESTS PASSED
+======================================================================
+
+Components verified:
+  ✅ TaskEncoderCNN (Version A) - 420,976 params
+  ✅ TaskEncoderAdvanced (Version B) - 1,246,688 params
+  ✅ Forward/backward passes work
+  ✅ Phase 1 dimensions (256) work
+  ✅ Phase 2 dimensions (400) work
+  ✅ Classification head works
+
+Ready for:
+  1. Phase 1C: Direct classification training
+  2. Phase 2B: Oracle-predictor training
+======================================================================
