@@ -47,6 +47,32 @@ def create_trial69_optimizer_and_scheduler(pl_module: pl.LightningModule) -> dic
     }
 
 
+def log_validation_loss(pl_module: pl.LightningModule, loss: torch.Tensor, batch_size: int):
+    """
+    Log validation loss in a way that ModelCheckpoint can reliably monitor.
+    
+    CENTRALIZED FUNCTION - All ablation models use this to ensure checkpoints work.
+    
+    Issue: prog_bar=False can cause ModelCheckpoint to not see val_loss properly.
+    Fix: Use prog_bar=True, sync_dist=True, logger=True for reliable checkpointing.
+    
+    Args:
+        pl_module: Lightning module
+        loss: Validation loss tensor
+        batch_size: Batch size for proper reduction
+    """
+    pl_module.log(
+        'val_loss',
+        loss,
+        batch_size=batch_size,
+        prog_bar=True,  # Show in progress bar (helps debugging + ensures checkpoint sees it)
+        on_step=False,
+        on_epoch=True,
+        sync_dist=True,  # Important for multi-GPU
+        logger=True,  # Ensure TensorBoard/CSV loggers get it
+    )
+
+
 def add_transformation_metrics(
     step_output: Dict[str, Any],
     src: torch.Tensor,

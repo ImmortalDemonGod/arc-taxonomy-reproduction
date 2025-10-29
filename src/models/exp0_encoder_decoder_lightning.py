@@ -147,7 +147,9 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         
         self.validation_step_outputs.append(step_output)
         
-        self.log('val_loss', loss, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        # Log validation loss (CENTRALIZED in validation_helpers for reliable checkpointing)
+        from .validation_helpers import log_validation_loss
+        log_validation_loss(self, loss, batch_size)
         
         return loss
     
