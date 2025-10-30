@@ -42,8 +42,8 @@ ENV/
 # Training outputs
 checkpoints/
 lightning_logs/
-logs/
-outputs/
+#logs/
+#outputs/
 wandb/
 tensorboard/
 *.log
