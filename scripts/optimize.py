@@ -36,16 +36,25 @@ def resolve_path(path_str: str, base_dir: Path) -> Path:
     resolved = (base_dir / path).resolve()
     if resolved.exists():
         return resolved
-    # Fallback for labels path - try arc_reactor/data location
+    # Fallback for labels path - try multiple possible locations
     if 'all_tasks_classified.json' in str(path):
-        try:
+        # Try several common locations
+        possible_paths = [
+            # From reproduction/ go to data/ (same level)
+            base_dir / 'data' / 'taxonomy_classification' / 'all_tasks_classified.json',
             # From reproduction/ go up to arc_reactor/ then into data/
-            fallback = base_dir.parents[0] / '..' / '..' / 'data' / 'taxonomy_classification' / 'all_tasks_classified.json'
-            fallback = fallback.resolve()
-            if fallback.exists():
-                return fallback
-        except (IndexError, OSError):
-            pass
+            base_dir.parent.parent / 'data' / 'taxonomy_classification' / 'all_tasks_classified.json',
+            # Absolute path from root (Paperspace-style)
+            Path('/data/taxonomy_classification/all_tasks_classified.json'),
+            # Try from parent directories
+            base_dir.parent / 'data' / 'taxonomy_classification' / 'all_tasks_classified.json',
+        ]
+        for possible_path in possible_paths:
+            try:
+                if possible_path.exists():
+                    return possible_path.resolve()
+            except (OSError, RuntimeError):
+                continue
     return resolved
 
 

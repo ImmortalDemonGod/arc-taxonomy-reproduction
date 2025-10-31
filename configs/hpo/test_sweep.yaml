@@ -14,7 +14,7 @@ pruner:
 
 fixed:
   data_dir: "data/distributional_alignment"
-  labels: "../../../../data/taxonomy_classification/all_tasks_classified.json"
+  labels: "data/taxonomy_classification/all_tasks_classified.json"
   centroids: "outputs/visual_classifier/category_centroids_v3.npy"
   epochs: 10  # Shorter for test
   num_workers: 2

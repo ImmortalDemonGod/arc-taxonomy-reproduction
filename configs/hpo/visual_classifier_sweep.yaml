@@ -17,7 +17,7 @@ pruner:
 # --- Fixed Parameters (constant across all trials) ---
 fixed:
   data_dir: "data/distributional_alignment"
-  labels: "../../../../data/taxonomy_classification/all_tasks_classified.json"
+  labels: "data/taxonomy_classification/all_tasks_classified.json"
   centroids: "outputs/visual_classifier/category_centroids_v3.npy"
   epochs: 20
   num_workers: 2
