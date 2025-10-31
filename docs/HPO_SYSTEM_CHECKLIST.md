@@ -109,9 +109,15 @@ The system is **fully self-contained** and ready to run in standalone environmen
 ## Recent Fixes (Commit History)
 
 1. **9852453** - Added missing optuna and psycopg2-binary dependencies
-2. **9852453** - Fixed path resolution for multiple environments
+2. **9852453** - Fixed path resolution for multiple environments  
 3. **1c076cd** - Added missing all_tasks_classified.json file (CRITICAL FIX)
 4. **3bf1924** - Added missing category_centroids_v3.npy file (CRITICAL FIX)
+5. **e7a436c** - Fixed invalid log distribution (weight_decay low=0) + added config tests (CRITICAL FIX)
+
+**Lesson Learned:** Configuration bugs can crash the system at runtime. Now protected by:
+- `tests/test_hpo_config.py` - 6 comprehensive config validation tests
+- Catches invalid log distributions, missing keys, malformed conditions, etc.
+- Run with: `pytest tests/test_hpo_config.py -v`
 
 The system is now production-ready for systematic MEASURE experiments.
 
