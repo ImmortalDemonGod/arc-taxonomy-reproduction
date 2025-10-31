@@ -342,15 +342,15 @@ class Objective:
             if param_type == "int":
                 value = trial.suggest_int(
                     param_name,
-                    param_config["low"],
-                    param_config["high"],
+                    int(param_config["low"]),
+                    int(param_config["high"]),
                     log=param_config.get("log", False)
                 )
             elif param_type == "float":
                 value = trial.suggest_float(
                     param_name,
-                    param_config["low"],
-                    param_config["high"],
+                    float(param_config["low"]),
+                    float(param_config["high"]),
                     log=param_config.get("log", False)
                 )
             elif param_type == "categorical":
