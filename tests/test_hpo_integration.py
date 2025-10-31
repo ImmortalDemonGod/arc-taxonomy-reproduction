@@ -10,9 +10,10 @@ from pathlib import Path
 from unittest.mock import Mock, MagicMock
 import sys
 
-# Add repo root to path
+# Add repo root and scripts to path
 REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 
 def test_config_values_work_with_optuna_api():
@@ -71,7 +72,7 @@ def test_objective_can_sample_parameters():
     
     This is a more realistic integration test that uses actual Objective code.
     """
-    from scripts.objective import Objective
+    from objective import Objective
     
     # Load real config
     config_path = REPO_ROOT / "configs" / "hpo" / "test_sweep.yaml"

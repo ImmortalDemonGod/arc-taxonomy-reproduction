@@ -94,7 +94,7 @@ def run_training_trial(
             grid_layers=hparams.get("ctx_grid_layers", 2),
             dropout_rate=hparams.get("ctx_dropout", 0.1),
         ).to(device)
-    else:  # cnn
+    elif encoder_type == "cnn":
         model = TaskEncoderCNN(
             embed_dim=embed_dim,
             num_demos=3,
@@ -104,6 +104,8 @@ def run_training_trial(
             demo_agg=hparams.get("demo_agg", "mean"),
             use_coords=hparams.get("use_coords", False),
         ).to(device)
+    else:
+        raise ValueError(f"Unknown encoder_type: '{encoder_type}'. Must be 'cnn' or 'context'.")
     
     # Centroid projection (learned)
     num_categories, centroid_dim = centroids.shape
