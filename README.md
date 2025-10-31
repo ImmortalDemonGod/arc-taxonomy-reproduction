@@ -5,20 +5,9 @@
 
 ---
 
-## ARC Taxonomy Reproduction Package
+## Overview
 
-**Built on Stanford CS336 Foundation**
-
-This package provides a minimal, verifiable implementation for reproducing the ARC Taxonomy paper experiments. Built from scratch using the cs336_basics reference implementation, this codebase demonstrates that each architectural component is empirically necessary through incremental ablation experiments.
-
-## Strategic Approach: Build-Up vs Tear-Down
-
-**Why we started from cs336_basics instead of stripping down existing code:**
-
-- **Credibility:** Built on Stanford's academically-validated reference implementation
-- **Clarity:** Every component justified through empirical ablation study
-- **Reproducibility:** Clean, minimal codebase (~450 lines of ARC-specific code)
-- **Scientific Value:** Implementation process generates core paper evidence
+This directory contains the complete reproduction package for the ARC Taxonomy paper. All code is self-contained and does not depend on the larger `jarc_reactor` codebase.
 
 ## Contents
 

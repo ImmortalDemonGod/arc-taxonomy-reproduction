@@ -3,13 +3,14 @@ import pytest
 import sys
 import tempfile
 import json
+import torch
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from scripts.train_atomic_loras import load_champion, setup_lora, evaluate_model
+from scripts.train_atomic_loras import load_champion, setup_lora, evaluate_model, train_task
 
 
 class TestOutputSeparation:
