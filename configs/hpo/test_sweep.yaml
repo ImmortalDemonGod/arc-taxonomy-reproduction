@@ -1,0 +1,129 @@
+# Test HPO Sweep - 5 trials to verify system
+# This is a quick verification run before the full 100-trial sweep
+
+study_name: "visual_classifier_test_v1"
+storage_url: "***REMOVED***"
+n_trials: 5
+direction: "maximize"
+
+pruner:
+  type: "hyperband"
+  min_resource: 2
+  max_resource: 10
+  reduction_factor: 3
+
+fixed:
+  data_dir: "data/distributional_alignment"
+  labels: "../../../../data/taxonomy_classification/all_tasks_classified.json"
+  centroids: "outputs/visual_classifier/category_centroids_v3.npy"
+  epochs: 10  # Shorter for test
+  num_workers: 2
+  seed: 42
+  stratify: true
+  demo_agg: "mean"
+  color_permute: true
+  random_demos: true
+  use_scheduler: true
+  early_stop_patience: 3
+  val_ratio: 0.2
+
+param_ranges:
+  encoder_type:
+    type: "categorical"
+    choices: ["cnn", "context"]
+  
+  lr:
+    type: "float"
+    low: 0.0005
+    high: 0.002
+    log: true
+  
+  batch_size:
+    type: "categorical"
+    choices: [8, 16]
+  
+  weight_decay:
+    type: "float"
+    low: 0.0
+    high: 0.001
+    log: false
+  
+  label_smoothing:
+    type: "float"
+    low: 0.0
+    high: 0.1
+    log: false
+  
+  embed_dim:
+    type: "categorical"
+    choices: [128, 256]
+  
+  # CNN params
+  width_mult:
+    type: "float"
+    low: 1.0
+    high: 1.5
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  depth:
+    type: "int"
+    low: 2
+    high: 3
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  mlp_hidden:
+    type: "categorical"
+    choices: [256, 512]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  use_coords:
+    type: "categorical"
+    choices: [false]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # Context params
+  ctx_d_model:
+    type: "categorical"
+    choices: [128, 256]
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_n_head:
+    type: "categorical"
+    choices: [4, 8]
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_pixel_layers:
+    type: "int"
+    low: 2
+    high: 3
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_grid_layers:
+    type: "int"
+    low: 1
+    high: 2
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_dropout:
+    type: "float"
+    low: 0.05
+    high: 0.15
+    condition:
+      equals:
+        encoder_type: "context"

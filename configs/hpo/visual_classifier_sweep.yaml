@@ -1,0 +1,160 @@
+# HPO Sweep Configuration for Visual Classifier
+# This defines the search space and study configuration for systematic MEASURE experiments
+
+# --- Study Configuration ---
+study_name: "visual_classifier_cnn_vs_context_v2_expanded"
+storage_url: "***REMOVED***"
+n_trials: 150  # Expanded search space requires more trials
+direction: "maximize"  # Maximize validation accuracy
+
+# --- Pruning Configuration ---
+pruner:
+  type: "hyperband"
+  min_resource: 3  # Min epochs before pruning
+  max_resource: 20  # Max epochs (matches training.epochs)
+  reduction_factor: 3
+
+# --- Fixed Parameters (constant across all trials) ---
+fixed:
+  data_dir: "data/distributional_alignment"
+  labels: "../../../../data/taxonomy_classification/all_tasks_classified.json"
+  centroids: "outputs/visual_classifier/category_centroids_v3.npy"
+  epochs: 20
+  num_workers: 2
+  seed: 42
+  stratify: true
+  color_permute: true
+  random_demos: true
+  early_stop_patience: 4  # Internal early stopping for each trial
+  val_ratio: 0.2
+
+# --- Parameter Search Space ---
+param_ranges:
+  # --- Architectural Switch (CNN vs ContextEncoder) ---
+  encoder_type:
+    type: "categorical"
+    choices: ["cnn", "context"]
+
+  # --- Shared Parameters ---
+  lr:
+    type: "float"
+    low: 0.00005
+    high: 0.01
+    log: true
+  
+  batch_size:
+    type: "categorical"
+    choices: [8, 16, 32, 64]
+  
+  weight_decay:
+    type: "float"
+    low: 0.0
+    high: 0.1
+    log: true
+  
+  label_smoothing:
+    type: "float"
+    low: 0.0
+    high: 0.2
+    log: false
+  
+  embed_dim:
+    type: "categorical"
+    choices: [128, 256, 384, 512, 768]
+  
+  use_scheduler:
+    type: "categorical"
+    choices: [true, false]
+  
+  # Projection and similarity options
+  use_cosine:
+    type: "categorical"
+    choices: [true, false]
+  
+  temperature:
+    type: "float"
+    low: 5.0
+    high: 20.0
+    log: false
+    condition:
+      equals:
+        use_cosine: true
+
+  # --- Conditional Parameters for TaskEncoderCNN ---
+  demo_agg:
+    type: "categorical"
+    choices: ["flatten", "mean"]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  width_mult:
+    type: "float"
+    low: 0.5
+    high: 3.0
+    log: false
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  depth:
+    type: "int"
+    low: 2
+    high: 6
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  mlp_hidden:
+    type: "categorical"
+    choices: [256, 512, 1024, 2048]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  use_coords:
+    type: "categorical"
+    choices: [true, false]
+    condition:
+      equals:
+        encoder_type: "cnn"
+
+  # --- Conditional Parameters for TaskEncoderAdvanced (ContextEncoder) ---
+  ctx_d_model:
+    type: "categorical"
+    choices: [128, 256, 384, 512]
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_n_head:
+    type: "categorical"
+    choices: [4, 8, 16]
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_pixel_layers:
+    type: "int"
+    low: 1
+    high: 5
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_grid_layers:
+    type: "int"
+    low: 1
+    high: 3
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_dropout:
+    type: "float"
+    low: 0.0
+    high: 0.3
+    log: false
+    condition:
+      equals:
+        encoder_type: "context"
