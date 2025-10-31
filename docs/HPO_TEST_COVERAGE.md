@@ -10,11 +10,11 @@
 **Test Suite (136 lines):**
 - `tests/test_hpo_config.py` - 136 lines (Configuration validation)
 
-## Current Test Coverage: ~15% (Config Only)
+## Current Test Coverage: ~20% (Config + Basic Integration)
 
-### ✅ What's Tested (6 tests)
+### ✅ What's Tested (9 tests)
 
-**Configuration Validation (`tests/test_hpo_config.py`):**
+**Configuration Validation (`tests/test_hpo_config.py` - 6 tests):**
 1. ✅ Config files exist
 2. ✅ Log distributions have valid low > 0
 3. ✅ Required config keys present
@@ -23,11 +23,21 @@
 6. ✅ Parameter ranges sensible (low < high)
 
 **What this catches:**
-- Invalid log distributions (caught the weight_decay bug!)
+- Invalid log distributions (caught Bug #1: weight_decay log distribution!)
 - Missing required parameters
 - Malformed conditional logic
 - Invalid pruner settings
 - Parameter range errors
+
+**Integration Tests (`tests/test_hpo_integration.py` - 3 tests):**
+7. ✅ Config values compatible with Optuna API
+8. ✅ Objective can sample parameters without type errors
+9. ✅ YAML scientific notation parsing behavior documented
+
+**What this catches:**
+- Type mismatches between YAML and Optuna (caught Bug #2: string vs float!)
+- Parameter sampling errors
+- YAML parsing quirks with scientific notation
 
 ### ❌ What's NOT Tested (0% coverage)
 
@@ -222,14 +232,35 @@ def test_checkpoint_save_and_load():
 - The real test is: does it run on Paperspace?
 - Configuration tests provide good ROI (caught 1 bug already)
 
+## Bugs Caught by Tests (Production Failures Prevented)
+
+### Bug #1: Invalid Log Distribution (Caught by Config Tests)
+**Error:** `ValueError: The 'low' value must be larger than 0 for a log distribution (low=0.0, high=0.1)`  
+**Location:** `configs/hpo/visual_classifier_sweep.yaml` - weight_decay parameter  
+**Root Cause:** `low: 0.0` with `log: true` is invalid (log(0) undefined)  
+**Caught By:** `test_log_distributions_have_positive_low()`  
+**Fix:** Changed `low: 0.0` → `low: 1e-7`  
+**Impact:** Would have crashed first trial on Paperspace
+
+### Bug #2: String vs Float Type Error (Caught by Integration Tests)
+**Error:** `TypeError: '>' not supported between instances of 'str' and 'float'`  
+**Location:** `scripts/objective.py:350` - `trial.suggest_float()`  
+**Root Cause:** YAML parses scientific notation (1e-7) as strings, passed to Optuna API expecting floats  
+**Caught By:** `test_config_values_work_with_optuna_api()`, `test_objective_can_sample_parameters()`  
+**Fix:** Added `float(param_config['low'])` conversion before Optuna calls  
+**Impact:** Would have crashed first trial on Paperspace (after Bug #1 fix)
+
+**Total Production Failures Prevented: 2**  
+**GPU Time Saved:** Unknown (both would crash trial 0 or trial 1)
+
 ## Summary
 
-**Test Coverage: 15%** (config validation only)
+**Test Coverage: 20%** (config + basic integration)
 
-**Tested:** Configuration validation (6 tests) ✅  
-**Untested:** Training logic, data pipeline, integration (0 tests) ❌
+**Tested:** Configuration validation (6 tests) + Integration (3 tests) ✅  
+**Untested:** Training logic, data pipeline, end-to-end (0 tests) ❌
 
-**Bugs Caught:** 1 (weight_decay log distribution error)  
-**Bugs Missed:** Unknown (no tests for 85% of system)
+**Bugs Caught by Tests:** 2 (both would have crashed on Paperspace)  
+**Bugs Missed:** Unknown (no tests for 80% of system)
 
 **Recommendation:** Add integration tests for critical path before large-scale sweeps.
