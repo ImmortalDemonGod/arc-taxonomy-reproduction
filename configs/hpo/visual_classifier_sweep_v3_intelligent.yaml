@@ -1,0 +1,236 @@
+# HPO Sweep Configuration v3: Intelligent Refinement
+# Based on systematic analysis of v2 sweep (20 trials completed Oct 31, 2025)
+# Strategy: Conservative refinement - expand boundaries, adjust ranges, minimal elimination
+
+# --- Study Configuration ---
+study_name: "visual_classifier_v3_intelligent_refinement"
+storage_url: "***REMOVED***"
+n_trials: 100  # More trials to properly explore expanded space
+direction: "maximize"
+
+# --- Pruning Configuration ---
+pruner:
+  type: "hyperband"
+  min_resource: 3
+  max_resource: 20
+  reduction_factor: 3
+
+# --- Fixed Parameters ---
+fixed:
+  # Data paths
+  data_dir: "data/distributional_alignment"
+  labels: "data/taxonomy_classification/all_tasks_classified.json"
+  centroids: "outputs/visual_classifier/category_centroids_v3.npy"
+  
+  # Training config
+  epochs: 20
+  num_workers: 2
+  seed: 42
+  stratify: true
+  color_permute: true
+  random_demos: true
+  early_stop_patience: 4
+  val_ratio: 0.2
+  
+  # FIXED based on strong evidence (100% elite convergence + significant effect)
+  use_scheduler: true           # +5.0% effect, 100% of elites used it
+  label_smoothing: 0.0          # Hurts performance (ρ=-0.41, p=0.075), fix to zero
+
+# --- Parameter Search Space (13 parameters, expanded from restricted v2) ---
+param_ranges:
+  
+  # ============================================================================
+  # ARCHITECTURAL CHOICE: Keep both, but bias toward CNN
+  # ============================================================================
+  # Rationale: CNN dominated (100% of elites) but context deserves fair trial
+  # with proper parameter ranges before complete elimination
+  encoder_type:
+    type: "categorical"
+    choices: ["cnn", "cnn", "cnn", "context"]  # 75% CNN, 25% context
+  
+  # ============================================================================
+  # LEARNING DYNAMICS: Refined ranges based on elite clustering
+  # ============================================================================
+  
+  # Batch Size: MOST IMPORTANT parameter (ρ=-0.67, p=0.001)
+  # Elite convergence at 16, but explore smaller per strong negative correlation
+  batch_size:
+    type: "categorical"
+    choices: [8, 16, 32]  # Add 8 (smaller may be better), keep 16 (elite choice), keep 32 for validation
+  
+  # Learning Rate: Narrow to elite cluster but allow headroom
+  # Elite range: [6.7e-5, 2.5e-4], expand slightly for safety
+  lr:
+    type: "float"
+    low: 5.0e-5      # Slightly below elite min
+    high: 3.0e-4     # Slightly above elite max
+    log: true
+  
+  # Weight Decay: Weak positive trend (ρ=0.37), keep broad exploration
+  weight_decay:
+    type: "float"
+    low: 1e-7
+    high: 0.1        # Keep original upper bound
+    log: true
+  
+  # ============================================================================
+  # CAPACITY: Expanded boundaries where elites hit limits
+  # ============================================================================
+  
+  # Embedding Dimension: Keep original choices (weak effect ρ=0.05)
+  embed_dim:
+    type: "categorical"
+    choices: [128, 256, 384, 512, 768]  # Keep all 5 original choices
+  
+  # ============================================================================
+  # CNN-SPECIFIC PARAMETERS (when encoder_type="cnn")
+  # ============================================================================
+  
+  # Demo Aggregation: Strong signal (flatten +7.1% better), but keep mean for validation
+  demo_agg:
+    type: "categorical"
+    choices: ["flatten", "mean"]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # Network Depth: EXPAND UPPER BOUND (elites hit boundary at 6)
+  # Strong positive trend (ρ=0.48, p=0.071)
+  depth:
+    type: "int"
+    low: 3           # Keep lower bound (elites never went below 4, but allow 3)
+    high: 10         # EXPANDED from 6 to 10 (elites maxed out)
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # Width Multiplier: EXPAND UPPER BOUND (elites clustered at 2.3-3.0)
+  # Positive trend (ρ=0.29)
+  width_mult:
+    type: "float"
+    low: 0.75        # Raised from 0.5 (elites never used <1.1)
+    high: 5.0        # EXPANDED from 3.0 to 5.0
+    log: false
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # MLP Hidden: Keep broader exploration (weak effect ρ=0.23)
+  mlp_hidden:
+    type: "categorical"
+    choices: [256, 512, 1024, 2048]  # Keep all 4 choices
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # Coordinate Encoding: Keep both (False +3.5% better, but not overwhelming)
+  use_coords:
+    type: "categorical"
+    choices: [false, true]
+    condition:
+      equals:
+        encoder_type: "cnn"
+  
+  # ============================================================================
+  # PROJECTION & SIMILARITY
+  # ============================================================================
+  
+  # Cosine Similarity: False was better (-1.6% penalty), but keep for validation
+  use_cosine:
+    type: "categorical"
+    choices: [false, true]
+  
+  # Temperature: Only applies when use_cosine=true
+  # Weak effect (ρ=0.21), expand range for better exploration
+  temperature:
+    type: "float"
+    low: 1.0         # EXPANDED from 5.0 (allow lower temps)
+    high: 30.0       # EXPANDED from 20.0 (allow higher temps)
+    log: false
+    condition:
+      equals:
+        use_cosine: true
+  
+  # ============================================================================
+  # CONTEXT ENCODER PARAMETERS (when encoder_type="context")
+  # ============================================================================
+  # Rationale: Give context a fair chance with expanded ranges
+  # Previous sweep had only 5 context trials, insufficient for conclusions
+  
+  ctx_d_model:
+    type: "categorical"
+    choices: [128, 256, 384, 512, 768]  # EXPANDED from [128,256,384,512]
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_n_head:
+    type: "categorical"
+    choices: [4, 8, 16]  # Keep original
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_pixel_layers:
+    type: "int"
+    low: 1
+    high: 6          # EXPANDED from 5 (allow deeper)
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_grid_layers:
+    type: "int"
+    low: 1
+    high: 4          # EXPANDED from 3 (allow more layers)
+    condition:
+      equals:
+        encoder_type: "context"
+  
+  ctx_dropout:
+    type: "float"
+    low: 0.0
+    high: 0.5        # EXPANDED from 0.3 (explore higher dropout)
+    log: false
+    condition:
+      equals:
+        encoder_type: "context"
+
+# ============================================================================
+# DESIGN RATIONALE SUMMARY
+# ============================================================================
+# 
+# FIXED (2 parameters):
+#   - use_scheduler=True     : 100% elite convergence, +5.0% effect
+#   - label_smoothing=0.0    : Negative correlation (ρ=-0.41), hurts performance
+# 
+# BIASED (1 parameter):
+#   - encoder_type           : 75% CNN / 25% context (give context fair trial)
+# 
+# NARROWED (1 parameter):
+#   - lr                     : Focused on elite cluster [5e-5, 3e-4]
+# 
+# EXPANDED (5 parameters):
+#   - depth                  : 6→10 (elites hit boundary)
+#   - width_mult             : 3.0→5.0 (elites clustered high)
+#   - temperature            : [1,30] (broader exploration)
+#   - ctx_pixel_layers       : 5→6 (give context more capacity)
+#   - ctx_grid_layers        : 3→4 (give context more capacity)
+#   - ctx_dropout            : 0.3→0.5 (explore higher regularization)
+#   - ctx_d_model            : add 768 choice
+# 
+# KEPT BROAD (5 parameters):
+#   - batch_size             : [8,16,32] (explore smaller per strong signal)
+#   - weight_decay           : [1e-7, 0.1] (weak signal, keep exploration)
+#   - embed_dim              : All 5 choices (weak effect)
+#   - mlp_hidden             : All 4 choices (weak effect)
+#   - demo_agg, use_coords, use_cosine : Keep both choices for validation
+# 
+# TOTAL: 13 searchable parameters (down from 17, up from aggressive 7)
+# 
+# Expected Outcomes:
+#   1. Validate CNN dominance with expanded capacity (depth, width)
+#   2. Give context encoder fair comparison with better hyperparams
+#   3. Explore smaller batch sizes (strongest signal from v2)
+#   4. Discover if performance continues improving with deeper/wider models
+#   5. 100 trials sufficient for 13-parameter space with biased sampling
