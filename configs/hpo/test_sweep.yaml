@@ -44,9 +44,9 @@ param_ranges:
   
   weight_decay:
     type: "float"
-    low: 0.0
+    low: 1e-7
     high: 0.001
-    log: false
+    log: true
   
   label_smoothing:
     type: "float"
