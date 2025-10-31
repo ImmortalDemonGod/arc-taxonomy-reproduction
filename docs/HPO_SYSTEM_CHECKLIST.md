@@ -111,5 +111,15 @@ The system is **fully self-contained** and ready to run in standalone environmen
 1. **9852453** - Added missing optuna and psycopg2-binary dependencies
 2. **9852453** - Fixed path resolution for multiple environments
 3. **1c076cd** - Added missing all_tasks_classified.json file (CRITICAL FIX)
+4. **3bf1924** - Added missing category_centroids_v3.npy file (CRITICAL FIX)
 
 The system is now production-ready for systematic MEASURE experiments.
+
+## File Sizes Summary
+
+**Critical data files:**
+- `data/taxonomy_classification/all_tasks_classified.json` - 7.9KB
+- `outputs/visual_classifier/category_centroids_v3.npy` - 5.8MB
+- `data/distributional_alignment/*.json` - 403 files (varies per task)
+
+Total repository size: ~120MB (mostly task JSON files)
