@@ -90,8 +90,8 @@ def main():
         
     elif dataset_mode == 'arc-agi-2':
         # ARC-AGI-2 real competition dataset
-        # Located in cultivation/data/raw/arc_prize_2025/
-        arc_data_dir = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/data/raw/arc_prize_2025")
+        # Located in reproduction/data/arc_prize_2025/
+        arc_data_dir = Path(__file__).parent.parent / "data" / "arc_prize_2025"
         
         # Load training challenges JSON
         with open(arc_data_dir / "arc-agi_training_challenges.json") as f:
