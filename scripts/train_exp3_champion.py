@@ -126,6 +126,16 @@ def main():
         dataset_info = f"{len(train_files)} train, {len(val_files)} eval tasks"
         experiment_phase = "Transfer Learning" if checkpoint_path else "Training from Scratch"
     
+    # Determine experiment name for logging (used throughout)
+    if checkpoint_path:
+        ckpt_name = Path(checkpoint_path).stem.split('-')[0]  # "champion" or "champion_merged_loras"
+        if "merged" in ckpt_name:
+            exp_name = f"exp3b_merged_lora_{dataset_mode}"  # e.g., "exp3b_merged_lora_arc-agi-2"
+        else:
+            exp_name = f"exp2_champion_{dataset_mode}"      # e.g., "exp2_champion_arc-agi-2"
+    else:
+        exp_name = f"exp3_champion_{dataset_mode}"          # e.g., "exp3_champion_rearc"
+    
     # Print experiment configuration
     print(f"\n{'='*80}")
     print(f"TRAINING: Champion Architecture (Exp 3)")
@@ -160,9 +170,11 @@ def main():
         print(f"   Strategy: Continue training with same hyperparameters")
         print(f"")
     print(f"💾 OUTPUTS:")
-    print(f"   Checkpoints: checkpoints/exp3_champion/")
-    print(f"   Logs: logs/champion_training/ (TensorBoard)")
-    print(f"   Per-task metrics: logs/per_task_metrics/exp3/")
+    print(f"   Experiment Name: {exp_name}")
+    print(f"   Checkpoints: checkpoints/{exp_name}/")
+    print(f"   TensorBoard: logs/{exp_name}_tb/")
+    print(f"   CSV Logs: logs/{exp_name}_csv/")
+    print(f"   Per-task metrics: logs/per_task_metrics/{exp_name}/")
     print(f"")
     print(f"{'='*80}\n")
     
@@ -230,9 +242,9 @@ def main():
     # Benefit: Reliable training without hangs
     # model = torch.compile(model)  # DISABLED
     
-    # Callbacks
+    # Callbacks with unique directories (exp_name calculated earlier)
     checkpoint_callback = ModelCheckpoint(
-        dirpath="checkpoints/exp3_champion",
+        dirpath=f"checkpoints/{exp_name}",
         filename="champion-{epoch:02d}-{val_loss:.4f}",
         monitor="val_loss",  # Monitor loss (standard practice)
         mode="min",
@@ -242,7 +254,7 @@ def main():
     )
 
     checkpoint_acc = ModelCheckpoint(
-        dirpath="checkpoints/exp3_champion",
+        dirpath=f"checkpoints/{exp_name}",
         filename="champion-acc-{epoch:02d}-{val_grid_accuracy:.4f}",
         monitor="val_grid_accuracy",
         mode="max",
@@ -254,8 +266,8 @@ def main():
     # Per-task metrics logger - writes CSV files after each epoch
     # Robust to GPU crashes - all data is on disk immediately
     per_task_logger = PerTaskMetricsLogger(
-        log_dir="logs/per_task_metrics/exp3",
-        experiment_name="exp3_champion"
+        log_dir=f"logs/per_task_metrics/{exp_name}",
+        experiment_name=exp_name
     )
     
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
@@ -263,13 +275,13 @@ def main():
     # Loggers for comprehensive metric tracking
     tb_logger = TensorBoardLogger(
         save_dir="logs",
-        name="champion_training",
+        name=f"{exp_name}_tb",
         version=None,  # Auto-increment version
     )
     
     csv_logger = CSVLogger(
         save_dir="logs",
-        name="champion_csv",
+        name=f"{exp_name}_csv",
         version=None,
     )
     
@@ -304,14 +316,16 @@ def main():
     print(f"")
     if not fast_dev_run:
         print(f"📁 OUTPUTS:")
+        print(f"   Experiment: {exp_name}")
         print(f"   Best checkpoint (loss): {checkpoint_callback.best_model_path}")
         if checkpoint_callback.best_model_score is not None:
             print(f"   Best val_loss: {checkpoint_callback.best_model_score:.4f}")
         print(f"   Best checkpoint (acc): {checkpoint_acc.best_model_path}")
         if checkpoint_acc.best_model_score is not None:
             print(f"   Best val_grid_accuracy: {checkpoint_acc.best_model_score:.4f}")
-        print(f"   TensorBoard logs: logs/champion_training/")
-        print(f"   Per-task metrics: logs/per_task_metrics/exp3/")
+        print(f"   TensorBoard logs: logs/{exp_name}_tb/")
+        print(f"   CSV logs: logs/{exp_name}_csv/")
+        print(f"   Per-task metrics: logs/per_task_metrics/{exp_name}/")
         print(f"")
         if dataset_mode == 'arc-agi-2':
             print(f"📊 NEXT STEPS:")
