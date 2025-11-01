@@ -76,10 +76,14 @@ class ChampionARCDataset(Dataset):
                 # Use first num_context_pairs as context (demonstrations)
                 context_examples = train_examples[:self.num_context_pairs]
                 
-                # Use ALL examples as queries (both train and test are examples of the same pattern)
-                # Note: ARC's "train"/"test" are NOT ML train/val splits!
-                # They're all demonstrations of the task's transformation rule.
-                query_examples = train_examples + test_examples
+                # Use training examples as queries
+                # Note: For re-arc, test examples also have outputs so we can use them
+                # For real ARC-AGI-2, test examples don't have outputs (they're for prediction)
+                # So we only use examples that have 'output' key
+                query_examples = []
+                for ex in train_examples + test_examples:
+                    if 'output' in ex:
+                        query_examples.append(ex)
                 
                 for query in query_examples:
                     example = self._process_example(query, context_examples, task_id)
