@@ -1,13 +1,33 @@
 """
 Training script for Champion architecture (Exp 3).
 
-Trains from scratch on 18 foundational V2 tasks with full champion architecture:
+Supports two dataset modes:
+1. Re-ARC (default): Pre-training on 400 synthetic re-arc tasks
+2. ARC-AGI-2: Fine-tuning/transfer learning on real ARC competition tasks
+
+Architecture:
 - Encoder-Decoder
 - Grid2D Positional Encoding  
 - Permutation-Invariant Embeddings
-- Context Bridge
+- Context Bridge and Encoder
 
-Uses CrossEntropyLoss (Option A - simple, standard approach).
+Uses Trial 69 hyperparameters (optimized on real ARC) and CrossEntropyLoss (Option A).
+
+USAGE EXAMPLES:
+
+1. Pre-train on re-arc (Phase 1B - reproduce champion_bootstrap.ckpt):
+   python scripts/train_exp3_champion.py --dataset rearc
+
+2. Transfer learning: Champion → ARC-AGI-2 (Experiment 2):
+   python scripts/train_exp3_champion.py --dataset arc-agi-2 \\
+       --checkpoint weights/champion-epoch=36-val_loss=0.5926.ckpt
+
+3. Transfer learning: Merged LoRA → ARC-AGI-2 (Experiment 3b):
+   python scripts/train_exp3_champion.py --dataset arc-agi-2 \\
+       --checkpoint weights/champion_merged_loras.ckpt
+
+4. Quick test (5 batches):
+   python scripts/train_exp3_champion.py --fast_dev_run 5
 """
 import sys
 import argparse
@@ -28,10 +48,17 @@ from src.callbacks import PerTaskMetricsLogger
 def main():
     """Train Champion architecture (Exp 3)."""
     # Parse CLI arguments
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Train Champion architecture on re-arc or ARC-AGI-2')
+    parser.add_argument('--dataset', type=str, default='rearc', choices=['rearc', 'arc-agi-2'],
+                        help='Dataset to train on: rearc (synthetic 400 tasks) or arc-agi-2 (real competition)')
+    parser.add_argument('--checkpoint', type=str, default=None,
+                        help='Path to checkpoint for transfer learning (e.g., champion_bootstrap.ckpt or champion_merged_loras.ckpt)')
     parser.add_argument('--fast_dev_run', type=int, default=None,
                         help='Run fast_dev_run with N batches for testing')
     args, unknown = parser.parse_known_args()
+    
+    dataset_mode = args.dataset
+    checkpoint_path = args.checkpoint
     fast_dev_run = args.fast_dev_run
 
     
@@ -42,36 +69,102 @@ def main():
     # Set seed for reproducibility (Trial 69 used 307)
     pl.seed_everything(307, workers=True)
     
-    # Get data files from distributional_alignment dataset (Phase 1B - 400 tasks)
-    # This is the correct pretraining dataset that produced champion_bootstrap.ckpt
+    # Load dataset based on mode
     import json
-    # Data is now bundled in the reproduction repo
-    data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
     
-    # Load split manifest to get train/val split
-    with open(data_dir / "split_manifest.json") as f:
-        split_info = json.load(f)
+    if dataset_mode == 'rearc':
+        # Re-ARC synthetic dataset (Phase 1B - 400 tasks)
+        # This is the pretraining dataset that produced champion_bootstrap.ckpt
+        data_dir = Path(__file__).parent.parent / "data" / "distributional_alignment"
+        
+        # Load split manifest to get train/val split
+        with open(data_dir / "split_manifest.json") as f:
+            split_info = json.load(f)
+        
+        train_files = [data_dir / fname for fname in split_info["train_files"]]
+        val_files = [data_dir / fname for fname in split_info["val_files"]]
+        
+        dataset_name = "Re-ARC Synthetic (distributional_alignment)"
+        dataset_info = f"{len(train_files) + len(val_files)} tasks"
+        experiment_phase = "Phase 1B (Pre-training)"
+        
+    elif dataset_mode == 'arc-agi-2':
+        # ARC-AGI-2 real competition dataset
+        # Located in cultivation/data/raw/arc_prize_2025/
+        arc_data_dir = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/data/raw/arc_prize_2025")
+        
+        # Load training challenges JSON
+        with open(arc_data_dir / "arc-agi_training_challenges.json") as f:
+            training_data = json.load(f)
+        
+        # Load evaluation challenges JSON  
+        with open(arc_data_dir / "arc-agi_evaluation_challenges.json") as f:
+            eval_data = json.load(f)
+        
+        # Convert JSON dict format to individual task files format
+        # ARC-AGI-2 format: {task_id: {train: [...], test: [...]}, ...}
+        # We need to create temporary task files or load them differently
+        # For now, we'll save them as temp files
+        temp_dir = Path(__file__).parent.parent / "data" / "arc_agi_temp"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        train_files = []
+        for task_id, task_data in training_data.items():
+            task_file = temp_dir / f"{task_id}.json"
+            with open(task_file, 'w') as f:
+                json.dump(task_data, f)
+            train_files.append(task_file)
+        
+        val_files = []
+        for task_id, task_data in eval_data.items():
+            task_file = temp_dir / f"{task_id}_eval.json"
+            with open(task_file, 'w') as f:
+                json.dump(task_data, f)
+            val_files.append(task_file)
+        
+        dataset_name = "ARC-AGI-2 Competition (Real Tasks)"
+        dataset_info = f"{len(train_files)} train, {len(val_files)} eval tasks"
+        experiment_phase = "Transfer Learning" if checkpoint_path else "Training from Scratch"
     
-    train_files = [data_dir / fname for fname in split_info["train_files"]]
-    val_files = [data_dir / fname for fname in split_info["val_files"]]
-    
-    task_files = train_files + val_files  # For info printing
-    
-    print(f"\n{'='*70}")
-    print(f"TRAINING: Exp 3 (Champion Architecture) - Phase 1B")
-    print(f"{'='*70}")
-    print(f"Dataset: distributional_alignment (re-arc synthetic)")
-    print(f"Total tasks: {len(task_files)}")
-    print(f"Train tasks: {len(train_files)} ({len(train_files) * 150} examples)")
-    print(f"Val tasks: {len(val_files)} ({len(val_files) * 150} examples)")
-    print(f"Architecture: Full Champion (E-D + Grid2D PE + PermInv + Bridge)")
-    print(f"Training config: Trial 69 hyperparameters")
-    print(f"Loss function: CrossEntropyLoss (Option A)")
-    print(f"Context pairs: 2 (fixed)")
-    print(f"Expected baseline: ~2.34% grid accuracy (champion_bootstrap)")
-    print(f"Early stopping: DISABLED (will train full 100 epochs)")
-    print(f"Per-task metrics: Saved to logs/per_task_metrics/ after each epoch")
-    print(f"{'='*70}\n")
+    # Print experiment configuration
+    print(f"\n{'='*80}")
+    print(f"TRAINING: Champion Architecture (Exp 3)")
+    print(f"{'='*80}")
+    print(f"")
+    print(f"📊 DATASET:")
+    print(f"   Name: {dataset_name}")
+    print(f"   Tasks: {dataset_info}")
+    print(f"   Phase: {experiment_phase}")
+    print(f"")
+    print(f"🏗️  ARCHITECTURE:")
+    print(f"   Model: Full Champion (V3)")
+    print(f"   Components: Encoder-Decoder + Grid2D PE + PermInv + Context Bridge")
+    print(f"   Parameters: ~1.7M")
+    print(f"   Bridge: 8 heads, 2 tokens (apply_to_decoder=true)")
+    print(f"")
+    print(f"⚙️  TRAINING CONFIG (Trial 69 - Optimized on Real ARC):")
+    print(f"   Learning Rate: 0.00185")
+    print(f"   Optimizer: Adam (beta1=0.95, beta2=0.999, weight_decay=0.0)")
+    print(f"   Scheduler: CosineAnnealingWarmRestarts (T_0=6)")
+    print(f"   Batch Size: 32")
+    print(f"   Max Epochs: 100")
+    print(f"   Precision: Mixed (16-bit)")
+    print(f"   Gradient Clip: 1.0")
+    print(f"   Context Pairs: 2 (FIXED)")
+    print(f"   Max Grid Size: 30x30")
+    print(f"   Seed: 307 (Trial 69)")
+    print(f"")
+    if checkpoint_path:
+        print(f"🔄 TRANSFER LEARNING:")
+        print(f"   Loading from: {checkpoint_path}")
+        print(f"   Strategy: Continue training with same hyperparameters")
+        print(f"")
+    print(f"💾 OUTPUTS:")
+    print(f"   Checkpoints: checkpoints/exp3_champion/")
+    print(f"   Logs: logs/champion_training/ (TensorBoard)")
+    print(f"   Per-task metrics: logs/per_task_metrics/exp3/")
+    print(f"")
+    print(f"{'='*80}\n")
     
     # Create data loaders with Trial 69 batch size
     train_loader = create_champion_dataloader(
@@ -79,7 +172,7 @@ def main():
         batch_size=32,  # Trial 69 value
         shuffle=True,
         num_context_pairs=2,  # Trial 69 value
-        max_grid_size=35,  # Increased for 150 samples/task (was 30 for 15 samples/task)
+        max_grid_size=30,
     )
     
     val_loader = create_champion_dataloader(
@@ -87,29 +180,49 @@ def main():
         batch_size=32,
         shuffle=False,
         num_context_pairs=2,
-        max_grid_size=35,  # Increased for 150 samples/task
+        max_grid_size=30,
     )
     
     # Create model with Trial 69-aligned configuration
-    # Using architecture parameters from Trial 69
-    model = Exp3ChampionLightningModule(
-        vocab_size=11,
-        d_model=160,  # Trial 69 value
-        num_encoder_layers=1,  # Trial 69 value
-        num_decoder_layers=3,  # Trial 69 value (1.7M params)
-        num_heads=4,
-        d_ff=640,  # Trial 69 value (1.7M params)
-        max_grid_size=35,  # Increased for 150 samples/task
-        dropout=0.16712351989226623,  # Trial 69 optimized dropout
-        learning_rate=0.0018498849832733245,  # Trial 69
-        weight_decay=0.0,  # Trial 69
-        beta1=0.95,  # Trial 69
-        beta2=0.999,
-        max_epochs=100,
-        pad_token=10,
-        use_context=True,
-        use_bridge=True,
-    )
+    if checkpoint_path:
+        # Load from checkpoint for transfer learning
+        print(f"Loading model from checkpoint: {checkpoint_path}")
+        torch.serialization.add_safe_globals([
+            'omegaconf.listconfig.ListConfig',
+            'omegaconf.dictconfig.DictConfig'
+        ])
+        model = Exp3ChampionLightningModule.load_from_checkpoint(
+            checkpoint_path,
+            # Override training config to continue with same hyperparameters
+            learning_rate=0.0018498849832733245,  # Trial 69
+            weight_decay=0.0,
+            beta1=0.95,
+            beta2=0.999,
+            max_epochs=100,
+        )
+        print("✓ Checkpoint loaded successfully\n")
+    else:
+        # Create new model from scratch
+        print("Creating model from scratch...")
+        model = Exp3ChampionLightningModule(
+            vocab_size=11,
+            d_model=160,  # Trial 69 value
+            num_encoder_layers=1,  # Trial 69 value
+            num_decoder_layers=3,  # Trial 69 value (1.7M params)
+            num_heads=4,
+            d_ff=640,  # Trial 69 value (1.7M params)
+            max_grid_size=30,
+            dropout=0.16712351989226623,  # Trial 69 optimized dropout
+            learning_rate=0.0018498849832733245,  # Trial 69
+            weight_decay=0.0,  # Trial 69
+            beta1=0.95,  # Trial 69
+            beta2=0.999,
+            max_epochs=100,
+            pad_token=10,
+            use_context=True,
+            use_bridge=True,
+        )
+        print("✓ Model created successfully\n")
     
     # NOTE: torch.compile DISABLED due to hangs with dynamic shapes
     # Even with unlimited cache, it causes training to freeze mid-epoch
@@ -126,6 +239,16 @@ def main():
         save_top_k=3,
         save_last=True,
         every_n_epochs=1,  # Save checkpoint every epoch for crash recovery
+    )
+
+    checkpoint_acc = ModelCheckpoint(
+        dirpath="checkpoints/exp3_champion",
+        filename="champion-acc-{epoch:02d}-{val_grid_accuracy:.4f}",
+        monitor="val_grid_accuracy",
+        mode="max",
+        save_top_k=3,
+        save_last=False,
+        every_n_epochs=1,
     )
     
     # Per-task metrics logger - writes CSV files after each epoch
@@ -158,7 +281,7 @@ def main():
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
-        callbacks=[checkpoint_callback, per_task_logger, lr_monitor],
+        callbacks=[checkpoint_callback, checkpoint_acc, per_task_logger, lr_monitor],
         logger=[tb_logger, csv_logger],  # Multiple loggers for comprehensive tracking
         log_every_n_steps=10,
         enable_progress_bar=True,
@@ -166,22 +289,40 @@ def main():
         fast_dev_run=fast_dev_run if fast_dev_run else False,  # CLI override for testing
     )
     
-    print("Starting training...")
-    print(f"Checkpoints will be saved to: checkpoints/exp_3_champion/\n")
+    print("🚀 Starting training...\n")
     
     # Train!
     trainer.fit(model, train_loader, val_loader)
     
-    print(f"\n{'='*70}")
-    print(f"Training complete!")
-    # Only print checkpoint info if not in fast_dev_run mode
+    # Print completion summary
+    print(f"\n{'='*80}")
+    print(f"✅ TRAINING COMPLETE")
+    print(f"{'='*80}")
+    print(f"")
+    print(f"Dataset: {dataset_name}")
+    print(f"Phase: {experiment_phase}")
+    print(f"")
     if not fast_dev_run:
-        print(f"Best checkpoint: {checkpoint_callback.best_model_path}")
+        print(f"📁 OUTPUTS:")
+        print(f"   Best checkpoint (loss): {checkpoint_callback.best_model_path}")
         if checkpoint_callback.best_model_score is not None:
-            print(f"Best val_loss: {checkpoint_callback.best_model_score:.4f}")
+            print(f"   Best val_loss: {checkpoint_callback.best_model_score:.4f}")
+        print(f"   Best checkpoint (acc): {checkpoint_acc.best_model_path}")
+        if checkpoint_acc.best_model_score is not None:
+            print(f"   Best val_grid_accuracy: {checkpoint_acc.best_model_score:.4f}")
+        print(f"   TensorBoard logs: logs/champion_training/")
+        print(f"   Per-task metrics: logs/per_task_metrics/exp3/")
+        print(f"")
+        if dataset_mode == 'arc-agi-2':
+            print(f"📊 NEXT STEPS:")
+            print(f"   1. Analyze results: Check val_grid_accuracy trend")
+            print(f"   2. Compare baselines: Exp 2 (champion) vs Exp 3b (merged LoRA)")
+            print(f"   3. Generate figures: Per-task performance analysis")
+            print(f"   4. Update paper: Transfer learning results section")
     else:
-        print(f"Fast dev run completed (5 batches)")
-    print(f"{'='*70}\n")
+        print(f"Fast dev run completed successfully")
+    print(f"")
+    print(f"{'='*80}\n")
 
 
 if __name__ == "__main__":
