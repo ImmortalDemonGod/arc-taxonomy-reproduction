@@ -203,16 +203,49 @@ def main():
             'omegaconf.listconfig.ListConfig',
             'omegaconf.dictconfig.DictConfig'
         ])
-        model = Exp3ChampionLightningModule.load_from_checkpoint(
-            checkpoint_path,
-            # Override training config to continue with same hyperparameters
-            learning_rate=0.0018498849832733245,  # Trial 69
-            weight_decay=0.0,
-            beta1=0.95,
-            beta2=0.999,
-            max_epochs=100,
-        )
-        print("✓ Checkpoint loaded successfully\n")
+        try:
+            # Primary path: Lightning-formatted checkpoint
+            model = Exp3ChampionLightningModule.load_from_checkpoint(
+                checkpoint_path,
+                # Override training config to continue with same hyperparameters
+                learning_rate=0.0018498849832733245,  # Trial 69
+                weight_decay=0.0,
+                beta1=0.95,
+                beta2=0.999,
+                max_epochs=100,
+            )
+            print("✓ Checkpoint loaded successfully (Lightning format)\n")
+        except Exception as e:
+            # Fallback path: Non-Lightning checkpoint (e.g., merged LoRA without version field)
+            print(f"⚠️  Lightning load failed ({e}). Falling back to raw state_dict load...")
+            # Initialize a fresh module with Trial 69 hyperparameters
+            model = Exp3ChampionLightningModule(
+                vocab_size=11,
+                d_model=160,
+                num_encoder_layers=1,
+                num_decoder_layers=3,
+                num_heads=4,
+                d_ff=640,
+                max_grid_size=30,
+                dropout=0.16712351989226623,
+                learning_rate=0.0018498849832733245,
+                weight_decay=0.0,
+                beta1=0.95,
+                beta2=0.999,
+                max_epochs=100,
+                pad_token=10,
+                use_context=True,
+                use_bridge=True,
+            )
+            # Load checkpoint and extract state_dict
+            ckpt_obj = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+            state_dict = ckpt_obj.get('state_dict', ckpt_obj)
+            # Attempt to load with non-strict to allow harmless metadata/key diffs
+            incompatible = model.load_state_dict(state_dict, strict=False)
+            # Report any key issues for traceability
+            missing = len(getattr(incompatible, 'missing_keys', []))
+            unexpected = len(getattr(incompatible, 'unexpected_keys', []))
+            print(f"✓ Raw state_dict loaded (strict=False). Missing keys: {missing}, Unexpected keys: {unexpected}\n")
     else:
         # Create new model from scratch
         print("Creating model from scratch...")
