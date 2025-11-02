@@ -44,15 +44,17 @@ class PerTaskMetricsLogger(pl.Callback):
     def _load_task_categories(self) -> Dict[str, str]:
         """Load task categories from JSON file."""
         mapping: Dict[str, str] = {}
+        # repo root: .../reproduction
+        base = Path(__file__).parent.parent
+        
         try:
-            # repo root: .../reproduction
-            base = Path(__file__).parent.parent
             rearc_categories = base / "data" / "distributional_alignment" / "task_categories.json"
             if rearc_categories.exists():
                 with open(rearc_categories) as f:
                     mapping.update(json.load(f))
         except Exception as e:
             print(f"Warning: Could not load re-arc task categories: {e}")
+        
         try:
             vcats_csv = base / "outputs" / "visual_classifier" / "results" / "arc2_classify_seed.csv"
             if vcats_csv.exists():
@@ -63,8 +65,11 @@ class PerTaskMetricsLogger(pl.Callback):
                         lab = row.get('pred_label')
                         if tid and lab:
                             mapping[tid] = lab
+            else:
+                print(f"Warning: Visual classifier CSV not found at {vcats_csv}")
         except Exception as e:
             print(f"Warning: Could not load visual classifier categories: {e}")
+        
         return mapping
     
     def on_validation_epoch_end(self, trainer: pl.Trainer, pl_module: pl.LightningModule) -> None:
