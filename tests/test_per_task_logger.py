@@ -199,6 +199,80 @@ def test_category_lookup_strips_suffix(tmp_path):
         assert rows[2]['category'] == 'C1', f"Expected C1, got {rows[2]['category']}"
 
 
+def test_validation_helpers_load_task_categories(tmp_path, monkeypatch):
+    """Test that validation_helpers.load_task_categories loads visual classifier CSV."""
+    from src.models.validation_helpers import load_task_categories
+    
+    # Create mock file structure
+    outputs_dir = tmp_path / "outputs" / "visual_classifier" / "results"
+    outputs_dir.mkdir(parents=True)
+    
+    # Create mock arc2_classify_seed.csv
+    csv_path = outputs_dir / "arc2_classify_seed.csv"
+    with open(csv_path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['task_id', 'pred_label', 'pred_idx'])
+        writer.writerow(['0934a4d8_eval', 'S3', '2'])
+        writer.writerow(['135a2760_eval', 'S3', '2'])
+        writer.writerow(['136b0064_eval', 'C1', '3'])
+    
+    # Change to temp directory so relative paths work
+    monkeypatch.chdir(tmp_path)
+    
+    # Load categories
+    categories = load_task_categories()
+    
+    # Verify visual classifier categories were loaded
+    assert '0934a4d8_eval' in categories, f"Task not found in {categories.keys()}"
+    assert categories['0934a4d8_eval'] == 'S3'
+    assert categories['135a2760_eval'] == 'S3'
+    assert categories['136b0064_eval'] == 'C1'
+    assert len(categories) >= 3, f"Expected at least 3 categories, got {len(categories)}"
+
+
+def test_validation_helpers_aggregate_with_eval_suffix():
+    """Test that validation_helpers.aggregate_validation_metrics handles _eval suffix."""
+    from src.models.validation_helpers import aggregate_validation_metrics
+    import torch
+    
+    # Categories with _eval suffix (matching real ARC-AGI-2 data)
+    task_categories = {
+        '0934a4d8_eval': 'S3',
+        '135a2760_eval': 'S3',
+        '136b0064_eval': 'C1',
+    }
+    
+    # Validation outputs (same format as real validation)
+    validation_outputs = [
+        {
+            'task_ids': ['0934a4d8_eval', '135a2760_eval', '136b0064_eval'],
+            'grid_correct': torch.tensor([False, False, True]),
+            'cell_correct_counts': torch.tensor([5, 41, 167]),
+            'cell_total_counts': torch.tensor([89, 525, 228]),
+            'copy_rate': torch.tensor([0.0982, 0.0245, 0.0567]),
+            'change_recall': torch.tensor([0.9015, 0.3889, 0.9175]),
+            'trans_quality': torch.tensor([0.063, 0.0002, 0.163]),
+        }
+    ]
+    
+    # Aggregate
+    category_stats = aggregate_validation_metrics(validation_outputs, task_categories)
+    
+    # Verify categories are recognized (should NOT all be 'unknown')
+    assert 'unknown' not in category_stats or category_stats['unknown']['grid_total'] == 0, \
+        f"All tasks fell back to 'unknown': {category_stats}"
+    
+    # Verify S3 category
+    assert 'S3' in category_stats, f"S3 category not found in {category_stats.keys()}"
+    assert category_stats['S3']['grid_total'] == 2, "S3 should have 2 grids"
+    assert category_stats['S3']['grid_correct'] == 0, "S3 should have 0 correct grids"
+    
+    # Verify C1 category  
+    assert 'C1' in category_stats, f"C1 category not found in {category_stats.keys()}"
+    assert category_stats['C1']['grid_total'] == 1, "C1 should have 1 grid"
+    assert category_stats['C1']['grid_correct'] == 1, "C1 should have 1 correct grid"
+
+
 def test_per_task_logger_aggregates_by_category(tmp_path):
     """Test that category aggregation works correctly."""
     log_dir = tmp_path / "test_logs"

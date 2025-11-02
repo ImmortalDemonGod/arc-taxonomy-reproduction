@@ -122,20 +122,39 @@ def add_transformation_metrics(
 
 def load_task_categories() -> Dict[str, str]:
     """
-    Load task_categories.json mapping.
+    Load task categories from both re-arc JSON and visual classifier CSV.
     
     Returns:
         Dict mapping task_id -> category
     """
+    import csv
+    mapping: Dict[str, str] = {}
+    
+    # Load re-arc categories
     try:
         data_dir = Path("data/distributional_alignment")
         categories_file = data_dir / "task_categories.json"
         if categories_file.exists():
             with open(categories_file) as f:
-                return json.load(f)
+                mapping.update(json.load(f))
     except Exception:
         pass
-    return {}
+    
+    # Load visual classifier categories for ARC-AGI-2
+    try:
+        vcats_csv = Path("outputs/visual_classifier/results/arc2_classify_seed.csv")
+        if vcats_csv.exists():
+            with open(vcats_csv, newline='') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    tid = row.get('task_id')
+                    lab = row.get('pred_label')
+                    if tid and lab:
+                        mapping[tid] = lab
+    except Exception:
+        pass
+    
+    return mapping
 
 
 def aggregate_validation_metrics(
