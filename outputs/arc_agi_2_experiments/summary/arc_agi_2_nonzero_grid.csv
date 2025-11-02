@@ -1,0 +1,10 @@
+run,variant,earliest_nonzero_epoch,nonzero_epoch_count,longest_nonzero_streak
+logs_arc_agi_2_run_1,exp2_champion_arc-agi-2_csv,0.0,62.0,24.0
+logs_arc_agi_2_run_1,exp3_champion_arc-agi-2_csv,,0.0,0.0
+logs_arc_agi_2_run_1,exp3b_merged_lora_arc-agi-2_csv,,0.0,0.0
+logs_arc_agi_2_run_2,exp2_champion_arc-agi-2_csv,0.0,50.0,31.0
+logs_arc_agi_2_run_2,exp3_champion_arc-agi-2_csv,,0.0,0.0
+logs_arc_agi_2_run_2,exp3b_merged_lora_arc-agi-2_csv,,0.0,0.0
+logs_arc_agi_2_run_3,exp2_champion_arc-agi-2_csv,0.0,41.0,24.0
+logs_arc_agi_2_run_3,exp3_champion_arc-agi-2_csv,,0.0,0.0
+logs_arc_agi_2_run_3,exp3b_merged_lora_arc-agi-2_csv,,0.0,0.0

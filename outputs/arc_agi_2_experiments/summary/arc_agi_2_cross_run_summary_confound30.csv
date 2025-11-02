@@ -1,0 +1,3 @@
+variant,n_runs,grid_mean,grid_std,grid_ci95,cell_mean,cell_std,cell_ci95
+exp3_champion_arc-agi-2_csv,3,0.0,0.0,0.0,0.7158616781234741,0.0012136647186196368,0.0013733909179219576
+exp3b_merged_lora_arc-agi-2_csv,3,0.0,0.0,0.0,0.70330810546875,0.007529943703910109,0.008520933447893049

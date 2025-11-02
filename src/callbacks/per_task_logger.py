@@ -43,14 +43,28 @@ class PerTaskMetricsLogger(pl.Callback):
     
     def _load_task_categories(self) -> Dict[str, str]:
         """Load task categories from JSON file."""
+        mapping: Dict[str, str] = {}
         try:
-            categories_file = Path("data/distributional_alignment/task_categories.json")
-            if categories_file.exists():
-                with open(categories_file) as f:
-                    return json.load(f)
+            base = Path(__file__).parent.parent
+            rearc_categories = base.parent / "data" / "distributional_alignment" / "task_categories.json"
+            if rearc_categories.exists():
+                with open(rearc_categories) as f:
+                    mapping.update(json.load(f))
         except Exception as e:
-            print(f"Warning: Could not load task categories: {e}")
-        return {}
+            print(f"Warning: Could not load re-arc task categories: {e}")
+        try:
+            vcats_csv = base.parent / "outputs" / "visual_classifier" / "results" / "arc2_classify_seed.csv"
+            if vcats_csv.exists():
+                with open(vcats_csv, newline='') as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        tid = row.get('task_id')
+                        lab = row.get('pred_label')
+                        if tid and lab:
+                            mapping[tid] = lab
+        except Exception as e:
+            print(f"Warning: Could not load visual classifier categories: {e}")
+        return mapping
     
     def on_validation_epoch_end(self, trainer: pl.Trainer, pl_module: pl.LightningModule) -> None:
         """
@@ -116,6 +130,11 @@ class PerTaskMetricsLogger(pl.Callback):
         
         print(f"\n✓ Saved per-task metrics to {per_task_file.name}")
         print(f"✓ Saved per-category metrics to {per_category_file.name}\n")
+
+        try:
+            self._write_global_metrics_csv(task_metrics, epoch)
+        except Exception as e:
+            print(f"Warning: Failed to write global metrics CSV: {e}")
     
     def _write_per_task_csv(self, filepath: Path, task_metrics: Dict[str, Dict[str, Any]], epoch: int) -> None:
         """Write per-task metrics to CSV."""
@@ -231,3 +250,69 @@ class PerTaskMetricsLogger(pl.Callback):
                     'change_recall': f"{change_recall:.4f}",
                     'transformation_quality': f"{trans_quality:.6f}",
                 })
+
+    def _write_global_metrics_csv(self, task_metrics: Dict[str, Dict[str, Any]], epoch: int) -> None:
+        # Aggregate across all tasks
+        total_grid_correct = sum(m['grid_correct'] for m in task_metrics.values())
+        total_grid = sum(m['grid_total'] for m in task_metrics.values())
+        total_cell_correct = sum(m['cell_correct'] for m in task_metrics.values())
+        total_cell = sum(m['cell_total'] for m in task_metrics.values())
+        total_copy_sum = sum(m['copy_rate_sum'] for m in task_metrics.values())
+        total_change_sum = sum(m['change_recall_sum'] for m in task_metrics.values())
+        total_transq_sum = sum(m['trans_quality_sum'] for m in task_metrics.values())
+        total_metric_count = sum(m['metric_count'] for m in task_metrics.values())
+
+        # Compute decimals (0-1)
+        val_grid_accuracy = (total_grid_correct / total_grid) if total_grid > 0 else 0.0
+        val_cell_accuracy = (total_cell_correct / total_cell) if total_cell > 0 else 0.0
+        val_copy_rate = (total_copy_sum / total_metric_count) if total_metric_count > 0 else 0.0
+        val_change_recall = (total_change_sum / total_metric_count) if total_metric_count > 0 else 0.0
+        val_transformation_quality = (total_transq_sum / total_metric_count) if total_metric_count > 0 else 0.0
+
+        # Path: logs/{experiment_name}_csv/version_0/metrics.csv
+        base = Path("logs") / f"{self.experiment_name}_csv" / "version_0"
+        base.mkdir(parents=True, exist_ok=True)
+        metrics_csv = base / "metrics.csv"
+        # Also write denominators for analysis
+        global_metrics_csv = base / "global_metrics.csv"
+
+        # Prepare header
+        fieldnames = [
+            'epoch', 'val_grid_accuracy', 'val_cell_accuracy',
+            'val_copy_rate', 'val_change_recall', 'val_transformation_quality'
+        ]
+
+        write_header = not metrics_csv.exists()
+        with open(metrics_csv, 'a', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if write_header:
+                writer.writeheader()
+            writer.writerow({
+                'epoch': epoch,
+                'val_grid_accuracy': f"{val_grid_accuracy:.8f}",
+                'val_cell_accuracy': f"{val_cell_accuracy:.8f}",
+                'val_copy_rate': f"{val_copy_rate:.8f}",
+                'val_change_recall': f"{val_change_recall:.8f}",
+                'val_transformation_quality': f"{val_transformation_quality:.8f}",
+            })
+        # Write denominators to a separate file
+        g_fieldnames = [
+            'epoch', 'val_total_grids', 'val_total_cells',
+            'val_grid_accuracy', 'val_cell_accuracy',
+            'val_copy_rate', 'val_change_recall', 'val_transformation_quality'
+        ]
+        g_write_header = not global_metrics_csv.exists()
+        with open(global_metrics_csv, 'a', newline='') as f:
+            gw = csv.DictWriter(f, fieldnames=g_fieldnames)
+            if g_write_header:
+                gw.writeheader()
+            gw.writerow({
+                'epoch': epoch,
+                'val_total_grids': total_grid,
+                'val_total_cells': total_cell,
+                'val_grid_accuracy': f"{val_grid_accuracy:.8f}",
+                'val_cell_accuracy': f"{val_cell_accuracy:.8f}",
+                'val_copy_rate': f"{val_copy_rate:.8f}",
+                'val_change_recall': f"{val_change_recall:.8f}",
+                'val_transformation_quality': f"{val_transformation_quality:.8f}",
+            })

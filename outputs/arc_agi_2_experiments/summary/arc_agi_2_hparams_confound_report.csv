@@ -1,0 +1,2 @@
+key,variants,values_by_variant,distinct_values
+max_grid_size,exp2_champion_arc-agi-2_csv;exp3_champion_arc-agi-2_csv;exp3b_merged_lora_arc-agi-2_csv,exp2_champion_arc-agi-2_csv:35;exp3_champion_arc-agi-2_csv:30;exp3b_merged_lora_arc-agi-2_csv:30,"30,35"

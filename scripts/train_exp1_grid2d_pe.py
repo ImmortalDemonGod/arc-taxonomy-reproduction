@@ -97,6 +97,14 @@ def main():
         save_top_k=3,
         save_last=True,
     )
+    checkpoint_acc = ModelCheckpoint(
+        dirpath="checkpoints/exp1_grid2d_pe",
+        filename="exp1-acc-{epoch:02d}-{val_grid_accuracy:.4f}",
+        monitor="val_grid_accuracy",
+        mode="max",
+        save_top_k=3,
+        save_last=False,
+    )
     
     per_task_logger = PerTaskMetricsLogger(
         log_dir="logs/per_task_metrics/exp1",
@@ -123,7 +131,7 @@ def main():
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
-        callbacks=[checkpoint_callback, per_task_logger, lr_monitor],
+        callbacks=[checkpoint_callback, checkpoint_acc, per_task_logger, lr_monitor],
         logger=[tb_logger, csv_logger],
         log_every_n_steps=10,
         enable_progress_bar=True,

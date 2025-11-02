@@ -1,0 +1,4 @@
+variant_A,variant_B,t_stat,t_p,mw_stat,mw_p
+exp3_champion_arc-agi-2_csv,exp2_champion_arc-agi-2_csv,,,,
+exp3b_merged_lora_arc-agi-2_csv,exp3_champion_arc-agi-2_csv,,,4.5,1.0
+exp3b_merged_lora_arc-agi-2_csv,exp2_champion_arc-agi-2_csv,,,,

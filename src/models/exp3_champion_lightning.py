@@ -133,6 +133,12 @@ class Exp3ChampionLightningModule(pl.LightningModule):
         # Use actual grid shapes from data loader
         src_shape = src_shapes[0]
         tgt_shape = tgt_shapes[0]
+        # Shape audit: detect mixed shapes within batch and log as epoch metric
+        try:
+            mixed = any((sh != src_shape) or (th != tgt_shape) for sh, th in zip(src_shapes, tgt_shapes))
+            self.log('val_shape_mixed', float(mixed), batch_size=batch_size, on_step=False, on_epoch=True, prog_bar=False)
+        except Exception:
+            pass
         
         logits = self(src, tgt_input, src_shape, tgt_shape, ctx_in, ctx_out)
         

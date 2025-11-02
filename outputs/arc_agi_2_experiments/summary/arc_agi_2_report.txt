@@ -1,0 +1,50 @@
+ARC-AGI-2 Analysis Report
+Confounds:
+- max_grid_size: exp2_champion_arc-agi-2_csv:35;exp3_champion_arc-agi-2_csv:30;exp3b_merged_lora_arc-agi-2_csv:30
+
+Cross-run (best-by-grid, all variants):
+- exp2_champion_arc-agi-2_csv: grid_mean=0.002793, cell_mean=0.895011
+- exp3_champion_arc-agi-2_csv: grid_mean=0.000000, cell_mean=0.715862
+- exp3b_merged_lora_arc-agi-2_csv: grid_mean=0.000000, cell_mean=0.703308
+
+Cross-run (confound-controlled max_grid_size=30):
+- exp3_champion_arc-agi-2_csv: grid_mean=0.000000, cell_mean=0.715862
+- exp3b_merged_lora_arc-agi-2_csv: grid_mean=0.000000, cell_mean=0.703308
+
+LoRA effect (grid deltas):
+- run 1: Δgrid=0.000000
+- run 2: Δgrid=0.000000
+- run 3: Δgrid=0.000000
+
+Training dynamics (AUC/grid):
+- logs_arc_agi_2_run_1 exp2_champion_arc-agi-2_csv: auc_grid=0.170391, auc_cell=86.42
+- logs_arc_agi_2_run_1 exp3_champion_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.55
+- logs_arc_agi_2_run_1 exp3b_merged_lora_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.63
+- logs_arc_agi_2_run_2 exp2_champion_arc-agi-2_csv: auc_grid=0.138268, auc_cell=86.50
+- logs_arc_agi_2_run_2 exp3_champion_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.51
+- logs_arc_agi_2_run_2 exp3b_merged_lora_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.74
+- logs_arc_agi_2_run_3 exp2_champion_arc-agi-2_csv: auc_grid=0.113128, auc_cell=86.49
+- logs_arc_agi_2_run_3 exp3_champion_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.55
+- logs_arc_agi_2_run_3 exp3b_merged_lora_arc-agi-2_csv: auc_grid=0.000000, auc_cell=71.81
+
+Dissociation (epoch lags):
+- logs_arc_agi_2_run_1 exp2_champion_arc-agi-2_csv: lag=5.0
+- logs_arc_agi_2_run_1 exp3_champion_arc-agi-2_csv: lag=16.0
+- logs_arc_agi_2_run_1 exp3b_merged_lora_arc-agi-2_csv: lag=15.0
+- logs_arc_agi_2_run_2 exp2_champion_arc-agi-2_csv: lag=3.0
+- logs_arc_agi_2_run_2 exp3_champion_arc-agi-2_csv: lag=19.0
+- logs_arc_agi_2_run_2 exp3b_merged_lora_arc-agi-2_csv: lag=19.0
+- logs_arc_agi_2_run_3 exp2_champion_arc-agi-2_csv: lag=3.0
+- logs_arc_agi_2_run_3 exp3_champion_arc-agi-2_csv: lag=19.0
+- logs_arc_agi_2_run_3 exp3b_merged_lora_arc-agi-2_csv: lag=8.0
+
+Nonzero grid statistics:
+- logs_arc_agi_2_run_1 exp2_champion_arc-agi-2_csv: earliest=0.0, count=62.0, streak=24.0
+- logs_arc_agi_2_run_1 exp3_champion_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0
+- logs_arc_agi_2_run_1 exp3b_merged_lora_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0
+- logs_arc_agi_2_run_2 exp2_champion_arc-agi-2_csv: earliest=0.0, count=50.0, streak=31.0
+- logs_arc_agi_2_run_2 exp3_champion_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0
+- logs_arc_agi_2_run_2 exp3b_merged_lora_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0
+- logs_arc_agi_2_run_3 exp2_champion_arc-agi-2_csv: earliest=0.0, count=41.0, streak=24.0
+- logs_arc_agi_2_run_3 exp3_champion_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0
+- logs_arc_agi_2_run_3 exp3b_merged_lora_arc-agi-2_csv: earliest=nan, count=0.0, streak=0.0

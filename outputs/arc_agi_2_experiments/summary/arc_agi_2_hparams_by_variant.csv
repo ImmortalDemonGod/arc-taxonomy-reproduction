@@ -1,0 +1,4 @@
+variant,vocab_size,d_model,num_encoder_layers,num_decoder_layers,num_heads,d_ff,max_grid_size,dropout,learning_rate,weight_decay,beta1,beta2,max_epochs,pad_token,use_context,use_bridge
+exp2_champion_arc-agi-2_csv,11,160,1,3,4,640,35,0.16712351989226623,0.0018498849832733245,0.0,0.95,0.999,100,10,True,True
+exp3_champion_arc-agi-2_csv,11,160,1,3,4,640,30,0.16712351989226623,0.0018498849832733245,0.0,0.95,0.999,100,10,True,True
+exp3b_merged_lora_arc-agi-2_csv,11,160,1,3,4,640,30,0.16712351989226623,0.0018498849832733245,0.0,0.95,0.999,100,10,True,True

@@ -1,0 +1,16 @@
+{
+  "scatter": "cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/figures/fig_scatter_cnn_vs_cell.png",
+  "bars": "cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/figures/fig_bars_cnn_vs_cell.png",
+  "coverage_vs_threshold": "cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/figures/fig_coverage_vs_threshold.png",
+  "cats_order": [
+    "S1",
+    "S2",
+    "S3",
+    "C1",
+    "C2",
+    "K1",
+    "L1",
+    "A1",
+    "A2"
+  ]
+}

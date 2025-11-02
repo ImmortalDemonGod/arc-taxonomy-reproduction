@@ -1,0 +1,10 @@
+run,variant,best_epoch_grid,best_epoch_cell,epoch_lag_cell_minus_grid,pearson_grid_cell
+logs_arc_agi_2_run_1,exp2_champion_arc-agi-2_csv,0.0,5.0,5.0,0.4348855494952715
+logs_arc_agi_2_run_1,exp3_champion_arc-agi-2_csv,0.0,16.0,16.0,
+logs_arc_agi_2_run_1,exp3b_merged_lora_arc-agi-2_csv,0.0,15.0,15.0,
+logs_arc_agi_2_run_2,exp2_champion_arc-agi-2_csv,0.0,3.0,3.0,0.5937678281263427
+logs_arc_agi_2_run_2,exp3_champion_arc-agi-2_csv,0.0,19.0,19.0,
+logs_arc_agi_2_run_2,exp3b_merged_lora_arc-agi-2_csv,0.0,19.0,19.0,
+logs_arc_agi_2_run_3,exp2_champion_arc-agi-2_csv,0.0,3.0,3.0,0.7815396451730213
+logs_arc_agi_2_run_3,exp3_champion_arc-agi-2_csv,0.0,19.0,19.0,
+logs_arc_agi_2_run_3,exp3b_merged_lora_arc-agi-2_csv,0.0,8.0,8.0,

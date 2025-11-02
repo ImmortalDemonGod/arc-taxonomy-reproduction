@@ -55,11 +55,14 @@ def main():
                         help='Path to checkpoint for transfer learning (e.g., champion_bootstrap.ckpt or champion_merged_loras.ckpt)')
     parser.add_argument('--fast_dev_run', type=int, default=None,
                         help='Run fast_dev_run with N batches for testing')
+    parser.add_argument('--seed', type=int, default=307,
+                        help='Random seed for reproducibility (Trial 69 used 307)')
     args, unknown = parser.parse_known_args()
     
     dataset_mode = args.dataset
     checkpoint_path = args.checkpoint
     fast_dev_run = args.fast_dev_run
+    seed = args.seed
 
     
     # Performance optimizations for Tensor Cores (A6000)
@@ -67,7 +70,7 @@ def main():
     torch.set_float32_matmul_precision('high')
     
     # Set seed for reproducibility (Trial 69 used 307)
-    pl.seed_everything(307, workers=True)
+    pl.seed_everything(seed, workers=True)
     
     # Load dataset based on mode
     import json
@@ -135,6 +138,8 @@ def main():
             exp_name = f"exp2_champion_{dataset_mode}"      # e.g., "exp2_champion_arc-agi-2"
     else:
         exp_name = f"exp3_champion_{dataset_mode}"          # e.g., "exp3_champion_rearc"
+    # Ensure uniqueness across seeds
+    exp_name = f"{exp_name}_s{seed}"
     
     # Print experiment configuration
     print(f"\n{'='*80}")
@@ -162,7 +167,7 @@ def main():
     print(f"   Gradient Clip: 1.0")
     print(f"   Context Pairs: 2 (FIXED)")
     print(f"   Max Grid Size: 30x30")
-    print(f"   Seed: 307 (Trial 69)")
+    print(f"   Seed: {seed} (Trial 69)")
     print(f"")
     if checkpoint_path:
         print(f"🔄 TRANSFER LEARNING:")

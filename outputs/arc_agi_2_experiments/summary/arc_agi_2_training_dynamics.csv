@@ -1,0 +1,10 @@
+run,variant,n_epochs,best_epoch_grid,best_grid,final_epoch,final_grid,stability_grid,auc_grid,auc_cell
+logs_arc_agi_2_run_1,exp2_champion_arc-agi-2_csv,100.0,0.0,0.0027932960074394,99.0,0.0027932960074394,0.0,0.17039105645380337,86.42112469673157
+logs_arc_agi_2_run_1,exp3_champion_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.54721090197563
+logs_arc_agi_2_run_1,exp3b_merged_lora_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.62969702482224
+logs_arc_agi_2_run_2,exp2_champion_arc-agi-2_csv,100.0,0.0,0.0027932960074394,99.0,0.0,-0.0027932960074394,0.1382681523682503,86.50034612417221
+logs_arc_agi_2_run_2,exp3_champion_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.51225501298904
+logs_arc_agi_2_run_2,exp3b_merged_lora_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.73875522613525
+logs_arc_agi_2_run_3,exp2_champion_arc-agi-2_csv,100.0,0.0,0.0027932960074394,99.0,0.0,-0.0027932960074394,0.11312848830129571,86.49413937330246
+logs_arc_agi_2_run_3,exp3_champion_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.55474558472633
+logs_arc_agi_2_run_3,exp3b_merged_lora_arc-agi-2_csv,100.0,0.0,0.0,99.0,0.0,0.0,0.0,71.80900555849075

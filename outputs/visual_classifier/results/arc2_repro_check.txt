@@ -1,0 +1,10 @@
+ARC-AGI-2 Reproducibility Check (seed vs rerun)
+===============================================
+
+Loaded CSVs: arc2_classify_seed.csv, arc2_classify_seed_rerun.csv
+Row count: 1120 (match)
+pred_label identical: True
+pred_idx identical: True
+max |Δ prob|: 0.000e+00
+
+OVERALL STATUS: OK

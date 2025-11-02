@@ -1,0 +1,21 @@
+ARC-AGI-2 Seed Classification Summary
+Total tasks: 1120
+
+Predicted label distribution (alphabetical):
+  C1: 693 (61.9%)
+  S2: 61 (5.4%)
+  S3: 366 (32.7%)
+
+Confidence metrics:
+  Mean max prob: 0.274
+  Median max prob: 0.266
+  Mean entropy (nats): 1.875
+  Median entropy (nats): 1.883
+
+Sample predictions (first 5):
+ task_id pred_label  pred_idx
+00576224         C1         3
+007bbfb7         S2         1
+009d5c81         S3         2
+00d62c1b         C1         3
+00dbd492         C1         3

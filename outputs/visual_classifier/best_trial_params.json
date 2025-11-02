@@ -1,0 +1,19 @@
+{
+  "encoder_type": "cnn",
+  "lr": 9.79647045622515e-05,
+  "batch_size": 16,
+  "weight_decay": 0.0195710881545803,
+  "label_smoothing": 0.0142435014825662,
+  "embed_dim": 512,
+  "use_scheduler": true,
+  "use_cosine": false,
+  "demo_agg": "flatten",
+  "width_mult": 2.6205226034075375,
+  "depth": 6.0,
+  "mlp_hidden": 2048.0,
+  "use_coords": false,
+  "best_epoch": 12,
+  "train_acc": 0.3135416666666666,
+  "train_loss": 1.791791570186615,
+  "val_loss": 1.9042679071426392
+}

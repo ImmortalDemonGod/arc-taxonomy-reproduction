@@ -1,0 +1,10 @@
+run,variant,r_grid_cell,r_grid_copy_rate,r_grid_change_recall,r_grid_transformation_f1,early_slope_cell,early_slope_grid
+logs_arc_agi_2_run_1,exp2_champion_arc-agi-2_csv,0.4348855494952715,-0.1377444693196976,0.3909389240762097,0.33662646108611377,-0.0004396189342845545,0.0
+logs_arc_agi_2_run_1,exp3_champion_arc-agi-2_csv,,,,,0.0009626128456809421,0.0
+logs_arc_agi_2_run_1,exp3b_merged_lora_arc-agi-2_csv,,,,,0.0023816903432210025,0.0
+logs_arc_agi_2_run_2,exp2_champion_arc-agi-2_csv,0.5937678281263427,0.07371498724664363,0.4072789819467476,0.2538431107996011,-0.00048819888721812613,0.0
+logs_arc_agi_2_run_2,exp3_champion_arc-agi-2_csv,,,,,0.0006307363510132052,0.0
+logs_arc_agi_2_run_2,exp3b_merged_lora_arc-agi-2_csv,,,,,0.0026476292899160567,0.0
+logs_arc_agi_2_run_3,exp2_champion_arc-agi-2_csv,0.7815396451730213,-0.2466061453161281,0.6771859443129091,0.6159123662161325,-0.0004510594136787249,0.0
+logs_arc_agi_2_run_3,exp3_champion_arc-agi-2_csv,,,,,0.0014169942248951509,0.0
+logs_arc_agi_2_run_3,exp3b_merged_lora_arc-agi-2_csv,,,,,0.002128255728519312,0.0

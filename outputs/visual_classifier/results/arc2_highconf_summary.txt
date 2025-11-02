@@ -1,0 +1,14 @@
+High-Confidence Subsets (by max predicted probability)
+-----------------------------------------------
+Total seed tasks: 1120
+≥0.30: 188 (16.8%)
+≥0.35: 72 (6.4%)
+
+Distribution ≥0.30:
+  S2: 42 (3.8% of full set)
+  S3: 146 (13.0% of full set)
+
+Distribution ≥0.35:
+  S2: 36 (3.2% of full set)
+  S3: 36 (3.2% of full set)
+

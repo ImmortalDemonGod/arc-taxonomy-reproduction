@@ -1,0 +1,21 @@
+ARC-AGI-2 Verification Report
+===============================
+
+FOUND: seed_csv -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_classify_seed.csv
+FOUND: quick_summary -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_quick_analysis.txt
+FOUND: thresh_sweep -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_threshold_sweep.csv
+FOUND: top_by_cat -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_top_by_category.csv
+FOUND: hi30 -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_highconf_t030.csv
+FOUND: hi35 -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_highconf_t035.csv
+FOUND: hisel -> cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/visual_classifier/results/arc2_highconf_selected.csv
+JSON files: 1120
+Seed CSV rows: 1120
+Category order (from columns): ['S1', 'S2', 'S3', 'C1', 'C2', 'K1', 'L1', 'A1', 'A2']
+Max |sum(probs)-1|: 1.639e-07
+Predicted distribution (from CSV):
+  C1: 693 (61.9%)
+  S2: 61 (5.4%)
+  S3: 366 (32.7%)
+High-confidence selected matches t=0.30 set
+
+OVERALL STATUS: OK

@@ -1,0 +1,27 @@
+VISUAL CLASSIFIER VALIDATION - COMPLETE SUMMARY
+================================================
+
+OBJECTIVE: Prove taxonomy generalizes to visual grids (not just code)
+
+KEY RESULTS:
+- S3 (Rotation): 95.24% accuracy ✅
+- Overall: 36.25% (vs 11.1% random baseline)
+- ARC-AGI-2: 1120 tasks classified
+
+ARTIFACTS (reproduction/outputs/visual_classifier/):
+1. category_centroids_v3.npy - fixed category embeddings
+2. models/task_encoder_direct_v3_best.pt - trained CNN checkpoint
+3. best_trial_params.json - hyperparameters (trial #26)
+4. results/arc2_classify_seed.csv - ARC-AGI-2 predictions
+5. figures/*.png - 3 publication-ready plots
+
+VERIFICATION: All checks passed (integrity + reproducibility)
+
+DOCUMENTATION: VISUAL_CLASSIFIER_ANALYSIS_VS_CHAMPION_BASELINE.md
+- Sections 1-9: Original analysis
+- Section 10: Complete methodology
+- Section 11: All numerical results
+- Section 12: Embedded figures
+- Section 13: Reproducibility instructions
+
+STATUS: ✅ COMPLETE & READY FOR PAPER

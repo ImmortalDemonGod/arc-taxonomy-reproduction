@@ -1,0 +1,10 @@
+index,run,variant,r_lr_grid,r_lr_cell
+0,logs_arc_agi_2_run_1,exp2_champion_arc-agi-2_csv,,
+1,logs_arc_agi_2_run_1,exp3_champion_arc-agi-2_csv,,
+2,logs_arc_agi_2_run_1,exp3b_merged_lora_arc-agi-2_csv,,
+3,logs_arc_agi_2_run_2,exp2_champion_arc-agi-2_csv,,
+4,logs_arc_agi_2_run_2,exp3_champion_arc-agi-2_csv,,
+5,logs_arc_agi_2_run_2,exp3b_merged_lora_arc-agi-2_csv,,
+6,logs_arc_agi_2_run_3,exp2_champion_arc-agi-2_csv,,
+7,logs_arc_agi_2_run_3,exp3_champion_arc-agi-2_csv,,
+8,logs_arc_agi_2_run_3,exp3b_merged_lora_arc-agi-2_csv,,
