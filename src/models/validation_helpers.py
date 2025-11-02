@@ -182,7 +182,11 @@ def aggregate_validation_metrics(
         for idx, (task_id, is_grid_correct, cell_correct, cell_total) in enumerate(zip(
             task_ids, grid_correct, cell_correct_counts, cell_total_counts
         )):
-            category = task_categories.get(task_id, 'unknown')
+            # Try exact match first, then without suffix
+            category = task_categories.get(task_id)
+            if category is None:
+                lookup_id = task_id.replace('_eval', '').replace('_train', '')
+                category = task_categories.get(lookup_id, 'unknown')
             category_stats[category]['grid_correct'] += int(is_grid_correct)
             category_stats[category]['grid_total'] += 1
             category_stats[category]['cell_correct'] += int(cell_correct)
