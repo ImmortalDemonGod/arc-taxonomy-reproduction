@@ -45,15 +45,16 @@ class PerTaskMetricsLogger(pl.Callback):
         """Load task categories from JSON file."""
         mapping: Dict[str, str] = {}
         try:
+            # repo root: .../reproduction
             base = Path(__file__).parent.parent
-            rearc_categories = base.parent / "data" / "distributional_alignment" / "task_categories.json"
+            rearc_categories = base / "data" / "distributional_alignment" / "task_categories.json"
             if rearc_categories.exists():
                 with open(rearc_categories) as f:
                     mapping.update(json.load(f))
         except Exception as e:
             print(f"Warning: Could not load re-arc task categories: {e}")
         try:
-            vcats_csv = base.parent / "outputs" / "visual_classifier" / "results" / "arc2_classify_seed.csv"
+            vcats_csv = base / "outputs" / "visual_classifier" / "results" / "arc2_classify_seed.csv"
             if vcats_csv.exists():
                 with open(vcats_csv, newline='') as f:
                     reader = csv.DictReader(f)
