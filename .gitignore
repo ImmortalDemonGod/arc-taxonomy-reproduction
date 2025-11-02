@@ -87,3 +87,4 @@ tests_old_backup/
 tmp/
 temp/
 src/utils/
+data/arc_agi_temp/*
