@@ -35,7 +35,7 @@ from pathlib import Path
 import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
-from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
+from pytorch_lightning.loggers import TensorBoardLogger
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -317,12 +317,6 @@ def main():
         version=None,  # Auto-increment version
     )
     
-    csv_logger = CSVLogger(
-        save_dir="logs",
-        name=f"{exp_name}_csv",
-        version=None,
-    )
-    
     # Create trainer with Trial 69 configuration
     # NOTE: Early stopping REMOVED for overnight run - will train full 100 epochs
     # Note: Using '16-mixed' for precision on Mac/MPS compatibility
@@ -332,7 +326,7 @@ def main():
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
         callbacks=[checkpoint_callback, checkpoint_acc, per_task_logger, lr_monitor],
-        logger=[tb_logger, csv_logger],  # Multiple loggers for comprehensive tracking
+        logger=tb_logger,  # TensorBoard only (CSVLogger removed - causes fieldname errors with dynamic metrics)
         log_every_n_steps=10,
         enable_progress_bar=True,
         enable_model_summary=True,
