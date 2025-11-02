@@ -108,7 +108,9 @@ class PerTaskMetricsLogger(pl.Callback):
                 task_ids, grid_correct, cell_correct_counts, cell_total_counts
             )):
                 task_metrics[task_id]['task_id'] = task_id
-                task_metrics[task_id]['category'] = self.task_categories.get(task_id, 'unknown')
+                # Strip _eval/_train suffix for category lookup
+                lookup_id = task_id.replace('_eval', '').replace('_train', '')
+                task_metrics[task_id]['category'] = self.task_categories.get(lookup_id, 'unknown')
                 task_metrics[task_id]['grid_correct'] += int(is_grid_correct)
                 task_metrics[task_id]['grid_total'] += 1
                 task_metrics[task_id]['cell_correct'] += int(cell_correct)
