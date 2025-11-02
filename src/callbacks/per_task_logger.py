@@ -44,8 +44,8 @@ class PerTaskMetricsLogger(pl.Callback):
     def _load_task_categories(self) -> Dict[str, str]:
         """Load task categories from JSON file."""
         mapping: Dict[str, str] = {}
-        # repo root: .../reproduction
-        base = Path(__file__).parent.parent
+        # repo root: .../reproduction (this file is at src/callbacks/per_task_logger.py)
+        base = Path(__file__).parent.parent.parent
         
         try:
             rearc_categories = base / "data" / "distributional_alignment" / "task_categories.json"
