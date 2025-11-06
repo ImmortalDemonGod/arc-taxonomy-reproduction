@@ -100,8 +100,16 @@ def add_transformation_metrics(
     """
     from ..evaluation.metrics import compute_copy_metrics_on_batch
     
+    # Always log placeholder values to ensure CSV logger header consistency
+    # This prevents the "fields not in fieldnames" error during training
+    default_val = torch.tensor(0.0)
+    
     if src.size(1) <= 1:
-        return  # Skip if sequence too short
+        # Log zeros for short sequences to maintain CSV header consistency
+        pl_module.log('val_change_recall', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_copy_rate', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_transformation_quality', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        return
     
     try:
         copy_metrics = compute_copy_metrics_on_batch(src, tgt, preds)
@@ -109,15 +117,21 @@ def add_transformation_metrics(
         # Log aggregated metrics
         pl_module.log('val_change_recall', copy_metrics['change_recall'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         pl_module.log('val_copy_rate', copy_metrics['copy_rate'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
-        pl_module.log('val_transformation_f1', copy_metrics['transformation_f1'], batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        
+        # Compute transformation quality: F1 weighted by cell accuracy
+        trans_quality_per_example = copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())
+        trans_quality_mean = torch.nan_to_num(trans_quality_per_example, nan=0.0).mean()
+        pl_module.log('val_transformation_quality', trans_quality_mean, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
         
         # Store per-example metrics for category aggregation (tensors on CPU)
         step_output['copy_rate'] = torch.nan_to_num(copy_metrics['copy_rate_per_example'], nan=0.0).cpu()
         step_output['change_recall'] = torch.nan_to_num(copy_metrics['change_recall_per_example'], nan=0.0).cpu()
-        trans_quality_per_example = copy_metrics['transformation_f1_per_example'] * (cell_correct_counts.float() / cell_total_counts.float())
         step_output['trans_quality'] = torch.nan_to_num(trans_quality_per_example, nan=0.0).cpu()
     except Exception:
-        pass  # Silently skip if computation fails
+        # Log zeros on failure to maintain CSV header consistency
+        pl_module.log('val_change_recall', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_copy_rate', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
+        pl_module.log('val_transformation_quality', default_val, batch_size=batch_size, prog_bar=False, on_step=False, on_epoch=True)
 
 
 def load_task_categories() -> Dict[str, str]:
