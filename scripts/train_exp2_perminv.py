@@ -1,9 +1,13 @@
 """
-Training script for Exp 2: E-D + Grid2D PE + PermInvariant Embedding
+Training script for Exp 2: E-D + PermInvariant Embedding ONLY (Independent Test)
 
-This experiment tests the contribution of color-permutation equivariance.
+This experiment tests the contribution of color-permutation equivariance INDEPENDENTLY.
+- Encoder-Decoder: YES
+- PermInvariant Embedding: YES  
+- Grid2D PE: NO (uses standard 1D PE)
+- Context System: NO
 
-Expected result: +2-3% improvement over Exp 1 (modest but consistent).
+This is for the INDEPENDENT ablation design where each component is tested separately.
 """
 import sys
 import argparse
@@ -17,13 +21,13 @@ from pytorch_lightning.loggers import TensorBoardLogger, CSVLogger
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.models.exp2_perminv_lightning import Exp2PermInvLightningModule
+from src.models.exp0_encoder_decoder_lightning import Exp0EncoderDecoderLightningModule
 from src.data.encoder_decoder_data import create_encoder_decoder_dataloader
 from src.callbacks import PerTaskMetricsLogger
 
 
 def main():
-    """Train Exp 2: E-D + Grid2D PE + PermInv."""
+    """Train Exp 2: E-D + PermInv only (independent test)."""
     # Parse CLI arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--fast_dev_run', type=int, default=None,
@@ -48,11 +52,12 @@ def main():
     train_files = [data_dir / fname for fname in split_info["train_files"]]
     val_files = [data_dir / fname for fname in split_info["val_files"]]
     
-    print(f"\nExp 2: E-D + Grid2D PE + PermInvariant Embedding")
+    print(f"\nExp 2: E-D + PermInvariant Embedding ONLY (Independent Test)")
     print(f"=" * 70)
     print(f"Training files: {len(train_files)}")
     print(f"Validation files: {len(val_files)}")
     print(f"Target params: 1.71M (parameter-matched to Champion)")
+    print(f"Components: E-D + PermInv ONLY (NO Grid2D, NO Context)")
     print()
     
     # Create data loaders
@@ -71,14 +76,14 @@ def main():
     )
     
     # Create model (PARAMETER-MATCHED to Champion: 1.71M params)
-    model = Exp2PermInvLightningModule(
+    # Using baseline module with use_perminv=True for independent testing
+    model = Exp0EncoderDecoderLightningModule(
         vocab_size=11,
         d_model=168,  # Matched to Champion
         num_encoder_layers=1,  # Same structure as Champion
         num_decoder_layers=3,  # Same structure as Champion
         num_heads=4,
         d_ff=672,  # Matched to Champion
-        max_grid_size=30,  # For Grid2D PE
         dropout=0.167,
         learning_rate=0.0018498849832733245,  # Trial 69
         weight_decay=0.0,  # Trial 69
@@ -86,6 +91,7 @@ def main():
         beta2=0.999,
         max_epochs=100,
         pad_token=10,
+        use_perminv=True,  # KEY: Enable PermInv for independent testing
     )
     
     # Callbacks
@@ -142,7 +148,9 @@ def main():
     # Print model summary
     print("\nModel Summary:")
     print(f"  Config: d_model=168, enc_layers=1, dec_layers=3, d_ff=672")
-    print(f"  Architecture: E-D + Grid2D PE + PermInvariant Embedding")
+    print(f"  Architecture: E-D + PermInvariant Embedding ONLY")
+    print(f"  Components: NO Grid2D PE, NO Context System")
+    print(f"  Tests: Independent contribution of PermInv")
     print(f"  Expected params: ~1.71M")
     print()
     

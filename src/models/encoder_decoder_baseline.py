@@ -7,8 +7,8 @@ Following cs336 pedagogical style: clean, well-documented, standard implementati
 This baseline uses:
 - PyTorch TransformerEncoder and TransformerDecoder
 - 1D sinusoidal positional encoding
-- Standard embeddings
-- No specialized components (Grid2D PE, PermInvariant, Context)
+- Standard embeddings OR PermInvariant embeddings (configurable)
+- No specialized components (Grid2D PE, Context)
 
 Purpose: Isolate the value of encoder-decoder architecture before adding
 specialized components. Expected to significantly outperform decoder-only (~15-20%).
@@ -19,6 +19,7 @@ from torch import Tensor
 from typing import Optional
 
 from ..positional_encoding_1d import PositionalEncoding1D
+from ..embedding import PermInvariantEmbedding
 
 
 class GenericEncoderDecoder(nn.Module):
@@ -39,6 +40,8 @@ class GenericEncoderDecoder(nn.Module):
         d_ff: int,
         dropout: float = 0.1,
         max_len: int = 2000,
+        use_perminv: bool = False,
+        pad_idx: int = 10,
     ):
         """
         Initialize encoder-decoder model.
@@ -52,6 +55,8 @@ class GenericEncoderDecoder(nn.Module):
             d_ff: Feedforward dimension
             dropout: Dropout probability
             max_len: Maximum sequence length
+            use_perminv: Use PermInvariant embedding instead of standard (for Exp2)
+            pad_idx: Padding token index
         """
         super().__init__()
         
@@ -59,7 +64,10 @@ class GenericEncoderDecoder(nn.Module):
         self.vocab_size = vocab_size
         
         # Embeddings (shared for encoder and decoder inputs)
-        self.embedding = nn.Embedding(vocab_size, d_model)
+        if use_perminv:
+            self.embedding = PermInvariantEmbedding(d_model=d_model, vocab_size=vocab_size, pad_idx=pad_idx)
+        else:
+            self.embedding = nn.Embedding(vocab_size, d_model)
         
         # Positional encoding
         self.pos_encoder = PositionalEncoding1D(d_model, max_len, dropout)
@@ -170,6 +178,8 @@ def create_encoder_decoder_model(
     d_ff: int = 512,
     dropout: float = 0.1,
     max_len: int = 2000,
+    use_perminv: bool = False,
+    pad_idx: int = 10,
 ) -> GenericEncoderDecoder:
     """
     Factory function for creating encoder-decoder model.
@@ -185,6 +195,8 @@ def create_encoder_decoder_model(
         d_ff: Feedforward dimension
         dropout: Dropout rate
         max_len: Max sequence length
+        use_perminv: Use PermInvariant embedding (for Exp2 independent test)
+        pad_idx: Padding token index
         
     Returns:
         GenericEncoderDecoder model
@@ -198,6 +210,8 @@ def create_encoder_decoder_model(
         d_ff=d_ff,
         dropout=dropout,
         max_len=max_len,
+        use_perminv=use_perminv,
+        pad_idx=pad_idx,
     )
 
 

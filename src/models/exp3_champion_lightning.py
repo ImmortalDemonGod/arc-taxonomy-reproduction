@@ -37,6 +37,8 @@ class Exp3ChampionLightningModule(pl.LightningModule):
         pad_token: int = 10,
         use_context: bool = True,
         use_bridge: bool = True,
+        use_perminv: bool = True,  # For Exp3: set to False
+        use_grid2d: bool = True,  # For Exp3: set to False
     ):
         """Initialize champion Lightning module."""
         super().__init__()
@@ -57,6 +59,8 @@ class Exp3ChampionLightningModule(pl.LightningModule):
             dropout=dropout,
             use_context=use_context,
             use_bridge=use_bridge,
+            use_perminv=use_perminv,
+            use_grid2d=use_grid2d,
         )
         
         self.pad_token = pad_token

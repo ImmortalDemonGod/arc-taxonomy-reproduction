@@ -37,6 +37,7 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
         beta2: float = 0.999,
         max_epochs: int = 100,
         pad_token: int = 10,
+        use_perminv: bool = False,  # For Exp2: independent PermInv test
     ):
         """Initialize encoder-decoder Lightning module."""
         super().__init__()
@@ -51,6 +52,8 @@ class Exp0EncoderDecoderLightningModule(pl.LightningModule):
             num_heads=num_heads,
             d_ff=d_ff,
             dropout=dropout,
+            use_perminv=use_perminv,
+            pad_idx=pad_token,
         )
         self.pad_token = pad_token
         

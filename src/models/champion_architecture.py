@@ -1,9 +1,9 @@
 """
-Champion Architecture - Full Model (Experiment 3)
+Champion Architecture - Full Model (Experiment 3/4)
 
-Matches champion_bootstrap.ckpt architecture:
-- PermInvariantEmbedding
-- Grid2D PE
+Configurable architecture supporting ablation studies:
+- PermInvariantEmbedding (optional, configurable)
+- Grid2D PE (optional, configurable)
 - Encoder-Decoder with standard PyTorch components
 - ContextEncoder (processes context pairs)
 - Bridge (ConcatMLP, integrates context into decoder)
@@ -19,6 +19,7 @@ from torch import Tensor
 from typing import Optional, Tuple
 
 from ..positional_encoding import Grid2DPositionalEncoding
+from ..positional_encoding_1d import PositionalEncoding1D
 from ..embedding import PermInvariantEmbedding
 from ..context import ContextEncoderModule
 from ..bridge import ConcatMLPBridge
@@ -49,6 +50,8 @@ class ChampionArchitecture(nn.Module):
         pad_idx: int = 10,
         context_config: Optional[ContextEncoderConfig] = None,
         bridge_config: Optional[BridgeConfig] = None,
+        use_perminv: bool = True,  # For ablation: disable PermInv
+        use_grid2d: bool = True,  # For ablation: disable Grid2D PE
     ):
         """
         Initialize champion architecture.
@@ -62,9 +65,13 @@ class ChampionArchitecture(nn.Module):
             d_ff: Feedforward dimension
             max_grid_size: Maximum grid dimension
             dropout: Dropout rate
+            encoder_dropout: Separate encoder dropout (Trial 69: 0.1)
+            decoder_dropout: Separate decoder dropout (Trial 69: 0.015)
             pad_idx: Padding token index
             context_config: Configuration for context encoder
             bridge_config: Configuration for bridge module
+            use_perminv: Use PermInvariant embedding (False for Exp3)
+            use_grid2d: Use Grid2D PE (False for Exp3)
         """
         super().__init__()
         
@@ -72,24 +79,32 @@ class ChampionArchitecture(nn.Module):
         self.vocab_size = vocab_size
         self.max_grid_size = max_grid_size
         self.pad_idx = pad_idx
+        self.use_perminv = use_perminv
+        self.use_grid2d = use_grid2d
         
         # Use separate dropout rates if provided, otherwise use general dropout
         self.encoder_dropout = encoder_dropout if encoder_dropout is not None else dropout
         self.decoder_dropout = decoder_dropout if decoder_dropout is not None else dropout
         
-        # PermInvariant Embedding
-        self.embedding = PermInvariantEmbedding(
-            d_model=d_model,
-            vocab_size=vocab_size,
-            pad_idx=pad_idx,
-        )
+        # Embedding: PermInvariant or standard
+        if use_perminv:
+            self.embedding = PermInvariantEmbedding(
+                d_model=d_model,
+                vocab_size=vocab_size,
+                pad_idx=pad_idx,
+            )
+        else:
+            self.embedding = nn.Embedding(vocab_size, d_model)
         
-        # Grid2D Positional Encoding
-        self.pos_encoder = Grid2DPositionalEncoding(
-            d_model=d_model,
-            max_height=max_grid_size,
-            max_width=max_grid_size,
-        )
+        # Positional Encoding: Grid2D or standard 1D
+        if use_grid2d:
+            self.pos_encoder = Grid2DPositionalEncoding(
+                d_model=d_model,
+                max_height=max_grid_size,
+                max_width=max_grid_size,
+            )
+        else:
+            self.pos_encoder = PositionalEncoding1D(d_model, max_len=2000, dropout=dropout)
         
         # Dropout
         self.dropout = nn.Dropout(dropout)
@@ -187,11 +202,13 @@ class ChampionArchitecture(nn.Module):
         if self.has_context and ctx_input is not None and ctx_output is not None:
             context_emb = self.context_encoder(ctx_input, ctx_output)
         
-        # Embed with PermInvariant
+        # Embed (PermInvariant or standard)
         src_emb = self.embedding(src) * (self.d_model ** 0.5)
         tgt_emb = self.embedding(tgt) * (self.d_model ** 0.5)
         
-        # Add Grid2D positional encoding + dropout
+        # Add positional encoding + dropout
+        # Grid2D PE auto-detects grid shape from sequence length
+        # 1D PE just adds sinusoidal position encodings
         src_emb = self.pos_encoder(src_emb)
         src_emb = self.dropout(src_emb)
         
@@ -250,11 +267,14 @@ def create_champion_architecture(
     pad_idx: int = 10,
     use_context: bool = True,
     use_bridge: bool = True,
+    use_perminv: bool = True,  # For ablation: disable PermInv
+    use_grid2d: bool = True,  # For ablation: disable Grid2D PE
 ) -> ChampionArchitecture:
     """
     Factory function for creating champion architecture.
     
     Default parameters match champion_bootstrap.ckpt (Trial 69).
+    For Exp3 (E-D + Context only): set use_perminv=False, use_grid2d=False.
     """
     # Create context config (matching champion)
     context_config = None
@@ -298,4 +318,6 @@ def create_champion_architecture(
         pad_idx=pad_idx,
         context_config=context_config,
         bridge_config=bridge_config,
+        use_perminv=use_perminv,
+        use_grid2d=use_grid2d,
     )
