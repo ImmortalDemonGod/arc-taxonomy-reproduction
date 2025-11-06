@@ -58,7 +58,13 @@ class ChampionARCDataset(Dataset):
     
     def _load_data(self):
         """Load all ARC tasks with context pairs."""
-        for task_file in self.task_files:
+        total_tasks = len(self.task_files)
+        print(f"Loading {total_tasks} tasks with context pairs (this may take 2-5 minutes)...")
+        
+        for idx, task_file in enumerate(self.task_files):
+            if idx % 50 == 0:
+                print(f"  Progress: {idx}/{total_tasks} tasks loaded ({len(self.examples)} examples so far)")
+            
             try:
                 # Extract task_id from filename
                 task_id = task_file.stem  # e.g., "007bbfb7" from "007bbfb7.json"
@@ -93,6 +99,8 @@ class ChampionARCDataset(Dataset):
             except Exception as e:
                 print(f"Warning: Failed to load {task_file}: {e}")
                 continue
+        
+        print(f"✓ Dataset loading complete: {len(self.examples)} examples from {total_tasks} tasks")
     
     def _pad_grid(
         self, 
