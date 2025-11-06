@@ -1,0 +1,4 @@
+epoch,category,task_count,grid_accuracy,cell_accuracy,grid_correct,grid_total,cell_correct,cell_total,copy_rate,change_recall,transformation_quality
+70,C1,31,0.0000,67.4063,0,104,9782,14512,0.1573,0.5768,0.071069
+70,S2,7,0.0000,61.6621,0,23,3836,6221,0.0592,0.8885,0.287110
+70,S3,82,0.0000,74.0462,0,231,58130,78505,0.3859,0.5624,0.202613

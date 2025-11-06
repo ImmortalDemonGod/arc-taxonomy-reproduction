@@ -1,1 +1,0 @@
-task_id,category,status,base_grid_accuracy,final_grid_accuracy,grid_improvement,base_cell_accuracy,final_cell_accuracy,cell_improvement,copy_rate,change_recall,transformation_quality,final_loss,epochs,num_examples,training_time_seconds,early_stopped,error
