@@ -32,12 +32,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--fast_dev_run', type=int, default=None,
                         help='Run fast_dev_run with N batches for testing')
+    parser.add_argument('--seed', type=int, default=307, help='Random seed for reproducibility')
+    parser.add_argument('--max_epochs', type=int, default=100, help='Maximum training epochs')
     args, unknown = parser.parse_known_args()
     fast_dev_run = args.fast_dev_run
 
     
     # Set seed for reproducibility
-    pl.seed_everything(307, workers=True)
+    pl.seed_everything(args.seed, workers=True)
     
     # Set matmul precision for Tensor Cores (A6000 optimization)
     torch.set_float32_matmul_precision('high')
@@ -130,10 +132,18 @@ def main():
         name="exp2_perminv_csv",
         version=None,
     )
+    # Pre-seed CSV header with validation metric keys to avoid header rewrite errors
+    csv_logger.log_metrics({
+        'val_grid_accuracy': 0.0,
+        'val_cell_accuracy': 0.0,
+        'val_change_recall': 0.0,
+        'val_copy_rate': 0.0,
+        'val_transformation_quality': 0.0,
+    }, step=0)
     
     # Trainer
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=args.max_epochs,
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)

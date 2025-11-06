@@ -223,5 +223,83 @@ def test_all_models_validation_pattern():
         assert callable(model.on_validation_epoch_end)
 
 
+def test_trainer_csv_logger_header_preseed(tmp_path):
+    """Regression test: CSVLogger must handle validation metrics keys.
+
+    Scenario: The CSV logger creates a header on first use (often during sanity check).
+    Later, validation logs add new keys (val_grid_accuracy, etc.) causing a header mismatch.
+    Fix: pre-seed the CSV logger with those keys before training starts.
+    This test verifies a short Trainer run finishes and metrics.csv contains expected columns.
+    """
+    import pytorch_lightning as pl
+    from pytorch_lightning.loggers import CSVLogger
+    from torch.utils.data import Dataset, DataLoader
+    from src.models.exp0_encoder_decoder_lightning import Exp0EncoderDecoderLightningModule
+    import torch
+    from pathlib import Path
+
+    class DummyEDDataset(Dataset):
+        def __len__(self):
+            return 2
+        def __getitem__(self, idx):
+            src = torch.randint(0, 11, (50,), dtype=torch.long)
+            tgt = torch.randint(0, 11, (50,), dtype=torch.long)
+            task_id = f"task_{idx}"
+            return src, tgt, task_id
+
+    train_loader = DataLoader(DummyEDDataset(), batch_size=2, shuffle=False)
+    val_loader = DataLoader(DummyEDDataset(), batch_size=2, shuffle=False)
+
+    model = Exp0EncoderDecoderLightningModule(
+        vocab_size=11,
+        d_model=32,
+        num_encoder_layers=1,
+        num_decoder_layers=1,
+        num_heads=2,
+        d_ff=64,
+        dropout=0.0,
+        learning_rate=1e-3,
+        pad_token=10,
+    )
+
+    csv_logger = CSVLogger(save_dir=str(tmp_path), name="csv_header_test", version=None)
+    # Pre-seed header with validation keys
+    csv_logger.log_metrics({
+        'val_grid_accuracy': 0.0,
+        'val_cell_accuracy': 0.0,
+        'val_change_recall': 0.0,
+        'val_copy_rate': 0.0,
+        'val_transformation_quality': 0.0,
+    }, step=0)
+
+    trainer = pl.Trainer(
+        max_epochs=1,
+        logger=csv_logger,
+        enable_progress_bar=False,
+        log_every_n_steps=1,
+        fast_dev_run=1,
+    )
+
+    trainer.fit(model, train_loader, val_loader)
+
+    # Locate metrics.csv
+    root = Path(tmp_path) / "csv_header_test"
+    assert root.exists()
+    versions = [d for d in root.iterdir() if d.is_dir() and d.name.startswith("version_")]
+    assert versions, f"No version directory under {root}"
+    metrics_csv = versions[0] / "metrics.csv"
+    assert metrics_csv.exists(), f"metrics.csv not found at {metrics_csv}"
+
+    # Header must include validation keys
+    header = metrics_csv.read_text().splitlines()[0]
+    for key in [
+        'val_grid_accuracy',
+        'val_cell_accuracy',
+        'val_change_recall',
+        'val_copy_rate',
+        'val_transformation_quality',
+    ]:
+        assert key in header, f"Missing column {key} in metrics.csv header"
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
