@@ -57,12 +57,15 @@ def main():
                         help='Run fast_dev_run with N batches for testing')
     parser.add_argument('--seed', type=int, default=307,
                         help='Random seed for reproducibility (Trial 69 used 307)')
+    parser.add_argument('--max_epochs', type=int, default=100,
+                        help='Maximum training epochs')
     args, unknown = parser.parse_known_args()
     
     dataset_mode = args.dataset
     checkpoint_path = args.checkpoint
     fast_dev_run = args.fast_dev_run
     seed = args.seed
+    max_epochs = args.max_epochs
 
     
     # Performance optimizations for Tensor Cores (A6000)
@@ -162,7 +165,7 @@ def main():
     print(f"   Optimizer: Adam (beta1=0.95, beta2=0.999, weight_decay=0.0)")
     print(f"   Scheduler: CosineAnnealingWarmRestarts (T_0=6)")
     print(f"   Batch Size: 32")
-    print(f"   Max Epochs: 100")
+    print(f"   Max Epochs: {max_epochs}")
     print(f"   Precision: Mixed (16-bit)")
     print(f"   Gradient Clip: 1.0")
     print(f"   Context Pairs: 2 (FIXED)")
@@ -217,7 +220,7 @@ def main():
                 weight_decay=0.0,
                 beta1=0.95,
                 beta2=0.999,
-                max_epochs=100,
+                max_epochs=max_epochs,
             )
             print("✓ Checkpoint loaded successfully (Lightning format)\n")
         except Exception as e:
@@ -237,7 +240,7 @@ def main():
                 weight_decay=0.0,
                 beta1=0.95,
                 beta2=0.999,
-                max_epochs=100,
+                max_epochs=max_epochs,
                 pad_token=10,
                 use_context=True,
                 use_bridge=True,
@@ -267,7 +270,7 @@ def main():
             weight_decay=0.0,  # Trial 69
             beta1=0.95,  # Trial 69
             beta2=0.999,
-            max_epochs=100,
+            max_epochs=max_epochs,
             pad_token=10,
             use_context=True,
             use_bridge=True,
@@ -321,7 +324,7 @@ def main():
     # NOTE: Early stopping REMOVED for overnight run - will train full 100 epochs
     # Note: Using '16-mixed' for precision on Mac/MPS compatibility
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=max_epochs,
         precision='16-mixed',  # Mixed precision (Trial 69 used 16, but '16-mixed' is modern syntax)
         gradient_clip_val=1.0,  # Trial 69
         deterministic=False,  # Set to False for MPS compatibility (Mac)
