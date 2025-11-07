@@ -1,0 +1,17 @@
+usage: train_exp3_champion.py [-h] [--dataset {rearc,arc-agi-2}]
+                              [--checkpoint CHECKPOINT]
+                              [--fast_dev_run FAST_DEV_RUN] [--seed SEED]
+
+Train Champion architecture on re-arc or ARC-AGI-2
+
+options:
+  -h, --help            show this help message and exit
+  --dataset {rearc,arc-agi-2}
+                        Dataset to train on: rearc (synthetic 400 tasks) or
+                        arc-agi-2 (real competition)
+  --checkpoint CHECKPOINT
+                        Path to checkpoint for transfer learning (e.g.,
+                        champion_bootstrap.ckpt or champion_merged_loras.ckpt)
+  --fast_dev_run FAST_DEV_RUN
+                        Run fast_dev_run with N batches for testing
+  --seed SEED           Random seed for reproducibility (Trial 69 used 307)
