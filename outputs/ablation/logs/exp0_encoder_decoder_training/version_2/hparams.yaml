@@ -1,0 +1,14 @@
+vocab_size: 11
+d_model: 168
+num_encoder_layers: 1
+num_decoder_layers: 3
+num_heads: 4
+d_ff: 672
+dropout: 0.167
+learning_rate: 0.0018498849832733245
+weight_decay: 0.0
+beta1: 0.95
+beta2: 0.999
+max_epochs: 100
+pad_token: 10
+use_perminv: false
