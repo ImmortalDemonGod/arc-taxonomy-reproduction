@@ -1,174 +1,53 @@
-# Reproduction Package
+# Neural Affinity Framework for ARC - Reproduction Package
 
-**Status:** In development (Week 1-2)  
-**Purpose:** Standalone package for reproducing paper results
+**Paper:** Ingram & Merrit (2025) - *An Empirical Answer to re-arc*  
+**Competition:** ARC Prize 2025 Paper Award Submission
 
----
+## 📄 Paper
 
-## Overview
+[**Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf**](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf) - Full 58-page paper
 
-This directory contains the complete reproduction package for the ARC Taxonomy paper. All code is self-contained and does not depend on the larger `jarc_reactor` codebase.
+## 🎯 Key Contributions
 
-## Contents
+1. **First validated 9-category taxonomy** (97.5% accuracy on re-arc)
+2. **Compositional Gap quantification** (69.5% of tasks show cell vs grid dissociation)
+3. **External validation** on ViTARC (400 independent models, p<0.001)
+4. **Neural Affinity Framework** - diagnostic tool for architectural suitability
 
-- `model.py` - Simplified Transformer implementation
-- `finetune.py` - Fine-tuning script for individual tasks
-- `validate_classifier.py` - Taxonomy classifier validation
-- `data_utils.py` - Data loading and preprocessing utilities
-- `weights/` - Pre-trained model weights
-- `tests/` - Unit tests for all components
-- `requirements.txt` - Pinned dependencies
+## 📁 Structure
 
----
+- `src/` - 1.7M parameter Transformer model
+- `scripts/` - Taxonomy generation, analysis, figure creation
+- `data/` - Taxonomy classifications and external validation data
+- `docs/` - Comprehensive documentation
+- `figures/` - All paper figures (reproducible)
+- `weights/` - Pre-trained model checkpoints
+- `outputs/` - Experiment results
 
-## Quick Start
+## 🚀 Quick Start
 
-### Prerequisites
+See [**QUICKSTART.md**](./QUICKSTART.md) for reproduction instructions.
 
-```bash
-# Python 3.10+
-python --version
+## 📊 Results
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+- **re-arc taxonomy:** 97.5% (390/400 tasks)
+- **ARC-AGI-2:** 0.34% (diagnostic model, not solver)
+- **External validation:** Affinity predictions confirmed (Cohen's d=0.726)
 
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Download Pre-Trained Weights
-
-```bash
-# Download from [URL to be provided]
-cd weights/
-# wget [URL]/pretrained_model.pt
-# Or follow instructions in weights/README.md
-```
-
-### Validate Taxonomy Classifier
-
-```bash
-# Run classifier validation
-python validate_classifier.py
-
-# Expected output:
-# ✓ Classifier accuracy: 97.5% (390/400 tasks)
-# ✓ Runtime: ~2 minutes
-```
-
-### Fine-Tune on Specific Task
-
-```bash
-# Fine-tune on task 137eaa0f (A2 category)
-python finetune.py --task_id 137eaa0f --category A2 --epochs 100
-
-# Expected output:
-# ✓ Final accuracy: ~17% (ceiling effect for A2)
-# ✓ Runtime: ~30 minutes
-```
-
----
-
-## Expected Results
-
-### Taxonomy Classification
-- **Accuracy:** 97.5% (390/400 tasks correctly classified)
-- **Runtime:** ~2 minutes on CPU
-- **Output:** Classification results JSON file
-
-### Fine-Tuning Experiments
-| Category | Example Task | Expected Accuracy | Runtime |
-|----------|--------------|-------------------|---------|
-| C1 (High) | [task_id] | 60%+ | ~30 min |
-| S3 (Low) | [task_id] | 25-30% | ~30 min |
-| A2 (Very Low) | 137eaa0f | ~17% (ceiling) | ~30 min |
-
----
-
-## File Descriptions
-
-### `model.py`
-Simplified Transformer implementation extracted from the main codebase:
-- Standard Transformer architecture
-- Input/output tokenization for ARC grids
-- Pre-training compatible
-
-### `finetune.py`
-Fine-tuning script for individual ARC tasks:
-- Loads pre-trained weights
-- Fine-tunes on single task
-- Tracks training dynamics
-- Saves results
-
-### `validate_classifier.py`
-Validates the taxonomy classifier:
-- Loads all 400 task definitions
-- Runs rule-based classifier
-- Compares against ground truth
-- Reports accuracy metrics
-
-### `data_utils.py`
-Data loading and preprocessing:
-- ARC task loading
-- Grid tokenization
-- Data augmentation
-- Batch preparation
-
----
-
-## Testing
-
-```bash
-# Run all tests
-pytest tests/
-
-# Run specific test
-pytest tests/test_model.py
-
-# Run with coverage
-pytest --cov=. --cov-report=html
-```
-
----
-
-## Troubleshooting
-
-### Issue: Import errors
-**Solution:** Ensure you're in the virtual environment and dependencies are installed
-
-### Issue: CUDA out of memory
-**Solution:** Reduce batch size or use CPU (`--device cpu`)
-
-### Issue: Weights not found
-**Solution:** Download weights following instructions in `weights/README.md`
-
----
-
-## Citation
-
-If you use this reproduction package, please cite:
+## 📝 Citation
 
 ```bibtex
-@article{author2025arc,
+@article{ingram2025neuralaffinity,
   title={An Empirical Answer to re-arc: A Systematic Taxonomy, 
-         Curriculum Analysis, and Neural Affinity Framework for the 
-         Abstraction and Reasoning Corpus},
-  author={Author Name},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
+         Curriculum Analysis, and Neural Affinity Framework},
+  author={Ingram, Miguel and Merrit, Arthur},
   year={2025}
 }
 ```
 
----
+## 📧 Contact
 
-## Contact
-
-For questions or issues with reproduction:
-- Open an issue on GitHub
-- Email: [author email]
+For questions: Open an issue on GitHub
 
 ---
-
-**Last Updated:** October 23, 2025  
-**Status:** Files to be created in Week 1-2
+**Last Updated:** November 9, 2025
