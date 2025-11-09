@@ -1,0 +1,16 @@
+run,variant,r_grid_cell,r_grid_copy_rate,r_grid_change_recall,r_grid_transformation_f1,early_slope_cell,early_slope_grid
+exp2_champion_arc-agi-2_s307_csv,exp2_champion_arc-agi-2_s307_csv,0.6899777557860655,0.0978731549034198,0.5491184064893159,0.7011669571121256,0.004840135970149226,0.0002501462686567162
+exp2_champion_arc-agi-2_s308_csv,exp2_champion_arc-agi-2_s308_csv,0.4750656001071011,0.13132197517064265,0.26739160892973646,0.4439135551310068,0.004657098358208893,0.0002501462686567162
+exp2_champion_arc-agi-2_s309_csv,exp2_champion_arc-agi-2_s309_csv,0.676761362665445,0.07713785140733437,0.5297142600206279,0.6867230605698512,0.004900231151385863,0.0002501462686567162
+exp2_champion_arc-agi-2_s310_csv,exp2_champion_arc-agi-2_s310_csv,0.5565839811375964,0.14113092920293016,0.374430597801151,0.5573881186202663,0.004844626204690772,0.0002501462686567162
+exp2_champion_arc-agi-2_s311_csv,exp2_champion_arc-agi-2_s311_csv,0.5994709612471162,0.20226287233612458,0.3215799362981787,0.5764017828504453,0.004780104669509537,0.0002501462686567162
+exp3_champion_arc-agi-2_s307_csv,exp3_champion_arc-agi-2_s307_csv,,,,,0.0625243135181236,0.0
+exp3_champion_arc-agi-2_s308_csv,exp3_champion_arc-agi-2_s308_csv,,,,,0.060277571769722746,0.0
+exp3_champion_arc-agi-2_s309_csv,exp3_champion_arc-agi-2_s309_csv,,,,,0.05926271051172701,0.0
+exp3_champion_arc-agi-2_s310_csv,exp3_champion_arc-agi-2_s310_csv,,,,,0.05252865496801698,0.0
+exp3_champion_arc-agi-2_s311_csv,exp3_champion_arc-agi-2_s311_csv,,,,,0.05904036189765452,0.0
+exp3b_merged_lora_arc-agi-2_s307_csv,exp3b_merged_lora_arc-agi-2_s307_csv,,,,,0.0567545147547974,0.0
+exp3b_merged_lora_arc-agi-2_s308_csv,exp3b_merged_lora_arc-agi-2_s308_csv,,,,,0.06440639776119396,0.0
+exp3b_merged_lora_arc-agi-2_s309_csv,exp3b_merged_lora_arc-agi-2_s309_csv,,,,,0.06539323049040507,0.0
+exp3b_merged_lora_arc-agi-2_s310_csv,exp3b_merged_lora_arc-agi-2_s310_csv,,,,,0.06513521076759055,0.0
+exp3b_merged_lora_arc-agi-2_s311_csv,exp3b_merged_lora_arc-agi-2_s311_csv,,,,,0.061939212537313354,0.0

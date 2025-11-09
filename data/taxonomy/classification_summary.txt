@@ -1,0 +1,15 @@
+RE-ARC Task Classification Summary
+================================================================================
+
+Total tasks: 400
+
+A1:   5 (  1.2%) - Iterative Refinement - while loops, convergence
+A2:  28 (  7.0%) - Spatial Packing - constraint-based placement
+C1:  99 ( 24.8%) - Color Transform (Direct) - recoloring, filtering
+C2:  28 (  7.0%) - Pattern Matching - template-based, marker-to-pattern
+K1:   7 (  1.8%) - Scaling Operations - upscale, downscale, crop
+L1:  21 (  5.2%) - Set Operations - intersection, union, difference, merge
+S1:  52 ( 13.0%) - Geometric Transform (Direct) - mirrors, rotations
+S2:  38 (  9.5%) - Geometric Composition - concat, tiling, replication
+S3: 108 ( 27.0%) - Topological Operations - paths, connectivity, neighbors
+ambiguous:  14 (  3.5%) - Unknown

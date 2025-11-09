@@ -1,0 +1,74 @@
+BEST GRID ACCURACY — GLOBAL SCAN
+================================
+
+Top 10 overall (by grid accuracy, any epoch):
+
+- 3.4655% grid @ epoch 0 | exp0 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs_run2/logs/per_task_metrics/exp0
+- 3.4337% grid @ epoch 0 | exp1 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs_run2/logs/per_task_metrics/exp1
+- 3.3310% grid @ epoch 41 | exp0 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/ablation/logs/per_task_metrics/exp0
+- 3.3310% grid @ epoch 41 | exp0 | Reproduction (current runs)
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp0
+- 3.2458% grid @ epoch 17 | exp2 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/ablation/logs/per_task_metrics/exp2
+- 3.2458% grid @ epoch 17 | exp2 | Reproduction (current runs)
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp2
+- 3.2256% grid @ epoch 95 | exp0 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs/per_task_metrics/exp0
+- 3.1689% grid @ epoch 7 | exp3_champion_rearc_s309 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/ablation/logs/per_task_metrics/exp3_champion_rearc_s309
+- 3.1689% grid @ epoch 7 | exp3 | Ablation (paper logs)
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/ablation_study/data_for_paper/logs_run4/logs/per_task_metrics/exp3
+- 3.1689% grid @ epoch 7 | exp3_champion_rearc_s309 | Reproduction (current runs)
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp3_champion_rearc_s309
+
+Top by dataset class:
+
+[ARC-AGI-2 (fine-tune)]
+- 0.5587% grid @ epoch 74 | exp2_champion_arc-agi-2_s311
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/arc_agi_2_experiments/per_task_metrics/exp2_champion_arc-agi-2_s311
+- 0.2793% grid @ epoch 0 | exp2_champion_arc-agi-2
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/arc_agi_2_experiments/archive/logs_arc_agi_2_run_1/per_task_metrics/exp2_champion_arc-agi-2
+- 0.2793% grid @ epoch 0 | exp2_champion_arc-agi-2
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/arc_agi_2_experiments/archive/logs_arc_agi_2_run_2/per_task_metrics/exp2_champion_arc-agi-2
+- 0.2793% grid @ epoch 0 | exp2_champion_arc-agi-2
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/arc_agi_2_experiments/archive/logs_arc_agi_2_run_3/per_task_metrics/exp2_champion_arc-agi-2
+- 0.2793% grid @ epoch 0 | exp2_champion_arc-agi-2_s307
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/arc_agi_2_experiments/per_task_metrics/exp2_champion_arc-agi-2_s307
+
+[Ablation (paper logs)]
+- 3.1689% grid @ epoch 7 | exp3
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/ablation_study/data_for_paper/logs_run4/logs/per_task_metrics/exp3
+- 3.1662% grid @ epoch 0 | exp3
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/ablation_study/data_for_paper/logs_run3/logs/per_task_metrics/exp3
+
+[Reproduction (current runs)]
+- 3.3310% grid @ epoch 41 | exp0
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp0
+- 3.2458% grid @ epoch 17 | exp2
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp2
+- 3.1689% grid @ epoch 7 | exp3_champion_rearc_s309
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp3_champion_rearc_s309
+- 3.1685% grid @ epoch 17 | exp1
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp1
+- 3.1662% grid @ epoch 0 | exp3
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics/exp3
+
+[Unclassified]
+- 3.4655% grid @ epoch 0 | exp0
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs_run2/logs/per_task_metrics/exp0
+- 3.4337% grid @ epoch 0 | exp1
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs_run2/logs/per_task_metrics/exp1
+- 3.3310% grid @ epoch 41 | exp0
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/ablation/logs/per_task_metrics/exp0
+- 3.2458% grid @ epoch 17 | exp2
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/outputs/ablation/logs/per_task_metrics/exp2
+- 3.2256% grid @ epoch 95 | exp0
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs/per_task_metrics/exp0
+
+Absolute best observed:
+
+- 3.4655% grid @ epoch 0 | exp0 | Unclassified
+  run_dir: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/data/data_for_paper/logs_run2/logs/per_task_metrics/exp0

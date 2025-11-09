@@ -1,0 +1,61 @@
+# Section 7.1 Compositional Gap - Updated Statistics
+# Generated: 2025-11-05
+# Source: reproduction/outputs/atomic_lora_training_summary.json
+
+## Summary Statistics
+
+Completed LoRA training runs: 302
+Failed runs: 44
+Total tasks parsed: 302
+
+## Compositional Gap Definition
+
+Tasks meeting BOTH criteria:
+- final_cell_accuracy > 80.0%
+- final_grid_accuracy < 10.0%
+
+## Core Finding
+
+Compositional Gap Count: 210 of 302 tasks (69.5%)
+
+This represents tasks where the model achieves high local pattern recognition (>80% cell accuracy)
+but fails to compose those patterns into global solutions (<10% grid accuracy).
+
+## Top 10 Extreme Examples (>90% cell, 0% grid)
+
+1. dc433765: 99.64% cell / 0.00% grid
+2. 63613498: 99.36% cell / 0.00% grid
+3. 98cf29f8: 98.85% cell / 0.00% grid
+4. 54d82841: 98.84% cell / 0.00% grid
+5. e9614598: 98.78% cell / 0.00% grid
+6. d89b689b: 98.70% cell / 0.00% grid
+7. d6ad076f: 98.62% cell / 0.00% grid
+8. 508bd3b6: 98.26% cell / 0.00% grid
+9. beb8660c: 98.25% cell / 0.00% grid
+10. 952a094c: 98.23% cell / 0.00% grid
+
+## Historical Context
+
+Previous measurements:
+- Original claim in draft: 127 of 186 (68%)
+- Verified in older JSON: 129 of 190 (67.9%)
+- Current (latest sync): 210 of 302 (69.5%)
+
+The consistency across dataset sizes (67.9% → 69.5%) validates that the Compositional Gap
+is a robust, reproducible phenomenon, not an artifact of sample size or specific task selection.
+
+## Reproducibility
+
+To regenerate these statistics:
+```bash
+python3 - << 'PY'
+import json
+p="reproduction/outputs/atomic_lora_training_summary.json"
+with open(p) as f: data=json.load(f)
+records=[(tid, m.get("final_cell_accuracy",0.0), m.get("final_grid_accuracy",0.0))
+         for tid, rec in data.get("tasks",{}).items()
+         if (m := rec.get("metadata",{}))]
+cg=[r for r in records if r[1] > 80.0 and r[2] < 10.0]
+print(f"Compositional Gap: {len(cg)} of {len(records)} ({len(cg)/len(records)*100:.1f}%)")
+PY
+```

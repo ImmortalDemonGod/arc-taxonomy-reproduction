@@ -1,0 +1,69 @@
+ARC-AGI-2 Analysis Report
+
+Cross-run (best-by-grid, all variants):
+- exp2_champion_arc-agi-2_s307_csv: grid_mean=0.002793, cell_mean=0.900159
+- exp2_champion_arc-agi-2_s308_csv: grid_mean=0.002793, cell_mean=0.901429
+- exp2_champion_arc-agi-2_s309_csv: grid_mean=0.002793, cell_mean=0.898698
+- exp2_champion_arc-agi-2_s310_csv: grid_mean=0.002793, cell_mean=0.899595
+- exp2_champion_arc-agi-2_s311_csv: grid_mean=0.005587, cell_mean=0.868790
+- exp3_champion_arc-agi-2_s307_csv: grid_mean=0.000000, cell_mean=0.032772
+- exp3_champion_arc-agi-2_s308_csv: grid_mean=0.000000, cell_mean=0.057582
+- exp3_champion_arc-agi-2_s309_csv: grid_mean=0.000000, cell_mean=0.063411
+- exp3_champion_arc-agi-2_s310_csv: grid_mean=0.000000, cell_mean=0.138480
+- exp3_champion_arc-agi-2_s311_csv: grid_mean=0.000000, cell_mean=0.059501
+- exp3b_merged_lora_arc-agi-2_s307_csv: grid_mean=0.000000, cell_mean=0.125613
+- exp3b_merged_lora_arc-agi-2_s308_csv: grid_mean=0.000000, cell_mean=0.043790
+- exp3b_merged_lora_arc-agi-2_s309_csv: grid_mean=0.000000, cell_mean=0.015995
+- exp3b_merged_lora_arc-agi-2_s310_csv: grid_mean=0.000000, cell_mean=0.070733
+- exp3b_merged_lora_arc-agi-2_s311_csv: grid_mean=0.000000, cell_mean=0.067392
+
+Training dynamics (AUC/grid):
+- exp2_champion_arc-agi-2_s307_csv exp2_champion_arc-agi-2_s307_csv: auc_grid=0.168995, auc_cell=87.06
+- exp2_champion_arc-agi-2_s308_csv exp2_champion_arc-agi-2_s308_csv: auc_grid=0.171788, auc_cell=87.14
+- exp2_champion_arc-agi-2_s309_csv exp2_champion_arc-agi-2_s309_csv: auc_grid=0.155028, auc_cell=87.08
+- exp2_champion_arc-agi-2_s310_csv exp2_champion_arc-agi-2_s310_csv: auc_grid=0.187151, auc_cell=87.12
+- exp2_champion_arc-agi-2_s311_csv exp2_champion_arc-agi-2_s311_csv: auc_grid=0.121509, auc_cell=87.11
+- exp3_champion_arc-agi-2_s307_csv exp3_champion_arc-agi-2_s307_csv: auc_grid=0.000000, auc_cell=71.43
+- exp3_champion_arc-agi-2_s308_csv exp3_champion_arc-agi-2_s308_csv: auc_grid=0.000000, auc_cell=71.34
+- exp3_champion_arc-agi-2_s309_csv exp3_champion_arc-agi-2_s309_csv: auc_grid=0.000000, auc_cell=71.82
+- exp3_champion_arc-agi-2_s310_csv exp3_champion_arc-agi-2_s310_csv: auc_grid=0.000000, auc_cell=71.25
+- exp3_champion_arc-agi-2_s311_csv exp3_champion_arc-agi-2_s311_csv: auc_grid=0.000000, auc_cell=71.66
+- exp3b_merged_lora_arc-agi-2_s307_csv exp3b_merged_lora_arc-agi-2_s307_csv: auc_grid=0.000000, auc_cell=71.14
+- exp3b_merged_lora_arc-agi-2_s308_csv exp3b_merged_lora_arc-agi-2_s308_csv: auc_grid=0.000000, auc_cell=71.80
+- exp3b_merged_lora_arc-agi-2_s309_csv exp3b_merged_lora_arc-agi-2_s309_csv: auc_grid=0.000000, auc_cell=71.50
+- exp3b_merged_lora_arc-agi-2_s310_csv exp3b_merged_lora_arc-agi-2_s310_csv: auc_grid=0.000000, auc_cell=71.66
+- exp3b_merged_lora_arc-agi-2_s311_csv exp3b_merged_lora_arc-agi-2_s311_csv: auc_grid=0.000000, auc_cell=72.13
+
+Dissociation (epoch lags):
+- exp2_champion_arc-agi-2_s307_csv exp2_champion_arc-agi-2_s307_csv: lag=3.0
+- exp2_champion_arc-agi-2_s308_csv exp2_champion_arc-agi-2_s308_csv: lag=0.0
+- exp2_champion_arc-agi-2_s309_csv exp2_champion_arc-agi-2_s309_csv: lag=3.0
+- exp2_champion_arc-agi-2_s310_csv exp2_champion_arc-agi-2_s310_csv: lag=2.0
+- exp2_champion_arc-agi-2_s311_csv exp2_champion_arc-agi-2_s311_csv: lag=-71.0
+- exp3_champion_arc-agi-2_s307_csv exp3_champion_arc-agi-2_s307_csv: lag=12.0
+- exp3_champion_arc-agi-2_s308_csv exp3_champion_arc-agi-2_s308_csv: lag=19.0
+- exp3_champion_arc-agi-2_s309_csv exp3_champion_arc-agi-2_s309_csv: lag=81.0
+- exp3_champion_arc-agi-2_s310_csv exp3_champion_arc-agi-2_s310_csv: lag=7.0
+- exp3_champion_arc-agi-2_s311_csv exp3_champion_arc-agi-2_s311_csv: lag=46.0
+- exp3b_merged_lora_arc-agi-2_s307_csv exp3b_merged_lora_arc-agi-2_s307_csv: lag=15.0
+- exp3b_merged_lora_arc-agi-2_s308_csv exp3b_merged_lora_arc-agi-2_s308_csv: lag=48.0
+- exp3b_merged_lora_arc-agi-2_s309_csv exp3b_merged_lora_arc-agi-2_s309_csv: lag=13.0
+- exp3b_merged_lora_arc-agi-2_s310_csv exp3b_merged_lora_arc-agi-2_s310_csv: lag=93.0
+- exp3b_merged_lora_arc-agi-2_s311_csv exp3b_merged_lora_arc-agi-2_s311_csv: lag=40.0
+
+Nonzero grid statistics:
+- exp2_champion_arc-agi-2_s307_csv exp2_champion_arc-agi-2_s307_csv: earliest=0.0, count=62.0, streak=31.0
+- exp2_champion_arc-agi-2_s308_csv exp2_champion_arc-agi-2_s308_csv: earliest=0.0, count=63.0, streak=17.0
+- exp2_champion_arc-agi-2_s309_csv exp2_champion_arc-agi-2_s309_csv: earliest=0.0, count=57.0, streak=37.0
+- exp2_champion_arc-agi-2_s310_csv exp2_champion_arc-agi-2_s310_csv: earliest=0.0, count=69.0, streak=45.0
+- exp2_champion_arc-agi-2_s311_csv exp2_champion_arc-agi-2_s311_csv: earliest=0.0, count=44.0, streak=13.0
+- exp3_champion_arc-agi-2_s307_csv exp3_champion_arc-agi-2_s307_csv: earliest=nan, count=0.0, streak=0.0
+- exp3_champion_arc-agi-2_s308_csv exp3_champion_arc-agi-2_s308_csv: earliest=nan, count=0.0, streak=0.0
+- exp3_champion_arc-agi-2_s309_csv exp3_champion_arc-agi-2_s309_csv: earliest=nan, count=0.0, streak=0.0
+- exp3_champion_arc-agi-2_s310_csv exp3_champion_arc-agi-2_s310_csv: earliest=nan, count=0.0, streak=0.0
+- exp3_champion_arc-agi-2_s311_csv exp3_champion_arc-agi-2_s311_csv: earliest=nan, count=0.0, streak=0.0
+- exp3b_merged_lora_arc-agi-2_s307_csv exp3b_merged_lora_arc-agi-2_s307_csv: earliest=nan, count=0.0, streak=0.0
+- exp3b_merged_lora_arc-agi-2_s308_csv exp3b_merged_lora_arc-agi-2_s308_csv: earliest=nan, count=0.0, streak=0.0
+- exp3b_merged_lora_arc-agi-2_s309_csv exp3b_merged_lora_arc-agi-2_s309_csv: earliest=nan, count=0.0, streak=0.0
+- exp3b_merged_lora_arc-agi-2_s310_csv exp3b_merged_lora_arc-agi-2_s310_csv: earliest=nan, count=0.0, streak=0.0
+- exp3b_merged_lora_arc-agi-2_s311_csv exp3b_merged_lora_arc-agi-2_s311_csv: earliest=nan, count=0.0, streak=0.0

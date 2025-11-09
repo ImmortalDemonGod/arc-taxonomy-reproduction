@@ -1,0 +1,223 @@
+================================================================================
+30-EPOCH ABLATION STUDY ANALYSIS
+================================================================================
+
+Data directory: /Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics
+
+================================================================================
+Exp0_ED (exp0)
+================================================================================
+
+Epochs: 0 to 50
+Total epochs: 51
+
+Best Epoch (by grid accuracy): 41
+  Grid Accuracy: 3.3310%
+  Cell Accuracy: 90.1487%
+  Grid Correct: 1213/36416
+
+Final Epoch: 50
+  Grid Accuracy: 3.2678%
+  Cell Accuracy: 89.9409%
+
+Training Dynamics:
+  Epoch 0: 3.0426%
+  Best: 3.3310% (epoch 41)
+  Final: 3.2678% (epoch 50)
+  Peak-to-Final: -0.0632 pp
+
+Per-Category Performance (Epoch 41):
+  A2: 0.00% grid, 87.67% cell (1 tasks)
+  C1: 4.18% grid, 89.97% cell (71 tasks)
+  S2: 1.62% grid, 90.92% cell (4 tasks)
+  S3: 0.23% grid, 90.95% cell (16 tasks)
+
+================================================================================
+Exp1_Grid2D (exp1)
+================================================================================
+
+Epochs: 0 to 29
+Total epochs: 30
+
+Best Epoch (by grid accuracy): 17
+  Grid Accuracy: 3.1685%
+  Cell Accuracy: 89.8650%
+  Grid Correct: 1166/36800
+
+Final Epoch: 29
+  Grid Accuracy: 3.1060%
+  Cell Accuracy: 90.0624%
+
+Training Dynamics:
+  Epoch 0: 2.9484%
+  Best: 3.1685% (epoch 17)
+  Final: 3.1060% (epoch 29)
+  Peak-to-Final: -0.0625 pp
+
+Per-Category Performance (Epoch 17):
+  A2: 0.00% grid, 87.58% cell (1 tasks)
+  C1: 4.01% grid, 89.72% cell (71 tasks)
+  S2: 0.75% grid, 89.40% cell (4 tasks)
+  S3: 0.23% grid, 90.88% cell (16 tasks)
+
+================================================================================
+Exp2_PermInv (exp2)
+================================================================================
+
+Epochs: 0 to 29
+Total epochs: 30
+
+Best Epoch (by grid accuracy): 17
+  Grid Accuracy: 3.2458%
+  Cell Accuracy: 89.6442%
+  Grid Correct: 1182/36416
+
+Final Epoch: 29
+  Grid Accuracy: 3.2266%
+  Cell Accuracy: 89.8824%
+
+Training Dynamics:
+  Epoch 0: 2.6005%
+  Best: 3.2458% (epoch 17)
+  Final: 3.2266% (epoch 29)
+  Peak-to-Final: -0.0192 pp
+
+Per-Category Performance (Epoch 17):
+  A2: 0.00% grid, 86.07% cell (1 tasks)
+  C1: 4.14% grid, 89.48% cell (71 tasks)
+  S2: 0.44% grid, 89.83% cell (4 tasks)
+  S3: 0.23% grid, 90.67% cell (16 tasks)
+
+================================================================================
+Exp3_Context_s307 (exp3_champion_rearc_s307)
+================================================================================
+
+Epochs: 0 to 29
+Total epochs: 30
+
+Best Epoch (by grid accuracy): 0
+  Grid Accuracy: 3.1662%
+  Cell Accuracy: 71.0067%
+  Grid Correct: 1153/36416
+
+Final Epoch: 29
+  Grid Accuracy: 0.6124%
+  Cell Accuracy: 11.8795%
+
+Training Dynamics:
+  Epoch 0: 3.1662%
+  Best: 3.1662% (epoch 0)
+  Final: 0.6124% (epoch 29)
+  Peak-to-Final: -2.5538 pp
+
+Per-Category Performance (Epoch 0):
+  A2: 0.00% grid, 52.81% cell (1 tasks)
+  C1: 4.07% grid, 71.77% cell (71 tasks)
+  S2: 0.00% grid, 67.33% cell (4 tasks)
+  S3: 0.22% grid, 70.68% cell (16 tasks)
+
+================================================================================
+Exp3_Context_s308 (exp3_champion_rearc_s308)
+================================================================================
+
+Epochs: 0 to 29
+Total epochs: 30
+
+Best Epoch (by grid accuracy): 0
+  Grid Accuracy: 3.1662%
+  Cell Accuracy: 69.2548%
+  Grid Correct: 1153/36416
+
+Final Epoch: 29
+  Grid Accuracy: 0.6124%
+  Cell Accuracy: 11.8795%
+
+Training Dynamics:
+  Epoch 0: 3.1662%
+  Best: 3.1662% (epoch 0)
+  Final: 0.6124% (epoch 29)
+  Peak-to-Final: -2.5538 pp
+
+Per-Category Performance (Epoch 0):
+  A2: 0.00% grid, 54.01% cell (1 tasks)
+  C1: 4.07% grid, 70.42% cell (71 tasks)
+  S2: 0.00% grid, 70.07% cell (4 tasks)
+  S3: 0.22% grid, 65.55% cell (16 tasks)
+
+================================================================================
+Exp3_Context_s309 (exp3_champion_rearc_s309)
+================================================================================
+
+Epochs: 0 to 18
+Total epochs: 19
+
+Best Epoch (by grid accuracy): 7
+  Grid Accuracy: 3.1689%
+  Cell Accuracy: 69.7270%
+  Grid Correct: 1154/36416
+
+Final Epoch: 18
+  Grid Accuracy: 0.6124%
+  Cell Accuracy: 11.8795%
+
+Training Dynamics:
+  Epoch 0: 3.1662%
+  Best: 3.1689% (epoch 7)
+  Final: 0.6124% (epoch 18)
+  Peak-to-Final: -2.5566 pp
+
+Per-Category Performance (Epoch 7):
+  A2: 0.00% grid, 45.95% cell (1 tasks)
+  C1: 4.07% grid, 71.23% cell (71 tasks)
+  S2: 0.00% grid, 69.76% cell (4 tasks)
+  S3: 0.22% grid, 65.69% cell (16 tasks)
+
+================================================================================
+Exp4_Champion_s307 (exp3)
+================================================================================
+
+Epochs: 0 to 29
+Total epochs: 30
+
+Best Epoch (by grid accuracy): 0
+  Grid Accuracy: 3.1662%
+  Cell Accuracy: 71.0067%
+  Grid Correct: 1153/36416
+
+Final Epoch: 29
+  Grid Accuracy: 0.6124%
+  Cell Accuracy: 11.8795%
+
+Training Dynamics:
+  Epoch 0: 3.1662%
+  Best: 3.1662% (epoch 0)
+  Final: 0.6124% (epoch 29)
+  Peak-to-Final: -2.5538 pp
+
+Per-Category Performance (Epoch 0):
+  A2: 0.00% grid, 52.81% cell (1 tasks)
+  C1: 4.07% grid, 71.77% cell (71 tasks)
+  S2: 0.00% grid, 67.33% cell (4 tasks)
+  S3: 0.22% grid, 70.68% cell (16 tasks)
+
+================================================================================
+SUMMARY COMPARISON (Best Epoch Performance)
+================================================================================
+
+Experiment                Best Epoch   Grid Acc %      Cell Acc %     
+--------------------------------------------------------------------------------
+Exp0_ED                   41           3.3310          90.1487        
+Exp1_Grid2D               17           3.1685          89.8650        
+Exp2_PermInv              17           3.2458          89.6442        
+Exp3_Context_s307         0            3.1662          71.0067        
+Exp3_Context_s308         0            3.1662          69.2548        
+Exp3_Context_s309         7            3.1689          69.7270        
+
+================================================================================
+COMPONENT CONTRIBUTIONS (Grid Accuracy)
+================================================================================
+
+Baseline (Exp0 E-D): 3.3310%
+  + Grid2D PE (Exp1): -0.1625 pp → 3.1685%
+  + PermInv (Exp2):   +0.0773 pp → 3.2458%
+  + Context (Exp3):   -0.0787 pp → 3.1671% ± 0.0016% (n=3)

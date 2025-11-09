@@ -1,0 +1,542 @@
+{
+  "00d62c1b": {
+    "classification": "S3-A",
+    "confidence": 0.5454545454545454,
+    "manual": false
+  },
+  "0a938d79": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "1bfc4729": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "1f0c79e5": {
+    "classification": "S3-B",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "22233c11": {
+    "classification": "S3-B",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "22eb0ac0": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "25d487eb": {
+    "classification": "S3-A",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "264363fd": {
+    "classification": "S3-B",
+    "confidence": 0.6363636363636364,
+    "manual": false
+  },
+  "29c11459": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "2bee17df": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "2c608aff": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "31aa019c": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "321b1fc6": {
+    "classification": "S3-B",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "36fdfd69": {
+    "classification": "S3-B",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "3bd67248": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "3befdf3e": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "3de23699": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "4093f84a": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "4258a5f9": {
+    "classification": "S3-B",
+    "confidence": 0.6923076923076923,
+    "manual": false
+  },
+  "4347f46a": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "444801d8": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "445eab21": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "44d8ac46": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "50cb2852": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "539a4f51": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "543a7ed5": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "56dc2b01": {
+    "classification": "S3-B",
+    "confidence": 0.7333333333333333,
+    "manual": false
+  },
+  "57aa92db": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "5c2c9af4": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "60b61512": {
+    "classification": "S3-B",
+    "confidence": 0.6363636363636364,
+    "manual": false
+  },
+  "623ea044": {
+    "classification": "S3-B",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "673ef223": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "67a423a3": {
+    "classification": "S3-A",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "694f12f3": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "6aa20dc0": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "6cdd2623": {
+    "classification": "S3-B",
+    "confidence": 0.5714285714285714,
+    "manual": false
+  },
+  "6d58a25d": {
+    "classification": "S3-B",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "6e02f1e3": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "6f8cd79b": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "72ca375d": {
+    "classification": "S3-B",
+    "confidence": 0.7777777777777778,
+    "manual": false
+  },
+  "760b3cac": {
+    "classification": "S3-B",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "7b6016b9": {
+    "classification": "S3-B",
+    "confidence": 0.6923076923076923,
+    "manual": false
+  },
+  "7ddcd7ec": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "7e0986d6": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "7f4411dc": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "810b9b61": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "834ec97d": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "8403a5d5": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "85c4e7cd": {
+    "classification": "S3-A",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "868de0fa": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "8d510a79": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "8e1813be": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "913fb3ed": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "928ad970": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "952a094c": {
+    "classification": "S3-A",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "95990924": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "9af7a82c": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "a2fd1cf0": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "a3325580": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "a5313dff": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "a65b410d": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "a740d043": {
+    "classification": "S3-B",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "a78176bb": {
+    "classification": "S3-B",
+    "confidence": 0.7,
+    "manual": false
+  },
+  "a8c38be5": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "a9f96cdd": {
+    "classification": "S3-B",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "aba27056": {
+    "classification": "S3-B",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "ae4f1146": {
+    "classification": "S3-B",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "af902bf9": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "b527c5c6": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "b548a754": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "b6afb2da": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "b8cdaf2b": {
+    "classification": "S3-A",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "b9b7f026": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "ba97ae07": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "bb43febb": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "bbc9ae5d": {
+    "classification": "S3-B",
+    "confidence": 0.7857142857142857,
+    "manual": false
+  },
+  "bda2d7a6": {
+    "classification": "S3-A",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "c0f76784": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "c909285e": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "ce22a75a": {
+    "classification": "S3-B",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "d037b0a7": {
+    "classification": "S3-B",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "d0f5fe59": {
+    "classification": "S3-B",
+    "confidence": 0.6428571428571429,
+    "manual": false
+  },
+  "d13f3404": {
+    "classification": "S3-B",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "d22278a0": {
+    "classification": "S3-A",
+    "confidence": 0.8333333333333334,
+    "manual": false
+  },
+  "d43fd935": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "d4a91cb9": {
+    "classification": "S3-B",
+    "confidence": 0.6363636363636364,
+    "manual": false
+  },
+  "d4f3cd78": {
+    "classification": "S3-A",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "d5d6de2d": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "d9f24cd1": {
+    "classification": "S3-A",
+    "confidence": 0.8,
+    "manual": false
+  },
+  "dc1df850": {
+    "classification": "S3-B",
+    "confidence": 0.6363636363636364,
+    "manual": false
+  },
+  "de1cd16c": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "ded97339": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "e50d258f": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "e6721834": {
+    "classification": "S3-B",
+    "confidence": 0.875,
+    "manual": false
+  },
+  "e73095fd": {
+    "classification": "S3-A",
+    "confidence": 0.5,
+    "manual": false
+  },
+  "e76a88a6": {
+    "classification": "S3-B",
+    "confidence": 0.6666666666666666,
+    "manual": false
+  },
+  "e9614598": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "eb5a1d5d": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "ec883f72": {
+    "classification": "S3-A",
+    "confidence": 0.8571428571428571,
+    "manual": false
+  },
+  "ecdecbb3": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "ef135b50": {
+    "classification": "S3-B",
+    "confidence": 0.6363636363636364,
+    "manual": false
+  },
+  "f15e1fac": {
+    "classification": "S3-A",
+    "confidence": 0.95,
+    "manual": true
+  },
+  "f25fbde4": {
+    "classification": "S3-B",
+    "confidence": 0.7777777777777778,
+    "manual": false
+  },
+  "f35d900a": {
+    "classification": "S3-A",
+    "confidence": 0.5454545454545454,
+    "manual": false
+  },
+  "f8c80d96": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "f8ff0b80": {
+    "classification": "S3-B",
+    "confidence": 0.7777777777777778,
+    "manual": false
+  },
+  "fcb5c309": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  },
+  "feca6190": {
+    "classification": "S3-A",
+    "confidence": 0.75,
+    "manual": false
+  }
+}

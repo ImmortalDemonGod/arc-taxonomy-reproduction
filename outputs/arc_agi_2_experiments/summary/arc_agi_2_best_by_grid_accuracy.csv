@@ -1,0 +1,16 @@
+run,variant,epoch,val_grid_accuracy,val_cell_accuracy,val_copy_rate,val_change_recall,val_transformation_f1,val_total_grids,val_total_cells
+exp2_champion_arc-agi-2_s307_csv,exp2_champion_arc-agi-2_s307_csv,0,0.0027933,0.90015921,0.3423026,0.63387338,0.25686542,64,14067
+exp2_champion_arc-agi-2_s308_csv,exp2_champion_arc-agi-2_s308_csv,0,0.0027933,0.90142889,0.34175261,0.63911825,0.25880226,64,14067
+exp2_champion_arc-agi-2_s309_csv,exp2_champion_arc-agi-2_s309_csv,0,0.0027933,0.89869808,0.33628077,0.64750459,0.25866941,64,14067
+exp2_champion_arc-agi-2_s310_csv,exp2_champion_arc-agi-2_s310_csv,0,0.0027933,0.89959491,0.33465042,0.64634331,0.26050073,64,14067
+exp2_champion_arc-agi-2_s311_csv,exp2_champion_arc-agi-2_s311_csv,74,0.00558659,0.86879018,0.31705799,0.6482128,0.24578101,358,99238
+exp3_champion_arc-agi-2_s307_csv,exp3_champion_arc-agi-2_s307_csv,0,0.0,0.03277174,0.01924973,0.95005375,0.01846816,64,14067
+exp3_champion_arc-agi-2_s308_csv,exp3_champion_arc-agi-2_s308_csv,0,0.0,0.05758157,0.02279507,0.92701342,0.02422005,64,14067
+exp3_champion_arc-agi-2_s309_csv,exp3_champion_arc-agi-2_s309_csv,0,0.0,0.06341082,0.07311046,0.87298981,0.02045204,64,14067
+exp3_champion_arc-agi-2_s310_csv,exp3_champion_arc-agi-2_s310_csv,0,0.0,0.13848013,0.03724846,0.9148217,0.06116896,64,14067
+exp3_champion_arc-agi-2_s311_csv,exp3_champion_arc-agi-2_s311_csv,0,0.0,0.05950096,0.0332258,0.93929517,0.02092048,64,14067
+exp3b_merged_lora_arc-agi-2_s307_csv,exp3b_merged_lora_arc-agi-2_s307_csv,0,0.0,0.12561314,0.04551586,0.89644567,0.04232732,64,14067
+exp3b_merged_lora_arc-agi-2_s308_csv,exp3b_merged_lora_arc-agi-2_s308_csv,0,0.0,0.04379043,0.02141069,0.94034043,0.01932314,64,14067
+exp3b_merged_lora_arc-agi-2_s309_csv,exp3b_merged_lora_arc-agi-2_s309_csv,0,0.0,0.01599488,0.24528431,0.92768953,0.00693111,64,14067
+exp3b_merged_lora_arc-agi-2_s310_csv,exp3b_merged_lora_arc-agi-2_s310_csv,0,0.0,0.07073292,0.02663557,0.94466903,0.0275088,64,14067
+exp3b_merged_lora_arc-agi-2_s311_csv,exp3b_merged_lora_arc-agi-2_s311_csv,0,0.0,0.06739177,0.20977098,0.87986725,0.01712662,64,14067
