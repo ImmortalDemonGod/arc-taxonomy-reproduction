@@ -1,8 +1,9 @@
 # Reproduction Package Dependencies
-# Python 3.10+
+# Python 3.9+
 
 # Core dependencies
 torch>=2.0.0
+pytorch-lightning>=2.0.0
 numpy>=1.24.0
 pandas>=2.0.0
 
