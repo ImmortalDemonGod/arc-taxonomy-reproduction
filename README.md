@@ -1,5 +1,11 @@
 # Neural Affinity Framework for ARC - Reproduction Package
 
+[![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
+[![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
+
 **Paper:** Ingram & Merrit (2025) - *An Empirical Answer to re-arc*  
 **Status:** Artifact Evaluated & Reproduction-Ready
 
@@ -43,9 +49,11 @@ This repository lets you **independently verify** the empirical claims from our 
 
 ---
 
-## 📄 Paper
+## 📄 Documentation
 
-[**Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf**](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf) - Full 61-page paper with complete 400-task taxonomy
+- [**Paper PDF**](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf) - Full 61-page paper with complete 400-task taxonomy
+- [**Applying to Your Model**](./APPLYING_TO_YOUR_MODEL.md) - Guide for researchers building ARC solvers
+- [**Training Guide**](./QUICKSTART.md) - Full reproduction from scratch (GPU required)
 
 ## 🎯 Key Contributions
 

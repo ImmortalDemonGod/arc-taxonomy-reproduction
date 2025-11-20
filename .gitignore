@@ -88,3 +88,4 @@ tmp/
 temp/
 src/utils/
 data/arc_agi_temp/*
+.analysis_archive/

@@ -7,7 +7,7 @@ tasks remained at 0.0% grid accuracy despite 400 examples of targeted LoRA train
 
 Source Data:
     - reproduction/outputs/atomic_lora_training_summary.json (LoRA results)
-    - data/taxonomy_classification/tasks_by_category.json (category mappings)
+    - reproduction/data/taxonomy/tasks_by_category.json (category mappings)
 
 Output: Verification of A2 failure statistics and examples
 
@@ -137,7 +137,7 @@ def main():
     repo_root = script_dir.parent.parent
     
     lora_file = repo_root / "reproduction" / "outputs" / "atomic_lora_training_summary.json"
-    mapping_file = repo_root / "data" / "taxonomy_classification" / "tasks_by_category.json"
+    mapping_file = repo_root / "reproduction" / "data" / "taxonomy" / "tasks_by_category.json"
     
     # Verify files exist
     if not lora_file.exists():
