@@ -2,12 +2,22 @@
 
 [![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
 [![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
 
 **Paper:** Ingram & Merrit (2025) - *An Empirical Answer to re-arc*  
 **Status:** Artifact Evaluated & Reproduction-Ready
+
+---
+
+**📋 Quick Links:** 
+[🚀 Quick Start](QUICKSTART.md) • 
+[🔧 Apply to Your Model](docs/internal/APPLYING_TO_YOUR_MODEL.md) • 
+[📄 License](LICENSE) • 
+[📊 Paper PDF](Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
+
+---
 
 ## What is this?
 
