@@ -47,15 +47,7 @@ tensorboard/
 *.log
 nohup.out
 
-# LoRA weights (keep JSON summaries, ignore .safetensors files)
-outputs/atomic_loras/**/*.safetensors
-outputs/checkpoints/
-!outputs/atomic_lora_training_summary.json
 
-# Downloaded checkpoints (prevent accidental commits of large binaries)
-weights/*.ckpt
-weights/*.safetensors
-!weights/README.md
 
 # Data (keep structure, ignore large files)
 data/raw/
