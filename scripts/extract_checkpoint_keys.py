@@ -98,7 +98,7 @@ def analyze_checkpoint(ckpt_path: str, output_path: str):
 if __name__ == "__main__":
     # Paths (relative to repository)
     repo_root = Path(__file__).parent.parent
-    ckpt_path = repo_root.parent.parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
+    ckpt_path = repo_root / "weights" / "champion-epoch=36-val_loss=0.5926.ckpt"
     output_path = repo_root / "docs" / "checkpoint_keys.txt"
     
     analyze_checkpoint(ckpt_path, output_path)

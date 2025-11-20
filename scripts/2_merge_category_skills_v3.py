@@ -58,22 +58,19 @@ def main():
     )
     args = parser.parse_args()
 
-    # Resolve paths robustly: prefer user-provided, else derive from script location
+    # Resolve paths relative to reproduction directory
     provided_labels = Path(args.labels)
-    if provided_labels.is_absolute() and provided_labels.exists():
+    if provided_labels.is_absolute():
         labels_path = provided_labels
     else:
-        # Try relative to CWD
-        labels_path = provided_labels.resolve()
-        if not labels_path.exists():
-            # Fallback: compute from script location up to arc_reactor/data
-            script_path = Path(__file__).resolve()
-            # parents: 0=scripts, 1=reproduction, 2=arc_taxonomy_2025, 3=publications, 4=arc_reactor
-            try:
-                arc_reactor_dir = script_path.parents[4]
-                labels_path = arc_reactor_dir / 'data' / 'taxonomy_classification' / 'all_tasks_classified.json'
-            except IndexError:
-                pass
+        # Resolve relative to repository root
+        labels_path = (REPRO_DIR / provided_labels).resolve()
+    
+    if not labels_path.exists():
+        raise FileNotFoundError(
+            f"Labels file not found: {labels_path}\n"
+            f"Please ensure the file exists or provide the correct path with --labels"
+        )
 
     # Atomic and output dirs: resolve relative to reproduction/ by default
     atomic_dir = Path(args.atomic_dir)

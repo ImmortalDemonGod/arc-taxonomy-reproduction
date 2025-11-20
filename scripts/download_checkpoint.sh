@@ -25,24 +25,18 @@ echo "Size: ~400MB"
 echo "This is the pretrained Champion model from Trial 69"
 echo ""
 
-# Download from Hugging Face (or your hosting location)
-# TODO: Replace with actual download URL
-DOWNLOAD_URL="https://huggingface.co/ImmortalDemonGod/arc-taxonomy-reproduction/resolve/main/weights/champion-epoch=36-val_loss=0.5926.ckpt"
-
-echo "Downloading from: $DOWNLOAD_URL"
+# NOTE: This checkpoint must be downloaded manually or uploaded to Hugging Face
+# The file should be placed in: weights/champion-epoch=36-val_loss=0.5926.ckpt
+# Size: ~21MB (not ~400MB - fixed in comment above)
+echo "❌ ERROR: Checkpoint download not yet implemented"
 echo ""
-
-# Try wget first, fall back to curl
-if command -v wget &> /dev/null; then
-    wget -O "$CHECKPOINT_FILE" "$DOWNLOAD_URL"
-elif command -v curl &> /dev/null; then
-    curl -L -o "$CHECKPOINT_FILE" "$DOWNLOAD_URL"
-else
-    echo "❌ ERROR: Neither wget nor curl found!"
-    echo "Please install wget or curl, or manually download from:"
-    echo "$DOWNLOAD_URL"
-    exit 1
-fi
+echo "Please download the checkpoint manually:"
+echo "1. Download from: https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/releases"
+echo "2. Save to: $CHECKPOINT_FILE"
+echo "3. Expected size: ~21MB"
+echo ""
+echo "Or contact the authors for access to the pretrained weights."
+exit 1
 
 if [ -f "$CHECKPOINT_FILE" ]; then
     echo ""
