@@ -6,7 +6,9 @@ import pandas as pd
 import json
 from pathlib import Path
 
-STORAGE_URL = "***REMOVED***"
+# Default to local SQLite database (change for distributed training)
+STORAGE_URL = "sqlite:///hpo_results.db"
+# STORAGE_URL = "postgresql://user:pass@host/db"  # Uncomment for external database
 STUDY_NAME = "visual_classifier_cnn_vs_context_v2_expanded"
 
 def main():

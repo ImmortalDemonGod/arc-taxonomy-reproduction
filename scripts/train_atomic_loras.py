@@ -14,8 +14,21 @@ import sys
 import json
 import csv
 import time
-import fcntl
 from pathlib import Path
+
+# Platform-specific import for file locking
+try:
+    import fcntl
+    HAS_FCNTL = True
+except ImportError:
+    # Windows doesn't have fcntl - file locking will be disabled
+    HAS_FCNTL = False
+    import warnings
+    warnings.warn(
+        "fcntl not available (Windows system detected). "
+        "File locking disabled - avoid parallel writes to the same output file.",
+        UserWarning
+    )
 
 import torch
 import torch.nn as nn
@@ -33,32 +46,29 @@ from src.evaluation.metrics import compute_grid_accuracy, compute_copy_metrics_o
 
 def write_json_safely(json_path: Path, task_id: str, task_data: dict):
     """Write task results to JSON with file locking for parallel safety."""
-    # Acquire exclusive lock
+    # Acquire exclusive lock (if available)
     with open(json_path, 'a+') as f:  # a+ allows read and creates if missing
-        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        if HAS_FCNTL:
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
         
         try:
             # Read current state
             f.seek(0)
-            content = f.read()
-            if content.strip():
-                results = json.loads(content)
-            else:
-                results = {'completed': 0, 'failed': 0, 'tasks': {}}
+            try:
+                results = json.load(f)
+            except json.JSONDecodeError:
+                results = {}
             
             # Update with new task
-            results['tasks'][task_id] = task_data
-            if task_data['status'] == 'success':
-                results['completed'] = sum(1 for t in results['tasks'].values() if t['status'] == 'success')
-            else:
-                results['failed'] = sum(1 for t in results['tasks'].values() if t['status'] == 'failed')
+            results[task_id] = task_data
             
             # Write back
             f.seek(0)
             f.truncate()
             json.dump(results, f, indent=2)
         finally:
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+            if HAS_FCNTL:
+                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
 
 def load_champion(ckpt_path: Path, device: str) -> nn.Module:
