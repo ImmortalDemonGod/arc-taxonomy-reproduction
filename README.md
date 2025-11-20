@@ -11,11 +11,22 @@
 
 ---
 
-**📋 Quick Links:** 
-[🚀 Quick Start](QUICKSTART.md) • 
-[🔧 Apply to Your Model](docs/internal/APPLYING_TO_YOUR_MODEL.md) • 
-[📄 License](LICENSE) • 
-[📊 Paper PDF](Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
+<table>
+  <tr>
+    <td width="25%" align="center">
+      <a href="QUICKSTART.md"><b>🚀 Quick Start</b></a>
+    </td>
+    <td width="25%" align="center">
+      <a href="docs/internal/APPLYING_TO_YOUR_MODEL.md"><b>🔧 Apply to Your Model</b></a>
+    </td>
+    <td width="25%" align="center">
+      <a href="LICENSE"><b>⚖️ License (MIT)</b></a>
+    </td>
+    <td width="25%" align="center">
+      <a href="Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf"><b>📄 Paper PDF</b></a>
+    </td>
+  </tr>
+</table>
 
 ---
 
