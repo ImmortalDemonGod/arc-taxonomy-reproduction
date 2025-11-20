@@ -132,12 +132,12 @@ def print_statistics(
 
 def main():
     """Main execution function."""
-    # Determine file paths relative to script location
+    # Determine file paths
     script_dir = Path(__file__).parent
-    repo_root = script_dir.parent.parent
+    repo_root = script_dir.parent  # Go up from scripts/ to reproduction/
     
-    lora_file = repo_root / "reproduction" / "outputs" / "atomic_lora_training_summary.json"
-    mapping_file = repo_root / "reproduction" / "data" / "taxonomy" / "tasks_by_category.json"
+    lora_file = repo_root / "outputs" / "atomic_lora_training_summary.json"
+    mapping_file = repo_root / "data" / "taxonomy" / "tasks_by_category.json"
     
     # Verify files exist
     if not lora_file.exists():

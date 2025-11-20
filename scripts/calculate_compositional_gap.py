@@ -107,13 +107,18 @@ def main():
     """Main execution function."""
     # Determine file path relative to script location
     script_dir = Path(__file__).parent
-    repo_root = script_dir.parent.parent
-    data_file = repo_root / "reproduction" / "outputs" / "atomic_lora_training_summary.json"
+    repo_root = script_dir.parent  # Go up from scripts/ to reproduction/
+    
+    # Try to find the data file - works both locally and in CI
+    data_file = repo_root / "outputs" / "atomic_lora_training_summary.json"
     
     # Verify file exists
     if not data_file.exists():
         print(f"ERROR: Data file not found at {data_file}")
-        print(f"Expected location: reproduction/outputs/atomic_lora_training_summary.json")
+        print(f"Expected location: outputs/atomic_lora_training_summary.json")
+        print(f"Current working directory: {Path.cwd()}")
+        print(f"Script directory: {script_dir}")
+        print(f"Repo root: {repo_root}")
         return 1
     
     # Load and analyze data

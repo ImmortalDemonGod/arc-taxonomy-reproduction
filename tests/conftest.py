@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Optional
 import numpy as np
 import pytest
 import os
@@ -29,7 +29,7 @@ class NumpySnapshot:
         snapshot_dir: str = "tests/_snapshots",
         default_force_update: bool = False,
         always_match_exact: bool = False,
-        default_test_name: str | None = None,
+        default_test_name: Optional[str] = None,
     ):
         self.snapshot_dir = Path(snapshot_dir)
         os.makedirs(self.snapshot_dir, exist_ok=True)
