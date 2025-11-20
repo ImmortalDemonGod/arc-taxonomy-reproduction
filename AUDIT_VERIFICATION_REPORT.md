@@ -107,34 +107,37 @@ storage_url: "***REMOVED***"
 
 ## PARTIALLY TRUE - Requires Nuance
 
-### 5. ⚠️ `archive/` Contains "Active Code" - NUANCED
+### 5. ⚠️ `archive/` Contains "Active Code" - RESOLVED
 
 **Audit Claim:** *"archive/ contains analyze_30epoch_ablation.py which is the ONLY script capable of analyzing ablation logs"*
 
+**Current Status:** This refers to an **OLD ablation study** that has since been completely redesigned and fixed.
+
 **Evidence:**
 ```bash
-# File exists:
+# Old analysis script exists in archive:
 archive/analysis_scripts/analyze_30epoch_ablation.py ✅
+archive/development_docs/ABLATION_30EPOCH_ANALYSIS.md ✅
 
-# Reads from critical data:
-LOGS_DIR = Path(".../logs/per_task_metrics") ✅
-
-# Not referenced in main scripts/:
-grep -r "analyze_30epoch_ablation" scripts/
-# Result: 0 matches ✅
+# NEW redesigned ablation (October 2025):
+docs/ABLATION_FAIRNESS_ANALYSIS.md ✅
+docs/ABLATION_MODEL_SPECIFICATIONS.md ✅
+archive/development_docs/ABLATION_REDESIGN_COMPLETE.md ✅
 ```
 
-**BUT - Critical Context from Memory:**
-The ablation study has **fundamental design flaws**:
-- Only n=2 seeds (need 5+ for statistical power)
-- Confounded variables (context + encoder-decoder bundled)
-- Wrong hyperparameters (Exp3 used max_grid_size=35 vs 30)
-- **Cannot support component contribution claims**
+**What Was Fixed in New Ablation:**
+- ✅ Now uses 5 seeds (307-311) instead of 2
+- ✅ Fixed max_grid_size=30 consistently (no confounders)
+- ✅ Independent component testing (Exp0→Exp1→Exp2→Exp3→Champion)
+- ✅ Proper logging infrastructure (PerTaskMetrics, TensorBoard, CSV)
+- ✅ Task ID tracking for per-category metrics
+- ✅ No early stopping (all train 100 epochs)
+- ✅ Parameter-matched within 1.5% (scientifically valid)
 
 **Recommendation:** 
-- ❌ **DO NOT** move to `scripts/` (validates flawed analysis)
-- ✅ **DO** keep in `archive/` (preserves history without endorsing)
-- ✅ **DO** document limitations in paper
+- ✅ **KEEP** old scripts in `archive/` (preserves history)
+- ✅ **NEW ablation is scientifically valid** (documented in `docs/`)
+- ✅ Paper can use new ablation results with confidence
 
 ---
 
