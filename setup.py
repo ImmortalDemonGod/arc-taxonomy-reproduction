@@ -29,9 +29,9 @@ setup(
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "train-decoder-only=scripts.train_decoder_only:main",
-            "train-encoder-decoder=scripts.train_encoder_decoder:main",
-            "train-champion=scripts.train_champion:main",
+            "train-decoder-only=scripts.train_baseline_decoder_only:main",
+            "train-encoder-decoder=scripts.train_exp0_encoder_decoder:main",
+            "train-champion=scripts.train_exp3_champion:main",
             "test-all-training=scripts.test_all_training:main",
         ],
     },

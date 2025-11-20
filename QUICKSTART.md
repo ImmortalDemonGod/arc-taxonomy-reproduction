@@ -73,7 +73,7 @@ python scripts/test_all_training.py
 ### Option 1: Champion Model (Recommended)
 
 ```bash
-python scripts/train_champion.py
+python scripts/train_exp3_champion.py
 ```
 
 **Configuration:**
@@ -88,7 +88,7 @@ python scripts/train_champion.py
 ### Option 2: Encoder-Decoder Baseline
 
 ```bash
-python scripts/train_encoder_decoder.py
+python scripts/train_exp0_encoder_decoder.py
 ```
 
 **Configuration:**
@@ -101,7 +101,7 @@ python scripts/train_encoder_decoder.py
 ### Option 3: Decoder-Only Baseline
 
 ```bash
-python scripts/train_decoder_only.py
+python scripts/train_baseline_decoder_only.py
 ```
 
 **Configuration:**
