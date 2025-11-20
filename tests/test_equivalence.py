@@ -10,8 +10,12 @@ import pytest
 import torch
 from pathlib import Path
 
-# Champion checkpoint location
-CHAMPION_CKPT = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/outputs/checkpoints/champion_bootstrap.ckpt")
+# Champion checkpoint location (optional - tests skip if not found)
+# First try repo location, then fall back to parent outputs
+CHAMPION_CKPT = Path(__file__).parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
+if not CHAMPION_CKPT.exists():
+    # Try parent location (for local dev)
+    CHAMPION_CKPT = Path(__file__).parent.parent.parent.parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
 
 
 @pytest.fixture

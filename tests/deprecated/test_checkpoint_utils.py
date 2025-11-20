@@ -13,8 +13,11 @@ from src.checkpoint_utils import (
 from src.config import ModelConfig
 
 
-# Path to champion checkpoint
-CHAMPION_CKPT = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/outputs/checkpoints/champion_bootstrap.ckpt")
+# Path to champion checkpoint (optional - tests skip if not found)
+CHAMPION_CKPT = Path(__file__).parent.parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
+if not CHAMPION_CKPT.exists():
+    # Try parent location (for local dev)
+    CHAMPION_CKPT = Path(__file__).parent.parent.parent.parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
 
 
 @pytest.mark.skipif(not CHAMPION_CKPT.exists(), reason="Champion checkpoint not found")

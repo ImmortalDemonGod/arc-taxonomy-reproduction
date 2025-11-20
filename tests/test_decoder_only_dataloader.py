@@ -13,8 +13,8 @@ from src.data.decoder_only_data import (
 )
 
 
-# Use synthetic data for testing
-DATA_DIR = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/data/synthetic_data/distributional_alignment")
+# Use relative path from test file to repo data
+DATA_DIR = Path(__file__).parent.parent / "data" / "distributional_alignment"
 
 
 def test_dataset_creation():
