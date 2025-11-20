@@ -1,7 +1,7 @@
 # Neural Affinity Framework for ARC - Reproduction Package
 
 [![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
 [![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
