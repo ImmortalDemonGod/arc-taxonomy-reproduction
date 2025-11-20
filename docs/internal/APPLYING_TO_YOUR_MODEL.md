@@ -454,7 +454,7 @@ If you use our taxonomy or framework:
 
 ## 📚 Further Reading
 
-- **Paper:** `Ingram_Merritt_2025_Neural_Affinity_Framework_ARC.pdf` (61 pages)
+- **Paper:** `Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf` (61 pages)
 - **Quick Start:** `QUICKSTART.md` (training guide)
 - **Main README:** `README.md` (verification guide)
 

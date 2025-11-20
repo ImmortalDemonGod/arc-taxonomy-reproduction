@@ -3,7 +3,7 @@
 [![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merritt_2025_Neural_Affinity_Framework_ARC.pdf)
+[![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
 [![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
 
 **Paper:** Ingram & Merritt (2025) - *A Neural Affinity Framework for Abstract Reasoning: Diagnosing the Compositional Gap in Transformer Architectures via Procedural Task Taxonomy*  
@@ -23,7 +23,7 @@
       <a href="LICENSE"><b>⚖️ License (MIT)</b></a>
     </td>
     <td width="25%" align="center">
-      <a href="Ingram_Merritt_2025_Neural_Affinity_Framework_ARC.pdf"><b>📄 Paper PDF</b></a>
+      <a href="Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf"><b>📄 Paper PDF</b></a>
     </td>
   </tr>
 </table>
@@ -72,7 +72,7 @@ This repository lets you **independently verify** the empirical claims from our 
 
 ## 📄 Documentation
 
-- [**Paper PDF**](./Ingram_Merritt_2025_Neural_Affinity_Framework_ARC.pdf) - Full 61-page paper with complete 400-task taxonomy
+- [**Paper PDF**](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf) - Full 61-page paper with complete 400-task taxonomy
 - [**Applying to Your Model**](./APPLYING_TO_YOUR_MODEL.md) - Guide for researchers building ARC solvers
 - [**Training Guide**](./QUICKSTART.md) - Full reproduction from scratch (GPU required)
 
