@@ -1,4 +1,4 @@
-from typing import TypeVar, Optional
+from typing import TypeVar, Optional, Union, Dict
 import numpy as np
 import pytest
 import os
@@ -43,11 +43,11 @@ class NumpySnapshot:
 
     def assert_match(
         self,
-        actual: _A | dict[str, _A],
+        actual: Union[_A, Dict[str, _A]],
         rtol: float = 1e-4,
         atol: float = 1e-2,
-        test_name: str | type[DEFAULT] = DEFAULT,
-        force_update: bool | type[DEFAULT] = DEFAULT,
+        test_name: Union[str, type] = DEFAULT,
+        force_update: Union[bool, type] = DEFAULT,
     ):
         """
         Assert that the actual array(s) matches the snapshot.
