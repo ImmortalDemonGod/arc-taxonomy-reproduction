@@ -96,8 +96,9 @@ def analyze_checkpoint(ckpt_path: str, output_path: str):
 
 
 if __name__ == "__main__":
-    # Paths
-    ckpt_path = "/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/outputs/checkpoints/champion_bootstrap.ckpt"
-    output_path = "/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/docs/checkpoint_keys.txt"
+    # Paths (relative to repository)
+    repo_root = Path(__file__).parent.parent
+    ckpt_path = repo_root.parent.parent.parent / "outputs" / "checkpoints" / "champion_bootstrap.ckpt"
+    output_path = repo_root / "docs" / "checkpoint_keys.txt"
     
     analyze_checkpoint(ckpt_path, output_path)

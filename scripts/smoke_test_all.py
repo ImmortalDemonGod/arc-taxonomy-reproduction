@@ -27,7 +27,8 @@ from src.models.encoder_decoder_lightning import EncoderDecoderLightningModule
 from src.models.champion_lightning import ChampionLightningModule
 
 
-DATA_DIR = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/data/synthetic_data/distributional_alignment")
+# Use relative path from script to repo data
+DATA_DIR = Path(__file__).parent.parent / "data" / "distributional_alignment"
 
 
 def smoke_test_decoder_only():

@@ -7,7 +7,8 @@ import pandas as pd
 from pathlib import Path
 import numpy as np
 
-LOGS_DIR = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/systems/arc_reactor/publications/arc_taxonomy_2025/reproduction/logs/per_task_metrics")
+# Use relative path from script to logs
+LOGS_DIR = Path(__file__).parent.parent.parent / "logs" / "per_task_metrics"
 
 EXPERIMENTS = {
     'Exp0_ED': 'exp0',

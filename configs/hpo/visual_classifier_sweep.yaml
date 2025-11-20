@@ -3,7 +3,8 @@
 
 # --- Study Configuration ---
 study_name: "visual_classifier_cnn_vs_context_v2_expanded"
-storage_url: "***REMOVED***"
+storage_url: "sqlite:///hpo_results.db"  # Local SQLite storage
+# storage_url: "postgresql://..."  # Optional: External database for production
 n_trials: 150  # Expanded search space requires more trials
 direction: "maximize"  # Maximize validation accuracy
 

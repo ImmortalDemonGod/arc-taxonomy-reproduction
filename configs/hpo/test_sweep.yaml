@@ -2,7 +2,8 @@
 # This is a quick verification run before the full 100-trial sweep
 
 study_name: "visual_classifier_test_v1"
-storage_url: "***REMOVED***"
+storage_url: "sqlite:///hpo_results.db"  # Local SQLite storage
+# storage_url: "***REMOVED***"  # Optional: External database for production
 n_trials: 5
 direction: "maximize"
 

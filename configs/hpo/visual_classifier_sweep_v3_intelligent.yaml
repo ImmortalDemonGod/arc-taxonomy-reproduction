@@ -4,7 +4,8 @@
 
 # --- Study Configuration ---
 study_name: "visual_classifier_v3_intelligent_refinement"
-storage_url: "***REMOVED***"
+storage_url: "sqlite:///hpo_results.db"  # Local SQLite storage
+# storage_url: "postgresql://..."  # Optional: External database for production
 n_trials: 100  # More trials to properly explore expanded space
 direction: "maximize"
 

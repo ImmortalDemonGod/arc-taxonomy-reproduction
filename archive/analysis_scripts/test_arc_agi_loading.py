@@ -16,8 +16,9 @@ def test_arc_agi_loading():
     print("Testing ARC-AGI-2 Data Loading")
     print("="*80 + "\n")
     
-    # Path to ARC-AGI-2 data
-    arc_data_dir = Path("/Users/tomriddle1/Holistic-Performance-Enhancement/cultivation/data/raw/arc_prize_2025")
+    # Path to ARC-AGI-2 data (relative to repository)
+    repo_root = Path(__file__).parent.parent.parent
+    arc_data_dir = repo_root.parent.parent.parent / "data" / "raw" / "arc_prize_2025"
     
     # Load training challenges
     print("1. Loading training challenges JSON...")
