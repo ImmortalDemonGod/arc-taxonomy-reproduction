@@ -434,8 +434,9 @@ If you use our taxonomy or framework:
 
 ```bibtex
 @article{ingram2025neural,
-  title={An Empirical Answer to re-arc: Neural Affinity Framework for ARC},
-  author={Ingram, [First] and Merrit, [First]},
+  title={A Neural Affinity Framework for Abstract Reasoning: Diagnosing the 
+         Compositional Gap in Transformer Architectures via Procedural Task Taxonomy},
+  author={Ingram, Miguel and Merritt, Arthur},
   journal={[Venue]},
   year={2025}
 }
@@ -453,7 +454,7 @@ If you use our taxonomy or framework:
 
 ## 📚 Further Reading
 
-- **Paper:** `Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf` (61 pages)
+- **Paper:** `Ingram_Merritt_2025_Neural_Affinity_Framework_ARC.pdf` (61 pages)
 - **Quick Start:** `QUICKSTART.md` (training guide)
 - **Main README:** `README.md` (verification guide)
 
