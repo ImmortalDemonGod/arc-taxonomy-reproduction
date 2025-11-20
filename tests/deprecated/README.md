@@ -25,6 +25,11 @@ These tests were written for an earlier version of the codebase or test training
 14. **test_per_task_logger.py** - Tests logger utility imports from scripts/
 15. **test_training_from_scratch.py** - Tests training pipeline imports from scripts/
 
+### Integration Tests (Require Full Training Data)
+16. **test_champion_dataloader.py** - Requires actual ARC task format (not synthetic)
+17. **test_decoder_only_dataloader.py** - Requires actual ARC task format (not synthetic)
+18. **test_encoder_decoder_dataloader.py** - Requires actual ARC task format (not synthetic)
+
 ## Current Test Coverage
 
 Active tests (207 passing) cover:
