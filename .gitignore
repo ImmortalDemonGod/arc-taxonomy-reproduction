@@ -74,11 +74,12 @@ htmlcov/
 .tox/
 .hypothesis/
 
-# Backup folders
+# Backup folders and archives
 *_backup/
 *_old/
 src_jarc_reactor_backup/
 tests_old_backup/
+archive/
 
 # Temporary files
 *.tmp
