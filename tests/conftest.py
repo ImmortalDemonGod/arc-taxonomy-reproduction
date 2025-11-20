@@ -100,7 +100,7 @@ class Snapshot:
         self,
         snapshot_dir: str = "tests/_snapshots",
         default_force_update: bool = False,
-        default_test_name: str | None = None,
+        default_test_name: Optional[str] = None,
     ):
         """
         Snapshot for arbitrary data types, saved as pickle files.
@@ -115,9 +115,9 @@ class Snapshot:
 
     def assert_match(
         self,
-        actual: _A | dict[str, _A],
-        test_name: str | type[DEFAULT] = DEFAULT,
-        force_update: bool | type[DEFAULT] = DEFAULT,
+        actual: Union[_A, Dict[str, _A]],
+        test_name: Union[str, type] = DEFAULT,
+        force_update: Union[bool, type] = DEFAULT,
     ):
         """
         Assert that the actual data matches the snapshot.
