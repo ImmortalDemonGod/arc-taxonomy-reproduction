@@ -3,7 +3,7 @@ import math
 import torch
 from torch import Tensor, nn
 from jaxtyping import Float
-from .utils import softmax as _softmax
+from src.utils import softmax as _softmax
 
 
 class Linear(nn.Module):
