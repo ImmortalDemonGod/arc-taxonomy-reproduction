@@ -1,4 +1,4 @@
-# Neural Affinity Framework for ARC - Reproduction Package
+# Neural Affinity Framework for ARC - Official Package
 
 [![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
