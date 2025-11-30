@@ -17,7 +17,7 @@
       <a href="QUICKSTART.md"><b>🚀 Quick Start</b></a>
     </td>
     <td width="25%" align="center">
-      <a href="docs/internal/APPLYING_TO_YOUR_MODEL.md"><b>🔧 Apply to Your Model</b></a>
+      <a href="APPLYING_TO_YOUR_MODEL.md"><b>🔧 Apply to Your Model</b></a>
     </td>
     <td width="25%" align="center">
       <a href="LICENSE"><b>⚖️ License (MIT)</b></a>
@@ -32,13 +32,20 @@
 
 ## What is this?
 
-This repository lets you **independently verify** the empirical claims from our paper without reading 61 pages or training models. We provide:
+This repository serves two main use cases:
+
+1. **Verify the paper** — independently check all empirical claims without reading 61 pages or training models.
+2. **Diagnose your ARC model** — evaluate new architectures by category (neural affinity), compositional gap, and curriculum design.
+
+We provide:
 
 1. **Pre-computed results** from 302 fine-tuning experiments (no GPU needed)
 2. **Verification scripts** that check the paper's statistics are correct
 3. **Complete training code** if you want to reproduce from scratch (GPU required)
 
-**Target audience:** Researchers wanting to verify our "Compositional Gap" (69.5% of tasks fail composition) and "Neural Affinity Ceiling" (42.9% of hard tasks stuck at 0%) claims.
+**Target audience:**
+- Researchers wanting to verify our "Compositional Gap" (69.5% of tasks fail composition) and "Neural Affinity Ceiling" (42.9% of hard tasks stuck at 0%) claims.
+- Researchers building new ARC models who want diagnostics for their architectures.
 
 **Time to verify claims:** ~5 minutes (scripts only)  
 **Time to reproduce from scratch:** ~120 GPU-hours (full training)
@@ -67,6 +74,12 @@ This repository lets you **independently verify** the empirical claims from our 
 
 **Want to train models yourself?**
 - See [🔧 Full Reproduction](#-full-reproduction-training-from-scratch) (requires GPU)
+
+**Have your own ARC model?**
+- See [🔧 Applying to Your Model](./APPLYING_TO_YOUR_MODEL.md) to:
+  - score your model by taxonomy category,
+  - measure its compositional gap,
+  - design curricula using neural affinity.
 
 ---
 
