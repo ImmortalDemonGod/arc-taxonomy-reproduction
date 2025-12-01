@@ -77,9 +77,9 @@ We provide:
 
 **Have your own ARC model?**
 - See [🔧 Applying to Your Model](./APPLYING_TO_YOUR_MODEL.md) to:
-  - score your model by taxonomy category,
-  - measure its compositional gap,
-  - design curricula using neural affinity.
+  - **benchmark** your model against specific skills (not just global accuracy),
+  - **diagnose** whether failures come from perception vs reasoning (Compositional Gap),
+  - **curate** training data to target specific architectural blind spots.
 
 ---
 
@@ -283,4 +283,4 @@ A: Some figure scripts are shared between the paper and reproduction package. Bo
 For questions or issues: Open an issue on GitHub
 
 ---
-**Last Updated:** November 19, 2025
+**Last Updated:** December 1, 2025
