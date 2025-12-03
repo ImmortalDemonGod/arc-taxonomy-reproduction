@@ -7,7 +7,7 @@
 [![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
 
 **Paper:** Ingram & Merritt (2025) - *A Neural Affinity Framework for Abstract Reasoning: Diagnosing the Compositional Gap in Transformer Architectures via Procedural Task Taxonomy*  
-**Status:** Artifact Evaluated & Reproduction-Ready
+**Status:** Pre-print (Under Review) • Artifact Evaluated
 
 ---
 
@@ -266,6 +266,12 @@ A: Some figure scripts are shared between the paper and reproduction package. Bo
 | `ModuleNotFoundError: torch` | Run `pip install -r requirements.txt` |
 | `FileNotFoundError: outputs/atomic_lora_training_summary.json` | This file should exist (241KB). Check you cloned the complete repo. |
 | Script outputs different percentages | Ensure you're using the correct data files. Run `python verify_setup.py` first. |
+
+## 🙏 Acknowledgments
+
+We thank **Michael Hodel** for his guidance during the pre-submission phase and for creating the `re-arc` infrastructure that made this analysis possible.
+
+We also extend our gratitude to **Wenhao Li** (University of Toronto) for validating our findings regarding the architectural ceilings in `ViTARC` and for facilitating the release of this work.
 
 ## 📝 Citation
 
