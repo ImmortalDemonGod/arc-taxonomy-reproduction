@@ -502,7 +502,8 @@ If you use this reproduction package, please cite:
 @article{ingram2025neuralaffinity,
   title={A Neural Affinity Framework for Abstract Reasoning: Diagnosing the 
          Compositional Gap in Transformer Architectures via Procedural Task Taxonomy},
-  author={Ingram, Miguel and Merritt, Arthur},
+  author={Ingram, Miguel and Merritt, Arthur Joseph},
+  journal={arXiv preprint arXiv:2512.07109},
   year={2025}
 }
 ```
