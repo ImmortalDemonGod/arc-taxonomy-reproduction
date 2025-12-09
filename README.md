@@ -3,7 +3,7 @@
 [![CI](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml/badge.svg)](https://github.com/ImmortalDemonGod/arc-taxonomy-reproduction/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red.svg)](http://arxiv.org/abs/2512.07109)
 [![Reproducible](https://img.shields.io/badge/Reproducible-100%25-brightgreen.svg)](#-reproducing-key-results)
 
 **Paper:** Ingram & Merritt (2025) - *A Neural Affinity Framework for Abstract Reasoning: Diagnosing the Compositional Gap in Transformer Architectures via Procedural Task Taxonomy*  
@@ -23,7 +23,7 @@
       <a href="LICENSE"><b>⚖️ License (MIT)</b></a>
     </td>
     <td width="25%" align="center">
-      <a href="Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf"><b>📄 Paper PDF</b></a>
+      <a href="http://arxiv.org/abs/2512.07109"><b>📄 Paper (arXiv)</b></a>
     </td>
   </tr>
 </table>
@@ -279,7 +279,8 @@ We also extend our gratitude to **Wenhao Li** (University of Toronto) for valida
 @article{ingram2025neuralaffinity,
   title={A Neural Affinity Framework for Abstract Reasoning: Diagnosing the 
          Compositional Gap in Transformer Architectures via Procedural Task Taxonomy},
-  author={Ingram, Miguel and Merritt, Arthur},
+  author={Ingram, Miguel and Merritt, Arthur Joseph},
+  journal={arXiv preprint arXiv:2512.07109},
   year={2025}
 }
 ```
