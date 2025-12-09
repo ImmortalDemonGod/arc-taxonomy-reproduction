@@ -454,7 +454,7 @@ If you use our taxonomy or framework:
 
 ## 📚 Further Reading
 
-- **Paper:** `Ingram_Merrit_2025_Neural_Affinity_Framework_ARC.pdf` (61 pages)
+- **Paper:** [Ingram & Merritt (2025)](http://arxiv.org/abs/2512.07109) (61 pages)
 - **Quick Start:** `QUICKSTART.md` (training guide)
 - **Main README:** `README.md` (verification guide)
 
@@ -464,3 +464,4 @@ If you use our taxonomy or framework:
 - §7.2: A2 ceiling effect (architectural bottleneck)
 - §7.5: ViTARC validation (external confirmation)
 - Appendix B: Complete reproducibility details
+: Complete reproducibility details
